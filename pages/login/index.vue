@@ -53,6 +53,7 @@
 import { login } from '@/api/auth'
 export default {
   name: 'LoginPage',
+  layout: 'auth',
   data () {
     return {
       formData: {
