@@ -8,18 +8,9 @@ export default [
   },
   {
     routerName: '',
-    title: 'Setting',
-    icon: 'el-icon-setting',
+    title: 'User',
+    icon: 'el-icon-user-solid',
     active: false,
-    items: [
-      {
-        title: 'Building',
-        link: '/building'
-      },
-      {
-        title: 'Room',
-        link: '/room'
-      }
-    ]
+    link: '/user'
   }
 ]
