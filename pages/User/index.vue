@@ -32,24 +32,37 @@
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
     />
+    <dialogs-edit-user
+      :props-dialog-visible="dialogPopEdit"
+      @handle-submit="handleSubmitEdit"
+    />
+    <dialogs-delete
+      :props-dialog-visible="dialogPopDelete"
+      @handle-submit="handleSubmitDelete"
+    />
   </div>
 </template>
 
 <script>
-// import * as user from '@/api/user'
+import * as user from '@/api/user'
 import ComponentsTable from '@/components/tableCURD/index.vue'
 import DialogsCreateUser from '@/components/dialogs/dialogsCreateUser.vue'
+import DialogsEditUser from '@/components/dialogs/dialogsEditUser.vue'
+import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
 
 export default {
   name: 'BuildingIndex',
   components: {
     ComponentsTable,
-    DialogsCreateUser
+    DialogsCreateUser,
+    DialogsEditUser,
+    DialogsDelete
   },
   data () {
     return {
       dialogPop: false,
+      dialogPopDelete: false,
       tableData: [],
       tableHeader: [{
         field: 'id',
@@ -83,7 +96,7 @@ export default {
     }
   },
   created () {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     handleClick () {
@@ -93,15 +106,52 @@ export default {
     openDialog () {
       EventBus.$emit('OpenCreateUser', true)
     },
-    handleCreate () {
-      this.dialogPop = false
+    async  handleCreate (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await user.add(params)
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Create user successfully')
+      } catch (e) {
+        this.$message.error('Create user unsuccessfully')
+      }
     },
-    // async fetchData () {
-    // this.$store.commit('pages/setLoading', true)
-    // const res = await user.list({})
-    // this.tableData = res.data.data.result
-    // this.$store.commit('pages/setLoading', false)
-    // },
+    handleEdit (index, value) {
+      // eslint-disable-next-line no-console
+      console.log('param', value)
+      EventBus.$emit('OpenEditUser', true, value)
+    },
+    async handleSubmitEdit (params, id) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await user.update(params)
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Edit user successfully')
+      } catch (e) {
+        this.$message.error('Edit user unsuccessfully')
+      }
+    },
+    handleDelete () {
+      EventBus.$emit('OpenDelete', true)
+    },
+    handleSubmitDelete () {
+      this.$message.success('Delete successfully')
+    },
+    async fetchData () {
+      this.$store.commit('pages/setLoading', true)
+      const res = await user.list({})
+      this.tableData = res.data.data
+      this.currentPage = res.data.paging.page
+      this.pageSize = res.data.paging.limit
+      this.totalItems = res.data.paging.total
+      // eslint-disable-next-line no-console
+      console.log('data', res.data)
+      this.$store.commit('pages/setLoading', false)
+    },
     handleSizeChange (val) {
       // eslint-disable-next-line no-console
       console.log(`${val} items per page`)

@@ -1,8 +1,7 @@
 <template>
-  <div class="md:container md:mx-auto pt-6">
+  <div class="md:container md:mx-auto pt-6 justify-center">
     <el-table
       :data="propsTableData"
-      style="width: 100%"
       border
       :default-sort="{prop: 'id', order: 'descending'}"
     >
@@ -10,7 +9,6 @@
         <el-table-column
           :key="index"
           :label="col.title"
-          width="170"
           sortable
         >
           <template slot-scope="scope">

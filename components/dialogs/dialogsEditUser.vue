@@ -1,12 +1,12 @@
 <template>
   <div>
     <el-dialog
-      title="Create New Account"
+      title="Edit Account"
       :visible.sync="dialogVisible"
       append-to-body
     >
       <ValidationObserver
-        ref="obsAddUser"
+        ref="obsEditUser"
         tag="div"
       >
         <el-card shadow="always">
@@ -19,7 +19,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'full name'"
-                :rules="{ required: true, numeric: false }"
+                :rules="{ required: false, numeric: false }"
                 class="mb-3"
                 tag="div"
               >
@@ -36,7 +36,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'date of birth'"
-                :rules="{ required: true }"
+                :rules="{ required: false }"
                 class="mb-3"
                 tag="div"
                 format="yyyy/MM/dd"
@@ -61,7 +61,7 @@
             <validation-provider
               v-slot="{ errors }"
               :name="'gender'"
-              :rules="{ required: true }"
+              :rules="{ required: false }"
               class="mb-3"
               tag="div"
             >
@@ -88,7 +88,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'department'"
-                :rules="{ required: true }"
+                :rules="{ required: false }"
                 class="mb-3"
                 tag="div"
               >
@@ -112,7 +112,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'role'"
-                :rules="{ required: true }"
+                :rules="{ required: false }"
                 class="mb-3"
                 tag="div"
               >
@@ -142,7 +142,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'email'"
-                :rules="{ required: true, email: true }"
+                :rules="{ required: false, email: true }"
                 class="mb-3"
                 tag="div"
               >
@@ -159,7 +159,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'password'"
-                :rules="{ required: true, min:6 }"
+                :rules="{ required: false, min:6 }"
                 class="mb-3"
                 tag="div"
                 vid="password"
@@ -175,7 +175,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'cf_password'"
-                rules="required|confirmed:password"
+                rules="confirmed:password"
                 class="mb-3"
                 tag="div"
                 data-vv-as="password"
@@ -202,7 +202,7 @@ import { ValidationObserver, ValidationProvider } from 'vee-validate'
 import EventBus from '@/utils/eventBus'
 
 export default {
-  name: 'ComponentCreateBuilding',
+  name: 'ComponentEditUser',
   components: {
     ValidationObserver,
     ValidationProvider
@@ -211,7 +211,7 @@ export default {
     propsDialogVisible: {
       type: Boolean,
       default: false,
-      required: true
+      required: false
     }
   },
   data () {
@@ -270,8 +270,17 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('OpenCreateUser', (val) => {
+    EventBus.$on('OpenEditUser', (val, newVal) => {
       this.dialogVisible = val
+      this.formData.id = newVal.id
+      this.formData.full_name = newVal.full_name
+      this.formData.department = newVal.department
+      this.formData.date_of_birth = newVal.date_of_birth
+      this.formData.email = newVal.email
+      this.formData.password = ''
+      this.formData.status = newVal.status
+      this.formData.role = newVal.role
+      this.formData.gender = newVal.gender
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -282,12 +291,12 @@ export default {
   },
   methods: {
     async handleSubmit () {
-      const isValid = await this.$refs.obsAddUser.validate()
+      const isValid = await this.$refs.obsEditUser.validate()
       if (!isValid) {
         this.$message.warning('Something went wrong')
         return
       }
-      this.$emit('handle-submit', this.formData)
+      this.$emit('handle-submit', this.formData, this.formData.id)
       this.dialogVisible = false
     }
   }
