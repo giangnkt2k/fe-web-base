@@ -11,7 +11,7 @@
         </div>
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
-            Create User
+            Create Category
           </el-button>
         </div>
       </div>
@@ -69,24 +69,12 @@ export default {
         title: 'ID'
       },
       {
-        field: 'full_name',
-        title: 'Full Name'
-      },
-      {
-        field: 'email',
-        title: 'Email'
-      },
-      {
-        field: 'department',
-        title: 'Department'
+        field: 'name',
+        title: 'Category name'
       },
       {
         field: 'status',
         title: 'Status'
-      },
-      {
-        field: 'role',
-        title: 'Role'
       }],
       // pagination default
       currentPage: '',

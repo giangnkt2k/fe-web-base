@@ -17,6 +17,9 @@
 import RightBar from '@/components/layouts/RightBar.vue'
 import TopBar from '@/components/layouts/TopBar.vue'
 import loading from '@/components/elements/loading/index.vue'
+import { currentUser } from '@/api/user'
+import menuMixin from '~/mixins/menu.js'
+
 export default {
   name: 'DefaultLayoutTemplate',
   components: {
@@ -24,21 +27,60 @@ export default {
     TopBar,
     loading
   },
+  mixins: [menuMixin],
   middleware: ['initAuth', 'auth'],
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      route: ''
     }
   },
   computed: {
     isLoading () {
       // eslint-disable-next-line no-console
       return this.$store.getters['pages/getLoading']
+    },
+    currentPath () {
+      return this.$nuxt.$route.fullPath
     }
   },
+  watch: {
+    currentPath () {
+      this.middlewareRouter()
+    }
+  },
+  created () {
+    this.fetchCurrentUser()
+    this.middlewareRouter()
+  },
   methods: {
+    async fetchCurrentUser () {
+      // eslint-disable-next-line no-console
+      this.$store.commit('pages/setLoading', true)
+      try {
+        const res = await currentUser()
+        const user = res.data.data || {}
+        this.$store.commit('user/setCurrentUser', user)
+        this.$store.commit('pages/setLoading', false)
+      } catch (e) {
+        this.$this.commit('pages/setLoading', false)
+      }
+    },
     handleChangeTypeMenu (value) {
       this.isCollapse = value
+    },
+    middlewareRouter () {
+      for (let index = 0; index < this.menus.length; index++) {
+        const element = this.menus[index]
+        if (element.link === this.$nuxt.$route.fullPath) {
+          this.route = element
+        }
+      }
+      if (this.route.role !== this.$store.getters['user/getCurrentUser'].role) {
+        if (this.$store.getters['user/getCurrentUser'].role === 'STAFF' && this.route.role === '') {
+          this.$router.push('/404')
+        }
+      }
     }
   }
 }

@@ -4,13 +4,31 @@ export default [
     title: 'Dashboard',
     link: '/',
     icon: 'el-icon-menu',
-    active: false
+    active: false,
+    role: ''
   },
   {
     routerName: '',
     title: 'User',
     icon: 'el-icon-user-solid',
     active: false,
-    link: '/user'
+    link: '/user',
+    role: 'ADMIN'
+  },
+  {
+    routerName: '',
+    title: 'Academic year',
+    icon: 'el-icon-date',
+    active: false,
+    link: '/academic-year',
+    role: 'ADMIN'
+  },
+  {
+    routerName: '',
+    title: 'Category',
+    icon: 'el-icon-set-up',
+    active: false,
+    link: '/category',
+    role: 'QAM'
   }
 ]

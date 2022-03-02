@@ -12,7 +12,7 @@
 
       <el-submenu index="2">
         <template slot="title">
-          GiangNKT
+          {{ currentUser.full_name }}
         </template>
         <el-menu-item index="2-1">
           Profile
@@ -38,6 +38,11 @@ export default {
     type: Boolean,
     required: true,
     default: false
+  },
+  computed: {
+    currentUser () {
+      return this.$store.getters['user/getCurrentUser']
+    }
   },
   watch: {
     isCollapse () {

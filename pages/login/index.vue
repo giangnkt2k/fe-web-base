@@ -80,23 +80,16 @@ export default {
 
         const res = await login(this.formData)
         if (res.data.data.access_token) {
-          // eslint-disable-next-line no-console
-          console.log(res.data.data.access_token)
           const token = 'Bearer ' + res.data.data.access_token
           const currentUser = res.data.data.profile
           this.$store.commit('auth/setAuthenticate', token)
           this.$store.commit('user/setCurrentUser', currentUser)
           this.redirectByAuth()
           this.$store.commit('pages/setLoading', false)
-
-          // this.$toast.success('ログイン成功');
         }
-        // this.$router.push({ path: '/' })
-        // eslint-disable-next-line no-console
-        console.log('alo')
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e)
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
       }
     },
     redirectByAuth () {

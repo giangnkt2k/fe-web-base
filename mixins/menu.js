@@ -1,16 +1,19 @@
 import AdminMenu from '~/utils/menu.js'
+// import QAMMenu from '~/utils/menuQAM.js'
 export default {
   computed: {
     menus () {
       const defaultMenu = AdminMenu
       const roleNames = this.$store.getters['user/getCurrentUserRoleNames']
-      if (!roleNames || !roleNames.length) {
-        return defaultMenu
+      if (roleNames === 'STAFF') {
+        return defaultMenu.filter((e) => {
+          return e.role === 'STAFF'
+        })
+      } else {
+        return defaultMenu.filter((e) => {
+          return (roleNames === e.role || e.role === '')
+        })
       }
-      if (roleNames.includes('super_admin')) {
-        return AdminMenu
-      }
-      return defaultMenu
     }
   }
 }

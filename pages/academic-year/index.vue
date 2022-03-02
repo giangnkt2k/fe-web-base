@@ -11,7 +11,7 @@
         </div>
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
-            Create User
+            Create Academic Year
           </el-button>
         </div>
       </div>
@@ -28,11 +28,11 @@
         @handle-current-change="handleCurrentChange"
       />
     </div>
-    <dialogs-create-user
+    <create
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
     />
-    <dialogs-edit-user
+    <edit
       :props-dialog-visible="dialogPopEdit"
       @handle-submit="handleSubmitEdit"
     />
@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import * as user from '@/api/user'
+import * as academicYear from '@/api/academicYear'
 import ComponentsTable from '@/components/tableCURD/index.vue'
-import DialogsCreateUser from '@/components/dialogs/dialogsCreateUser.vue'
-import DialogsEditUser from '@/components/dialogs/dialogsEditUser.vue'
+import create from '@/components/dialogs/academinYear/create.vue'
+import edit from '@/components/dialogs/academinYear/edit.vue'
 import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
 
@@ -55,8 +55,8 @@ export default {
   name: 'BuildingIndex',
   components: {
     ComponentsTable,
-    DialogsCreateUser,
-    DialogsEditUser,
+    create,
+    edit,
     DialogsDelete
   },
   data () {
@@ -69,30 +69,35 @@ export default {
         title: 'ID'
       },
       {
-        field: 'full_name',
-        title: 'Full Name'
+        field: 'title',
+        title: 'Title of term'
       },
       {
-        field: 'email',
+        field: 'start_date',
         title: 'Email'
       },
       {
-        field: 'department',
+        field: 'end_date',
         title: 'Department'
+      },
+      {
+        field: 'first_closure_date',
+        title: 'First closure date'
+      },
+      {
+        field: 'final_closure_date',
+        title: 'Final closure date'
       },
       {
         field: 'status',
         title: 'Status'
-      },
-      {
-        field: 'role',
-        title: 'Role'
-      }],
+      }
+      ],
       // pagination default
-      currentPage: '',
+      currentPage: 1,
       pageSizes: [10, 50, 100],
-      pageSize: '',
-      totalItems: '',
+      pageSize: 50,
+      totalItems: 1,
       search: '',
       dialogPopEdit: false
     }
@@ -106,12 +111,12 @@ export default {
       console.log('click')
     },
     openDialog () {
-      EventBus.$emit('OpenCreateUser', true)
+      EventBus.$emit('OpenCreateAY', true)
     },
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
-        await user.add(params)
+        await academicYear.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Create user successfully')
@@ -121,15 +126,13 @@ export default {
       }
     },
     handleEdit (index, value) {
-      // eslint-disable-next-line no-console
-      console.log('param', value)
-      EventBus.$emit('OpenEditUser', true, value)
+      EventBus.$emit('OpenEditAd', true, value)
     },
     async handleSubmitEdit (params, id) {
       try {
       // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
-        await user.update(params)
+        await academicYear.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Edit user successfully')
@@ -161,7 +164,7 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await user.list({ })
+        const res = await academicYear.list({ query })
         this.tableData = res.data.data
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
