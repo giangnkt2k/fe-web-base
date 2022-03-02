@@ -9,9 +9,6 @@
       <span class="icon-nav">
         <el-switch v-model="isCollapse" active-color="#304156" />
       </span>
-      <span class="logo-nav">
-        <h1>IBUILD Systems</h1>
-      </span>
 
       <el-submenu index="2">
         <template slot="title">

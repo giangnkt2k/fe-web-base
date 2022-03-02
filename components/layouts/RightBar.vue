@@ -9,6 +9,12 @@
       @open="handleOpen"
       @close="handleClose"
     >
+      <el-menu-item style="height: 66px;">
+        <i v-if="isCollapse" class="el-icon-star-on" style="color: #00C675" />
+        <h1 v-if="!isCollapse" class="text-center text-xl align-middle" style="padding: 17px;">
+          GREENWICH
+        </h1>
+      </el-menu-item>
       <template v-for="(menu, index) in menus">
         <template v-if="!menu.link">
           <el-submenu

@@ -4,22 +4,31 @@
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 content-box">
       <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
         <div class="bg-contain bg-center">
-          <img src="@/assets/img/FGW_logo_d.jpg">
+          <img src="@/assets/img/logo.png">
+        </div>
+        <div class="sign-in">
+          Sign in
         </div>
         <h5>Email</h5>
         <el-input
           v-model="formData.email"
           type="email"
           placeholder="Please input"
+          class="input-login"
         />
         <div class="space" style="margin: 5px 0 0 5px;" />
         <h5>Password</h5>
         <el-input
           v-model="formData.password"
           placeholder="Please input"
+          :show-password="true"
           type="password"
+          class="input-login"
         />
         <div class="space" style="margin: 5px 0 0 5px;" />
+        <div class="my-3">
+          <a href="/" class="text-sm forgot-password"> Forgotten my password</a>
+        </div>
         <el-button type="primary" style="width: 100%;" @click="onSubmit">
           Login
         </el-button>
@@ -103,7 +112,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .bg-login {
   background-image: url('@/assets/img/gre.jpg');
   background-size: cover;
@@ -126,5 +135,36 @@ svg.w-6.h-6.text-gray-600.hover\:text-gray-800.button--github {
 }
 svg.w-6.h-6.text-gray-600.hover\:text-gray-800 {
     color: aliceblue;
+}
+.sign-in {
+  box-sizing: border-box;
+    color: rgb(20, 20, 20);
+    direction: ltr;
+    display: block;
+    font-family: "Segoe UI","Helvetica Neue","Lucida Grande","Roboto","Ebrima","Nirmala UI","Gadugi","Segoe Xbox Symbol","Segoe UI Symbol","Meiryo UI","Khmer UI","Tunga","Lao UI","Raavi","Iskoola Pota","Latha","Leelawadee","Microsoft YaHei UI","Microsoft JhengHei UI","Malgun Gothic","Estrangelo Edessa","Microsoft Himalaya","Microsoft New Tai Lue","Microsoft PhagsPa","Microsoft Tai Le","Microsoft Yi Baiti","Mongolian Baiti","MV Boli","Myanmar Text","Cambria Math";
+    font-weight: 600;
+    font-size: 1.5rem;
+    height: auto;
+    line-height: 28px;
+    margin-bottom: 16px;
+    margin-left: -2px;
+    margin-right: -2px;
+    margin-top: 16px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    text-align: left;
+    text-size-adjust: 100%;
+    width: 342px;
+    background-color: transparent;
+}
+
+.forgot-password {
+  color: #2e3947
+}
+
+.forgot-password:hover {
+  color: #0736b6
 }
 </style>
