@@ -18,7 +18,7 @@
       <components-table
         :props-table-data="tableData"
         :props-table-header="tableHeader"
-        :props-current-page="currentPage1"
+        :props-current-page="currentPage"
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
@@ -89,10 +89,12 @@ export default {
         title: 'Role'
       }],
       // pagination default
-      currentPage: 1,
+      currentPage: 2,
       pageSizes: [10, 50, 100],
       pageSize: 5,
-      totalItems: 100
+      totalItems: 100,
+      search: '',
+      dialogPopEdit: false
     }
   },
   created () {
@@ -108,14 +110,14 @@ export default {
     },
     async  handleCreate (params) {
       try {
-      // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
         await user.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Create user successfully')
       } catch (e) {
-        this.$message.error('Create user unsuccessfully')
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
       }
     },
     handleEdit (index, value) {
@@ -132,7 +134,8 @@ export default {
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Edit user successfully')
       } catch (e) {
-        this.$message.error('Edit user unsuccessfully')
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
       }
     },
     handleDelete () {
@@ -142,15 +145,32 @@ export default {
       this.$message.success('Delete successfully')
     },
     async fetchData () {
-      this.$store.commit('pages/setLoading', true)
-      const res = await user.list({})
-      this.tableData = res.data.data
-      this.currentPage = res.data.paging.page
-      this.pageSize = res.data.paging.limit
-      this.totalItems = res.data.paging.total
-      // eslint-disable-next-line no-console
-      console.log('data', res.data)
-      this.$store.commit('pages/setLoading', false)
+      try {
+        const query = {
+          page: this.currentPage,
+          limit: this.pageSize,
+          search: this.search
+        }
+        if (query.search === '') {
+          delete query.search
+        }
+        if (query.limit === '') {
+          delete query.limit
+        }
+        if (query.page === '') {
+          delete query.page
+        }
+        this.$store.commit('pages/setLoading', true)
+        const res = await user.list({ query })
+        this.tableData = res.data.data
+        this.currentPage = res.data.paging.page
+        this.pageSize = res.data.paging.limit
+        this.totalItems = res.data.paging.total
+        this.$store.commit('pages/setLoading', false)
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
     },
     handleSizeChange (val) {
       // eslint-disable-next-line no-console

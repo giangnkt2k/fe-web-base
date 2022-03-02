@@ -39,7 +39,7 @@
     </el-table>
     <div class="block">
       <el-pagination
-        :current-page.sync="CurrentPage"
+        :current-page="currentPage"
         :page-sizes="propsPageSizes"
         :page-size="propsPageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -92,9 +92,15 @@ export default {
       required: true
     }
   },
-  computed: {
-    CurrentPage () {
-      return this.propsCurrentPage
+  data () {
+    return {
+      currentPage: null
+    }
+  },
+  watch: {
+    propsCurrentPage (page) {
+      // eslint-disable-next-line no-console
+      this.currentPage = page
     }
   },
   methods: {
