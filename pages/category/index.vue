@@ -28,11 +28,11 @@
         @handle-current-change="handleCurrentChange"
       />
     </div>
-    <dialogs-create-user
+    <create
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
     />
-    <dialogs-edit-user
+    <edit
       :props-dialog-visible="dialogPopEdit"
       @handle-submit="handleSubmitEdit"
     />
@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import * as user from '@/api/user'
+import * as category from '@/api/category'
 import ComponentsTable from '@/components/tableCURD/index.vue'
-import DialogsCreateUser from '@/components/dialogs/dialogsCreateUser.vue'
-import DialogsEditUser from '@/components/dialogs/dialogsEditUser.vue'
+import create from '@/components/dialogs/category/create.vue'
+import edit from '@/components/dialogs/category/edit.vue'
 import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
 
@@ -55,8 +55,8 @@ export default {
   name: 'BuildingIndex',
   components: {
     ComponentsTable,
-    DialogsCreateUser,
-    DialogsEditUser,
+    create,
+    edit,
     DialogsDelete
   },
   data () {
@@ -94,15 +94,15 @@ export default {
       console.log('click')
     },
     openDialog () {
-      EventBus.$emit('OpenCreateUser', true)
+      EventBus.$emit('OpenCreateCategory', true)
     },
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
-        await user.add(params)
+        await category.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
+        this.$message.success('Create category successfully')
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
@@ -111,26 +111,37 @@ export default {
     handleEdit (index, value) {
       // eslint-disable-next-line no-console
       console.log('param', value)
-      EventBus.$emit('OpenEditUser', true, value)
+      EventBus.$emit('OpenEditCategory', true, value)
     },
     async handleSubmitEdit (params, id) {
       try {
       // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
-        await user.update(params)
+        await category.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
+        this.$message.success('Edit category successfully')
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
       }
     },
-    handleDelete () {
-      EventBus.$emit('OpenDelete', true)
+    handleDelete (index, value) {
+      EventBus.$emit('OpenDelete', true, value.id)
     },
-    handleSubmitDelete () {
-      this.$message.success('Delete successfully')
+    async  handleSubmitDelete (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await category.destroy(params)
+
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Delete successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
     },
     async fetchData () {
       try {
@@ -149,13 +160,14 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await user.list({ })
+        const res = await category.list({ })
         this.tableData = res.data.data
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
         this.totalItems = res.data.paging.total
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
+        this.$router.push('/404')
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
       }

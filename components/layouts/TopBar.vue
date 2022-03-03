@@ -14,7 +14,7 @@
         <template slot="title">
           {{ currentUser.full_name }}
         </template>
-        <el-menu-item index="2-1">
+        <el-menu-item index="2-1" @click="profile">
           Profile
         </el-menu-item>
         <el-menu-item index="2-3" @click="logout">
@@ -57,6 +57,9 @@ export default {
     },
     changeTypeMenu () {
       this.$emit('handle-change-type-menu', this.isCollapse)
+    },
+    profile () {
+      this.$router.push('/profile')
     },
     logout () {
       // eslint-disable-next-line no-console

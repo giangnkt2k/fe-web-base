@@ -73,9 +73,17 @@ export default {
       for (let index = 0; index < this.menus.length; index++) {
         const element = this.menus[index]
         if (element.link === this.$nuxt.$route.fullPath) {
+          // eslint-disable-next-line no-console
+          console.log('route', element.link)
+          // eslint-disable-next-line no-console
+          console.log('routssse', this.$nuxt.$route.fullPath)
           this.route = element
         }
       }
+      // eslint-disable-next-line no-console
+      console.log('route', this.route.role)
+      // eslint-disable-next-line no-console
+      console.log('route==>', this.$store.getters['user/getCurrentUser'].role)
       if (this.route.role !== this.$store.getters['user/getCurrentUser'].role) {
         if (this.$store.getters['user/getCurrentUser'].role === 'STAFF' && this.route.role === '') {
           this.$router.push('/404')

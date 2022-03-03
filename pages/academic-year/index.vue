@@ -141,11 +141,23 @@ export default {
         this.$store.commit('pages/setLoading', false)
       }
     },
-    handleDelete () {
-      EventBus.$emit('OpenDelete', true)
+    handleDelete (index, value) {
+      // eslint-disable-next-line no-console
+      EventBus.$emit('OpenDelete', true, value.id)
     },
-    handleSubmitDelete () {
-      this.$message.success('Delete successfully')
+    async handleSubmitDelete (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await academicYear.destroy(params)
+
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Delete successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
     },
     async fetchData () {
       try {
@@ -171,6 +183,7 @@ export default {
         this.totalItems = res.data.paging.total
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
+        this.$router.push('/404')
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
       }

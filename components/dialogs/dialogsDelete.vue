@@ -9,7 +9,7 @@
       <span>Do you want to delete this??</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="danger" @click="dialogVisible = false">Confirm</el-button>
+        <el-button type="danger" @click="handleSubmit">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -45,8 +45,9 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('OpenDelete', (val) => {
+    EventBus.$on('OpenDelete', (val, param) => {
       this.dialogVisible = val
+      this.id = param
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -56,13 +57,8 @@ export default {
     this.dialogVisible = this.propsDialogVisible
   },
   methods: {
-    async handleSubmit () {
-      const isValid = await this.$refs.obsAddUser.validate()
-      if (!isValid) {
-        this.$message.warning('Something went wrong')
-        return
-      }
-      this.$emit('handle-submit', this.formData)
+    handleSubmit () {
+      this.$emit('handle-submit', this.id)
       this.dialogVisible = false
     }
   }

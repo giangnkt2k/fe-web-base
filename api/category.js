@@ -16,6 +16,6 @@ export const details = async (id) => {
   return await axios.get(`qam/category/${id}`)
 }
 
-export const destroy = async (id = {}) => {
-  return await axios.post('qam/category/delete', id)
+export const destroy = async (id) => {
+  return await axios.delete(`qam/category/${id}`)
 }

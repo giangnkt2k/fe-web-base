@@ -16,6 +16,6 @@ export const details = async (id) => {
   return await axios.get(`admin/academic-year/${id}`)
 }
 
-export const destroy = async (id = {}) => {
-  return await axios.post('admin/academic-year/delete', id)
+export const destroy = async (id) => {
+  return await axios.delete(`admin/academic-year/${id}`)
 }

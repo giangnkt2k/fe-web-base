@@ -1,8 +1,16 @@
 export default [
   {
     routerName: '',
-    title: 'Dashboard',
+    title: 'Feed',
     link: '/',
+    icon: 'el-icon-menu',
+    active: false,
+    role: 'STAFF'
+  },
+  {
+    routerName: '',
+    title: 'Dashboard',
+    link: '/dashboard',
     icon: 'el-icon-menu',
     active: false,
     role: ''

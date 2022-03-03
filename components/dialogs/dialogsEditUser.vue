@@ -231,30 +231,42 @@ export default {
       confrimPassword: '',
       optionsDepartment: [
         {
-          value: 0,
-          label: 'Admin'
-        },
-        {
           value: 1,
-          label: 'IT'
+          label: 'Information Technology'
         },
         {
           value: 2,
-          label: 'Bisiness'
+          label: 'Business'
+        },
+        {
+          value: 3,
+          label: 'Graphic and Digital Design'
+        },
+        {
+          value: 4,
+          label: 'Marketing'
+        },
+        {
+          value: 5,
+          label: 'Event Management'
         }
       ],
       optionsRole: [
         {
           value: 0,
-          label: 'Admin'
+          label: 'ADMIN'
         },
         {
           value: 1,
-          label: 'Staff'
+          label: 'QAM'
         },
         {
           value: 2,
-          label: 'something'
+          label: 'QAC'
+        },
+        {
+          value: 3,
+          label: 'STAFF'
         }
       ]
     }

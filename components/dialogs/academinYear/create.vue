@@ -23,7 +23,7 @@
                 class="mb-3"
                 tag="div"
               >
-                <el-input v-model="formData.title" type="text" placeholder="Enter your name" />
+                <el-input v-model="formData.title" type="text" placeholder="Enter academic year" />
                 <div class="text-error">
                   {{ errors[0] }}
                 </div>

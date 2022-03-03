@@ -121,8 +121,6 @@ export default {
       }
     },
     handleEdit (index, value) {
-      // eslint-disable-next-line no-console
-      console.log('param', value)
       EventBus.$emit('OpenEditUser', true, value)
     },
     async handleSubmitEdit (params, id) {
@@ -138,7 +136,9 @@ export default {
         this.$store.commit('pages/setLoading', false)
       }
     },
-    handleDelete () {
+    handleDelete (index, value) {
+      // eslint-disable-next-line no-console
+      console.log('param', value)
       EventBus.$emit('OpenDelete', true)
     },
     handleSubmitDelete () {
@@ -168,6 +168,7 @@ export default {
         this.totalItems = res.data.paging.total
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
+        this.$router.push('/404')
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
       }
