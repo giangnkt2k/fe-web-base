@@ -38,5 +38,14 @@ export default [
     active: false,
     link: '/category',
     role: 'QAM'
+  },
+  {
+    routerName: '',
+    title: 'Idea',
+    icon: 'el-icon-document',
+    active: false,
+    link: '/idea',
+    role: 'QAM'
   }
+
 ]

@@ -11,7 +11,7 @@
         </div>
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
-            Create User
+            Create Idea
           </el-button>
         </div>
       </div>
@@ -28,11 +28,11 @@
         @handle-current-change="handleCurrentChange"
       />
     </div>
-    <dialogs-create-user
+    <create
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
     />
-    <dialogs-edit-user
+    <edit
       :props-dialog-visible="dialogPopEdit"
       @handle-submit="handleSubmitEdit"
     />
@@ -44,19 +44,19 @@
 </template>
 
 <script>
-import * as user from '@/api/user'
+import * as idea from '@/api/idea.js'
 import ComponentsTable from '@/components/tableCURD/index.vue'
-import DialogsCreateUser from '~/components/dialogs/user/dialogsCreateUser.vue'
-import DialogsEditUser from '~/components/dialogs/user/dialogsEditUser.vue'
+import create from '@/components/dialogs/idea/create.vue'
+import edit from '@/components/dialogs/idea/edit.vue'
 import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
 
 export default {
-  name: 'BuildingIndex',
+  name: 'IdeaForPersonIndex',
   components: {
     ComponentsTable,
-    DialogsCreateUser,
-    DialogsEditUser,
+    create,
+    edit,
     DialogsDelete
   },
   data () {
@@ -69,36 +69,41 @@ export default {
         title: 'ID'
       },
       {
-        field: 'full_name',
-        title: 'Full Name'
+        field: 'title',
+        title: 'Title'
       },
       {
-        field: 'email',
-        title: 'Email'
+        field: 'picture',
+        title: 'Picture'
+      },
+      {
+        field: 'file',
+        title: 'File'
       },
       {
         field: 'department',
         title: 'Department'
       },
       {
-        field: 'status',
-        title: 'Status'
+        field: 'academic_year',
+        title: 'Academic Year'
       },
       {
-        field: 'role',
-        title: 'Role'
-      }],
+        field: 'created_at',
+        title: 'Created At'
+      }
+      ],
       // pagination default
-      currentPage: '',
+      currentPage: 1,
       pageSizes: [10, 50, 100],
-      pageSize: '',
-      totalItems: '',
+      pageSize: 50,
+      totalItems: 1,
       search: '',
       dialogPopEdit: false
     }
   },
   created () {
-    this.fetchData()
+    // this.fetchData()
   },
   methods: {
     handleClick () {
@@ -106,12 +111,12 @@ export default {
       console.log('click')
     },
     openDialog () {
-      EventBus.$emit('OpenCreateUser', true)
+      EventBus.$emit('OpenCreateAY', true)
     },
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
-        await user.add(params)
+        await idea.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Create user successfully')
@@ -121,13 +126,13 @@ export default {
       }
     },
     handleEdit (index, value) {
-      EventBus.$emit('OpenEditUser', true, value)
+      EventBus.$emit('OpenEditAd', true, value)
     },
     async handleSubmitEdit (params, id) {
       try {
       // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
-        await user.update(params)
+        await idea.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Edit user successfully')
@@ -138,11 +143,21 @@ export default {
     },
     handleDelete (index, value) {
       // eslint-disable-next-line no-console
-      console.log('param', value)
-      EventBus.$emit('OpenDelete', true)
+      EventBus.$emit('OpenDelete', true, value.id)
     },
-    handleSubmitDelete () {
-      this.$message.success('Delete successfully')
+    async handleSubmitDelete (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await idea.destroy(params)
+
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Delete successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
     },
     async fetchData () {
       try {
@@ -161,7 +176,7 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await user.list({ })
+        const res = await idea.list({ query })
         this.tableData = res.data.data
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
