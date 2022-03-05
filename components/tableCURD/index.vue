@@ -72,24 +72,24 @@ export default {
     propsCurrentPage: {
       type: Number,
       default: 1,
-      required: true
+      required: 1
     },
     propsPageSizes: {
       type: [Array, Object],
       required: true,
       default: () => {
-        return []
+        return [10, 50, 100]
       }
     },
     propsPageSize: {
       type: Number,
       default: null,
-      required: true
+      required: 10
     },
     propsTotalItems: {
       type: Number,
       default: 10,
-      required: true
+      required: 1
     }
   },
   data () {

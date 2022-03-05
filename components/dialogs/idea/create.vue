@@ -194,6 +194,8 @@ export default {
         content: '',
         fileList: []
       },
+      optionsCategory: [],
+      optionsAcademicYear: [],
       editorConfig: {
         simpleUpload: {
           uploadUrl: 'assets/ck',

@@ -3,9 +3,9 @@ export default [
     routerName: '',
     title: 'Feed',
     link: '/',
-    icon: 'el-icon-menu',
+    icon: 'el-icon-coffee-cup',
     active: false,
-    role: 'STAFF'
+    role: ['STAFF', 'ADMIN', 'QAM', 'QAC']
   },
   {
     routerName: '',
@@ -13,7 +13,7 @@ export default [
     link: '/dashboard',
     icon: 'el-icon-menu',
     active: false,
-    role: ''
+    role: ['ADMIN', 'QAM', 'QAC']
   },
   {
     routerName: '',
@@ -21,7 +21,7 @@ export default [
     icon: 'el-icon-user-solid',
     active: false,
     link: '/user',
-    role: 'ADMIN'
+    role: ['ADMIN']
   },
   {
     routerName: '',
@@ -29,7 +29,7 @@ export default [
     icon: 'el-icon-date',
     active: false,
     link: '/academic-year',
-    role: 'ADMIN'
+    role: ['ADMIN']
   },
   {
     routerName: '',
@@ -37,7 +37,7 @@ export default [
     icon: 'el-icon-set-up',
     active: false,
     link: '/category',
-    role: 'QAM'
+    role: ['QAM']
   },
   {
     routerName: '',
@@ -45,7 +45,7 @@ export default [
     icon: 'el-icon-document',
     active: false,
     link: '/idea',
-    role: 'QAM'
+    role: ['STAFF', 'QAM', 'QAC']
   }
 
 ]

@@ -44,7 +44,7 @@
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :key="index+0.1" :index="index+0.1">
+          <el-menu-item :key="index+0.1" :index="index+0.1.toString()">
             <nuxt-link
               :to="menu.link"
               exact

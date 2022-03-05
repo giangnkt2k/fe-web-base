@@ -89,10 +89,10 @@ export default {
         title: 'Role'
       }],
       // pagination default
-      currentPage: '',
+      currentPage: 1,
       pageSizes: [10, 50, 100],
-      pageSize: '',
-      totalItems: '',
+      pageSize: 50,
+      totalItems: 1,
       search: '',
       dialogPopEdit: false
     }
