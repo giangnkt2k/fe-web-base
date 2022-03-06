@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 ul.el-menu-demo.el-menu--horizontal.el-menu {
   padding-bottom: 5px;
 }
