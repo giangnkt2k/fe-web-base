@@ -1,5 +1,5 @@
 require('dotenv').config()
-const baseApi = process.env.BASE_API || 'https://atmtc-api.vw-dev.com/'
+const baseApi = process.env.BASE_API || 'https://groupbar.me/api/v1'
 
 export default {
   server: {
@@ -32,9 +32,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     'element-ui/lib/theme-chalk/index.css',
-    '@/assets/text.scss',
-    '@/assets/layout.scss',
-    '@/assets/dialog.scss'
+    '@/assets/text.css',
+    '@/assets/layout.css',
+    '@/assets/dialog.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
