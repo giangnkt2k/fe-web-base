@@ -22,7 +22,7 @@
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
-        :props-hidden-delete="true"
+        :props-hidden-delete="false"
         @handle-edit="handleEdit"
         @handle-delete="handleDelete"
         @handle-size-change="handleSizeChange"
