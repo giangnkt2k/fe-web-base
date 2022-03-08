@@ -10,7 +10,7 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <div class="row-input grid grid-cols-2 gap-4">
             <div class="col-span-2 md:col-span-1">
               <div class="mams-label">
@@ -39,7 +39,7 @@
                 :rules="{ required: false }"
                 class="mb-3"
                 tag="div"
-                format="yyyy/MM/dd"
+                format="MM/dd/yyyy"
                 value-format="yyyy-MM-dd"
               >
                 <el-date-picker
@@ -170,7 +170,7 @@
                 </div>
               </validation-provider>
               <div class="mams-label">
-                Confrim Password
+                Confirm Password
               </div>
               <validation-provider
                 v-slot="{ errors }"
@@ -180,7 +180,33 @@
                 tag="div"
                 data-vv-as="password"
               >
-                <el-input v-model="confrimPassword" type="password" placeholder="Enter your password" data-vv-as="password" />
+                <el-input v-model="confirmPassword" type="password" placeholder="Enter your password" data-vv-as="password" />
+                <div class="text-error">
+                  {{ errors[0] }}
+                </div>
+              </validation-provider>
+            </div>
+          </div>
+          <div class="row-input grid grid-cols-1 gap-4">
+            <div class="col-span-1">
+              <div class="mams-label">
+                Status
+              </div>
+              <validation-provider
+                v-slot="{ errors }"
+                :name="'status'"
+                :rules="{ required: true }"
+                class="mb-3"
+                tag="div"
+              >
+                <el-switch
+                  v-model="formData.status"
+                  style="display: block"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-text="ACTIVE"
+                  inactive-text="INACTIVE"
+                />
                 <div class="text-error">
                   {{ errors[0] }}
                 </div>
@@ -228,7 +254,7 @@ export default {
         status: true
 
       },
-      confrimPassword: '',
+      confirmPassword: '',
       optionsDepartment: [
         {
           value: 1,

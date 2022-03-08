@@ -10,7 +10,7 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <br>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">

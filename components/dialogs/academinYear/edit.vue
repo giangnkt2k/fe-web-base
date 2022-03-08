@@ -10,11 +10,11 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
               <div class="mams-label">
-                Title
+                Name
               </div>
               <validation-provider
                 v-slot="{ errors }"
@@ -51,7 +51,7 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="yyyy/MM/dd"
+                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -80,7 +80,7 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="yyyy/MM/dd"
+                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -153,7 +153,7 @@ export default {
         final_closure_date: '',
         status: true
       },
-      confrimPassword: '',
+      confirmPassword: '',
       pickerOptions: {
         shortcuts: [{
           text: 'Last week',

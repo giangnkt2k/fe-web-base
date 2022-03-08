@@ -9,16 +9,15 @@
         <el-table-column
           :key="index"
           :label="col.title"
-          sortable
         >
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row[col.field] }}</span>
+            <span class="rowSpan">{{ scope.row[col.field] }}</span>
           </template>
         </el-table-column>
       </template>
       <el-table-column
         width="180"
-        label="Operations"
+        label="Actions"
       >
         <template slot-scope="scope">
           <el-button
@@ -28,6 +27,7 @@
             Edit
           </el-button>
           <el-button
+            v-if="propsHiddenDelete == false"
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
@@ -72,7 +72,12 @@ export default {
     propsCurrentPage: {
       type: Number,
       default: 1,
-      required: 1
+      required: true
+    },
+    propsHiddenDelete: {
+      type: Boolean,
+      default: true,
+      required: true
     },
     propsPageSizes: {
       type: [Array, Object],
@@ -89,7 +94,7 @@ export default {
     propsTotalItems: {
       type: Number,
       default: 10,
-      required: 1
+      required: true
     }
   },
   data () {
@@ -123,5 +128,10 @@ export default {
 </script>
 
 <style>
-
+.rowSpan {
+  word-break: break-word !important;
+}
+.cell {
+  word-break: break-word !important;
+}
 </style>

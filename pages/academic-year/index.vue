@@ -70,15 +70,15 @@ export default {
       },
       {
         field: 'title',
-        title: 'Title of term'
+        title: 'Name of term'
       },
       {
         field: 'start_date',
-        title: 'Email'
+        title: 'Start date'
       },
       {
         field: 'end_date',
-        title: 'Department'
+        title: 'End date'
       },
       {
         field: 'first_closure_date',

@@ -17,10 +17,10 @@ export default [
   },
   {
     routerName: '',
-    title: 'User',
+    title: 'Users',
     icon: 'el-icon-user-solid',
     active: false,
-    link: '/user',
+    link: '/users',
     role: ['ADMIN']
   },
   {

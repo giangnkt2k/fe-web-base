@@ -44,16 +44,18 @@
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :key="index+0.1" :index="index+0.1.toString()">
-            <nuxt-link
-              :to="menu.link"
-              exact
-              class="menu-item-link"
-            >
+          <nuxt-link
+            :key="index+0.1"
+            :index="index+0.1.toString()"
+            :to="menu.link"
+            exact
+            class="menu-item-link"
+          >
+            <el-menu-item>
               <i :class="[menu.icon]" />
               <span class="link-item">  {{ menu.title }}</span>
-            </nuxt-link>
-          </el-menu-item>
+            </el-menu-item>
+          </nuxt-link>
         </template>
       </template>
 

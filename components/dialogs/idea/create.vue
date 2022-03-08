@@ -10,7 +10,7 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
               <div class="mams-label">
@@ -198,9 +198,9 @@ export default {
       optionsAcademicYear: [],
       editorConfig: {
         simpleUpload: {
-          uploadUrl: 'assets/ck',
+          uploadUrl: 'https://groupbar.me/api/v1/upload',
           headers: {
-            Authorization: 'optional_token'
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjgsInJvbGUiOiJRQU0ifSwiZXhwIjoxNjQ5MTAyMDU2LCJpYXQiOjE2NDY1MTAwNTZ9.PY_4uTLRt1ics1F9xjq2rgrtPjW0XXLuZGGeH6EMxwE'
           }
         }
       },

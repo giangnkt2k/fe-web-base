@@ -10,7 +10,7 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <div class="row-input grid grid-cols-2 gap-4">
             <div class="col-span-2 md:col-span-1">
               <div class="mams-label">
@@ -39,7 +39,7 @@
                 :rules="{ required: true }"
                 class="mb-3"
                 tag="div"
-                format="yyyy/MM/dd"
+                format="MM/dd/yyyy"
                 value-format="yyyy-MM-dd"
               >
                 <el-date-picker
@@ -170,7 +170,7 @@
                 </div>
               </validation-provider>
               <div class="mams-label">
-                Confrim Password
+                Confirm Password
               </div>
               <validation-provider
                 v-slot="{ errors }"
@@ -180,7 +180,7 @@
                 tag="div"
                 data-vv-as="password"
               >
-                <el-input v-model="confrimPassword" type="password" placeholder="Enter your password" data-vv-as="password" />
+                <el-input v-model="confirmPassword" type="password" placeholder="Enter your password" data-vv-as="password" />
                 <div class="text-error">
                   {{ errors[0] }}
                 </div>
@@ -191,7 +191,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit">Create</el-button>
       </span>
     </el-dialog>
   </div>
@@ -228,7 +228,7 @@ export default {
         status: true
 
       },
-      confrimPassword: '',
+      confirmPassword: '',
       optionsDepartment: [
         {
           value: 1,
@@ -296,11 +296,20 @@ export default {
     async handleSubmit () {
       const isValid = await this.$refs.obsAddUser.validate()
       if (!isValid) {
-        this.$message.warning('Something went wrong')
         return
       }
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
+      this.formData = {
+        full_name: '',
+        email: '',
+        password: '',
+        gender: '',
+        department: '',
+        date_of_birth: '',
+        role: '',
+        status: true
+      }
     }
   }
 }

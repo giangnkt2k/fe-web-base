@@ -10,7 +10,7 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <br>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
@@ -61,7 +61,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit">Create</el-button>
       </span>
     </el-dialog>
   </div>
@@ -126,6 +126,7 @@ export default {
       console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
+      this.formData = {}
     }
   }
 }

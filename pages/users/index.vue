@@ -22,6 +22,7 @@
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
+        :props-hidden-delete="true"
         @handle-edit="handleEdit"
         @handle-delete="handleDelete"
         @handle-size-change="handleSizeChange"
@@ -161,8 +162,16 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await user.list({ })
-        this.tableData = res.data.data
+        const res = await user.list(query)
+        const formatData = []
+        res.data.data.length > 0 && res.data.data.map((item) => {
+          const rowData = {
+            ...item,
+            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'
+          }
+          return formatData.push(rowData)
+        })
+        this.tableData = formatData
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
         this.totalItems = res.data.paging.total
@@ -175,6 +184,8 @@ export default {
     },
     handleSizeChange (val) {
       this.pageSize = val
+      // eslint-disable-next-line no-console
+      console.log('pageSize', this.pageSize)
       this.fetchData()
     },
     handleCurrentChange (val) {

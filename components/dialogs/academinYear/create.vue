@@ -10,11 +10,11 @@
         tag="div"
       >
         <el-card shadow="always">
-          <h2>Generate Information</h2>
+          <h2> General information</h2>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
               <div class="mams-label">
-                Title
+                Name
               </div>
               <validation-provider
                 v-slot="{ errors }"
@@ -51,7 +51,7 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="yyyy/MM/dd"
+                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -80,7 +80,7 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="yyyy/MM/dd"
+                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -118,7 +118,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit">Create</el-button>
       </span>
     </el-dialog>
   </div>
@@ -153,7 +153,7 @@ export default {
         final_closure_date: '',
         status: true
       },
-      confrimPassword: '',
+      confirmPassword: '',
       pickerOptions: {
         shortcuts: [{
           text: 'Last week',
@@ -241,6 +241,16 @@ export default {
       console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
+      this.formData = {
+        title: '',
+        start_date: '',
+        end_date: '',
+        first_closure_date: '',
+        final_closure_date: '',
+        status: true
+      }
+      this.start_end = ''
+      this.first_final = ''
     }
   }
 }
