@@ -81,30 +81,6 @@
           </div>
           <br>
           <div class="row-input grid grid-cols-2 gap-4">
-            <div class="col-span-2 md:col-span-1">
-              <div class="mams-label">
-                Department
-              </div>
-              <validation-provider
-                v-slot="{ errors }"
-                :name="'department'"
-                :rules="{ required: false }"
-                class="mb-3"
-                tag="div"
-              >
-                <el-select v-model="formData.department" class="item-input" placeholder="Select department">
-                  <el-option
-                    v-for="item in optionsDepartment"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
-                <div class="text-error">
-                  {{ errors[0] }}
-                </div>
-              </validation-provider>
-            </div>
             <div class="col-span-2 mams-label md:col-span-1">
               <div class="mams-label">
                 Role
@@ -122,6 +98,30 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.label"
+                  />
+                </el-select>
+                <div class="text-error">
+                  {{ errors[0] }}
+                </div>
+              </validation-provider>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+              <div class="mams-label">
+                Department
+              </div>
+              <validation-provider
+                v-slot="{ errors }"
+                :name="'department'"
+                :rules="{ required: formData.role === 'STAFF' }"
+                class="mb-3"
+                tag="div"
+              >
+                <el-select v-model="formData.department" :disabled="formData.role !== 'STAFF'" class="item-input" placeholder="Select department">
+                  <el-option
+                    v-for="item in optionsDepartment"
+                    :key="item.value"
+                    :label="item.name"
+                    :value="item.id"
                   />
                 </el-select>
                 <div class="text-error">
@@ -255,28 +255,7 @@ export default {
 
       },
       confirmPassword: '',
-      optionsDepartment: [
-        {
-          value: 1,
-          label: 'Information Technology'
-        },
-        {
-          value: 2,
-          label: 'Business'
-        },
-        {
-          value: 3,
-          label: 'Graphic and Digital Design'
-        },
-        {
-          value: 4,
-          label: 'Marketing'
-        },
-        {
-          value: 5,
-          label: 'Event Management'
-        }
-      ],
+      optionsDepartment: [],
       optionsRole: [
         {
           value: 0,
@@ -298,6 +277,12 @@ export default {
     }
   },
   watch: {
+    formData: {
+      handler () {
+        this.handleDeleteDepartment()
+      },
+      deep: true
+    },
     dialogVisible (newVal) {
       // eslint-disable-next-line no-console
       console.log(this.propsDialogVisible)
@@ -308,7 +293,7 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('OpenEditUser', (val, newVal) => {
+    EventBus.$on('OpenEditUser', (val, newVal, dataDepartments) => {
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.full_name = newVal.full_name
@@ -316,9 +301,10 @@ export default {
       this.formData.date_of_birth = newVal.date_of_birth
       this.formData.email = newVal.email
       this.formData.password = ''
-      this.formData.status = newVal.status
+      this.formData.status = (newVal.status === 'ACTIVE')
       this.formData.role = newVal.role
       this.formData.gender = newVal.gender
+      this.optionsDepartment = dataDepartments
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -336,6 +322,11 @@ export default {
       }
       this.$emit('handle-submit', this.formData, this.formData.id)
       this.dialogVisible = false
+    },
+    handleDeleteDepartment () {
+      if (this.formData.role !== 'STAFF') {
+        this.formData.department = ''
+      }
     }
   }
 }

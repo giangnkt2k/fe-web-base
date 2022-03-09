@@ -2,12 +2,22 @@
   <div>
     <div class="md:container md:mx-auto pt-6">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="w-80 search-div col-start-1 col-end-3 flex flex-row">
+        <div class="search-div col-start-1 col-end-4 flex flex-row">
+          <el-select v-model="searchKey" clearable placeholder="Select key to search">
+            <el-option
+              v-for="(item, index) in optionsSearchKey"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
           <el-input
             v-model="search"
+            :disabled="searchKey === ''"
+            style="margin-left: 5px;"
             placeholder="Type to search"
           />
-          <el-button icon="el-icon-search" style="margin-left: 5px;" />
+          <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
         </div>
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
@@ -22,6 +32,7 @@
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
+        :props-hidden-delete="true"
         @handle-edit="handleEdit"
         @handle-delete="handleDelete"
         @handle-size-change="handleSizeChange"
@@ -82,7 +93,20 @@ export default {
       pageSize: '',
       totalItems: '',
       search: '',
+      optionsSearchKey: [{
+        value: 'name',
+        label: 'Name'
+      }, {
+        value: 'leader',
+        label: 'Leader'
+      }],
+      searchKey: '',
       dialogPopEdit: false
+    }
+  },
+  watch: {
+    searchKey () {
+      this.search = ''
     }
   },
   created () {
@@ -92,6 +116,11 @@ export default {
     handleClick () {
       // eslint-disable-next-line no-console
       console.log('click')
+    },
+    handleSearch () {
+      if (this.search !== '') {
+        this.fetchData()
+      }
     },
     openDialog () {
       EventBus.$emit('OpenCreateCategory', true)

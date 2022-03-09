@@ -33,6 +33,14 @@ export default [
   },
   {
     routerName: '',
+    title: 'Department',
+    icon: 'el-icon-suitcase-1',
+    active: false,
+    link: '/department',
+    role: ['ADMIN']
+  },
+  {
+    routerName: '',
     title: 'Category',
     icon: 'el-icon-set-up',
     active: false,

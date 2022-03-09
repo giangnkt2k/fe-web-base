@@ -2,12 +2,22 @@
   <div>
     <div class="md:container md:mx-auto pt-6">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="w-80 search-div col-start-1 col-end-3 flex flex-row">
+        <div class="search-div col-start-1 col-end-4 flex flex-row">
+          <el-select v-model="searchKey" clearable placeholder="Select key to search">
+            <el-option
+              v-for="(item, index) in optionsSearchKey"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
           <el-input
             v-model="search"
+            :disabled="searchKey === ''"
+            style="margin-left: 5px;"
             placeholder="Type to search"
           />
-          <el-button icon="el-icon-search" style="margin-left: 5px;" />
+          <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
         </div>
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
@@ -20,6 +30,7 @@
         :props-table-header="tableHeader"
         :props-current-page="currentPage"
         :props-page-sizes="pageSizes"
+        :props-hidden-delete="true"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
         @handle-edit="handleEdit"
@@ -98,8 +109,20 @@ export default {
       pageSizes: [10, 50, 100],
       pageSize: 50,
       totalItems: 1,
-      search: '',
+      optionsSearchKey: [{
+        value: 'name',
+        label: 'Name'
+      }, {
+        value: 'status',
+        label: 'Status'
+      }],
+      searchKey: '',
       dialogPopEdit: false
+    }
+  },
+  watch: {
+    searchKey () {
+      this.search = ''
     }
   },
   created () {
@@ -109,6 +132,11 @@ export default {
     handleClick () {
       // eslint-disable-next-line no-console
       console.log('click')
+    },
+    handleSearch () {
+      if (this.search !== '') {
+        this.fetchData()
+      }
     },
     openDialog () {
       EventBus.$emit('OpenCreateAY', true)
@@ -163,11 +191,11 @@ export default {
       try {
         const query = {
           page: this.currentPage,
-          limit: this.pageSize,
-          search: this.search
+          limit: this.pageSize
         }
-        if (query.search === '') {
-          delete query.search
+        query[this.searchKey] = this.search
+        if (query[this.searchKey] === '') {
+          delete query[this.searchKey]
         }
         if (query.limit === '') {
           delete query.limit
@@ -176,7 +204,7 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await academicYear.list({ query })
+        const res = await academicYear.list(query)
         this.tableData = res.data.data
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit

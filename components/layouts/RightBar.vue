@@ -51,9 +51,9 @@
             exact
             class="menu-item-link"
           >
-            <el-menu-item>
+            <el-menu-item :index="index+0.1.toString()">
               <i :class="[menu.icon]" />
-              <span class="link-item">  {{ menu.title }}</span>
+              <span slot="title" class="link-item">  {{ menu.title }}</span>
             </el-menu-item>
           </nuxt-link>
         </template>

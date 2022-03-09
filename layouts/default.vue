@@ -1,9 +1,9 @@
 <template>
   <div class="app-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-    <right-bar :props-collapse="isCollapse" />
+    <right-bar v-if="!mobileSize" :props-collapse="isCollapse" />
     <div
-      :class="{marginOff: isCollapse}"
+      :class="{marginOff: isCollapse, mobileOn: mobileSize}"
       class="main-content-container"
     >
       <top-bar @handle-change-type-menu="handleChangeTypeMenu" />
@@ -19,7 +19,6 @@ import TopBar from '@/components/layouts/TopBar.vue'
 import loading from '@/components/elements/loading/index.vue'
 import { currentUser } from '@/api/user'
 import menuMixin from '~/mixins/menu.js'
-
 export default {
   name: 'DefaultLayoutTemplate',
   components: {
@@ -32,12 +31,13 @@ export default {
   data () {
     return {
       isCollapse: false,
-      route: ''
+      route: '',
+      windowWidth: '',
+      mobileSize: false
     }
   },
   computed: {
     isLoading () {
-      // eslint-disable-next-line no-console
       return this.$store.getters['pages/getLoading']
     },
     currentPath () {
@@ -47,11 +47,21 @@ export default {
   watch: {
     currentPath () {
       this.middlewareRouter()
+    },
+    windowWidth () {
+      if (this.windowWidth < 500) {
+        this.mobileSize = true
+      }
     }
   },
   mounted () {
     this.fetchCurrentUser()
     this.middlewareRouter()
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+      // eslint-disable-next-line no-console
+      console.log('windowWidth: ' + window.innerWidth)
+    })
   },
   methods: {
     async fetchCurrentUser () {
@@ -94,6 +104,9 @@ export default {
 .marginOff {
   margin-left: 65px !important;
   transition: margin-left 0.25s;
+}
+.mobileOn {
+  margin: 0 !important;
 }
 .main-content-container {
   transition: margin-left 0.25s;

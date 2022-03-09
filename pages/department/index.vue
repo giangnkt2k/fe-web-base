@@ -19,10 +19,9 @@
           />
           <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
         </div>
-
         <div class="create-div col-end-8">
           <el-button type="success" @click="openDialog">
-            Create User
+            Create Department
           </el-button>
         </div>
       </div>
@@ -32,19 +31,19 @@
         :props-current-page="currentPage"
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
-        :props-total-items="totalItems"
         :props-hidden-delete="true"
+        :props-total-items="totalItems"
         @handle-edit="handleEdit"
         @handle-delete="handleDelete"
         @handle-size-change="handleSizeChange"
         @handle-current-change="handleCurrentChange"
       />
     </div>
-    <dialogs-create-user
+    <create
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
     />
-    <dialogs-edit-user
+    <edit
       :props-dialog-visible="dialogPopEdit"
       @handle-submit="handleSubmitEdit"
     />
@@ -56,20 +55,21 @@
 </template>
 
 <script>
+import * as department from '@/api/department'
 import * as user from '@/api/user'
-import { list } from '@/api/department'
+
 import ComponentsTable from '@/components/tableCURD/index.vue'
-import DialogsCreateUser from '~/components/dialogs/user/dialogsCreateUser.vue'
-import DialogsEditUser from '~/components/dialogs/user/dialogsEditUser.vue'
+import create from '@/components/dialogs/department/create.vue'
+import edit from '@/components/dialogs/department/edit.vue'
 import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
 
 export default {
-  name: 'BuildingIndex',
+  name: 'DepartmentIndex',
   components: {
     ComponentsTable,
-    DialogsCreateUser,
-    DialogsEditUser,
+    create,
+    edit,
     DialogsDelete
   },
   data () {
@@ -82,25 +82,18 @@ export default {
         title: 'ID'
       },
       {
-        field: 'full_name',
-        title: 'Full Name'
+        field: 'name',
+        title: 'Name'
       },
       {
-        field: 'email',
-        title: 'Email'
-      },
-      {
-        field: 'department',
-        title: 'Department'
+        field: 'leader_id',
+        title: 'Leader'
       },
       {
         field: 'status',
         title: 'Status'
-      },
-      {
-        field: 'role',
-        title: 'Role'
-      }],
+      }
+      ],
       // pagination default
       currentPage: 1,
       pageSizes: [10, 50, 100],
@@ -109,23 +102,14 @@ export default {
       search: '',
       dialogPopEdit: false,
       optionsSearchKey: [{
-        value: 'role',
-        label: 'Role'
+        value: 'name',
+        label: 'Name'
       }, {
-        value: 'department',
-        label: 'Department'
-      }, {
-        value: 'email',
-        label: 'Email'
-      }, {
-        value: 'full_name',
-        label: 'Full Name'
-      }, {
-        value: 'status',
-        label: 'Status'
+        value: 'leader',
+        label: 'Leader'
       }],
       searchKey: '',
-      listDepartment: []
+      listLeader: []
     }
   },
   watch: {
@@ -137,6 +121,82 @@ export default {
     this.fetchData()
   },
   methods: {
+    handleClick () {
+      // eslint-disable-next-line no-console
+      console.log('click')
+    },
+    handleSearch () {
+      if (this.search !== '') {
+        this.fetchData()
+      }
+    },
+    openDialog () {
+      EventBus.$emit('OpenCreateAY', true)
+      EventBus.$emit('listLeader', this.listLeader)
+    },
+    async  handleCreate (params) {
+      try {
+        this.$store.commit('pages/setLoading', true)
+        await department.add(params)
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Create user successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    handleEdit (index, value) {
+      const lead = this.listLeader.filter(e => e.full_name === value.leader_id)
+      value.leader_id = lead[0].id
+      EventBus.$emit('OpenEditAd', true, value)
+      EventBus.$emit('listLeader', this.listLeader)
+    },
+    async handleSubmitEdit (params, id) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await department.update(params)
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Edit user successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    handleDelete (index, value) {
+      // eslint-disable-next-line no-console
+      EventBus.$emit('OpenDelete', true, value.id)
+    },
+    async handleSubmitDelete (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await department.destroy(params)
+
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Delete successfully')
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    async getListLeader () {
+      try {
+        const query = {
+          role: 'QAC',
+          limit: 1000
+        }
+        const listLeader = await user.list(query)
+        // eslint-disable-next-line no-console
+        this.listLeader = listLeader.data.data
+      } catch (e) {
+        // this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
     async fetchData () {
       try {
         const query = {
@@ -154,12 +214,13 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await user.list(query)
+        const res = await department.listAdmin(query)
         const formatData = []
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'
+            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE',
+            leader_id: (item.leader_id) ? item.leader.full_name : ''
           }
           return formatData.push(rowData)
         })
@@ -167,7 +228,7 @@ export default {
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
         this.totalItems = res.data.paging.total
-        this.getListDepartment()
+        this.getListLeader()
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
@@ -175,67 +236,8 @@ export default {
         this.$store.commit('pages/setLoading', false)
       }
     },
-    async getListDepartment () {
-      try {
-        const listDepartment = await list()
-        this.listDepartment = listDepartment.data.data
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
-    },
-    handleClick () {
-      // eslint-disable-next-line no-console
-      console.log('click')
-    },
-    openDialog () {
-      EventBus.$emit('OpenCreateUser', true, this.listDepartment)
-    },
-    async  handleCreate (params) {
-      try {
-        this.$store.commit('pages/setLoading', true)
-        await user.add(params)
-        this.fetchData()
-        this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
-    },
-    handleEdit (index, value) {
-      EventBus.$emit('OpenEditUser', true, value, this.listDepartment)
-    },
-    async handleSubmitEdit (params, id) {
-      try {
-      // eslint-disable-next-line no-console
-        this.$store.commit('pages/setLoading', true)
-        await user.update(params)
-        this.fetchData()
-        this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
-    },
-    handleDelete (index, value) {
-      // eslint-disable-next-line no-console
-      console.log('param', value)
-      EventBus.$emit('OpenDelete', true)
-    },
-    handleSubmitDelete () {
-      this.$message.success('Delete successfully')
-    },
-    handleSearch () {
-      if (this.search !== '') {
-        this.fetchData()
-      }
-    },
     handleSizeChange (val) {
       this.pageSize = val
-      // eslint-disable-next-line no-console
-      console.log('pageSize', this.pageSize)
       this.fetchData()
     },
     handleCurrentChange (val) {

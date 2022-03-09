@@ -7,11 +7,24 @@
     >
       <template v-for="(col, index) in propsTableHeader">
         <el-table-column
+          v-if="col.title !== 'Status'"
           :key="index"
           :label="col.title"
         >
           <template slot-scope="scope">
             <span class="rowSpan">{{ scope.row[col.field] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="col.title== 'Status'"
+          :key="index"
+          :label="col.title"
+        >
+          <template slot-scope="scope">
+            <span class="rowSpan">
+              <el-tag v-if="scope.row[col.field] =='ACTIVE'" type="success"> {{ scope.row[col.field] }}</el-tag>
+              <el-tag v-if="scope.row[col.field] !=='ACTIVE'" type="danger"> {{ scope.row[col.field] }}</el-tag>
+            </span>
           </template>
         </el-table-column>
       </template>
@@ -76,8 +89,8 @@ export default {
     },
     propsHiddenDelete: {
       type: Boolean,
-      default: true,
-      required: true
+      required: true,
+      default: true
     },
     propsPageSizes: {
       type: [Array, Object],
