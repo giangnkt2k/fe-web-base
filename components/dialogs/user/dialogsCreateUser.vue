@@ -116,7 +116,7 @@
                 class="mb-3"
                 tag="div"
               >
-                <el-select v-model="formData.department" :disabled="formData.role !== 'STAFF'" class="item-input" placeholder="Select department">
+                <el-select v-model="formData.department_id" :disabled="formData.role !== 'STAFF'" class="item-input" placeholder="Select department">
                   <el-option
                     v-for="item in optionsDepartment"
                     :key="item.value"
@@ -222,7 +222,7 @@ export default {
         email: '',
         password: '',
         gender: '',
-        department: '',
+        department_id: '',
         date_of_birth: '',
         role: '',
         status: true

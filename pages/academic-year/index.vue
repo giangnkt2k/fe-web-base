@@ -117,6 +117,7 @@ export default {
         label: 'Status'
       }],
       searchKey: '',
+      search: '',
       dialogPopEdit: false
     }
   },

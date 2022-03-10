@@ -1,12 +1,12 @@
 <template>
   <div>
     <el-dialog
-      title="Create New Academic Year"
+      title="Create New Idea"
       :visible.sync="dialogVisible"
       append-to-body
     >
       <ValidationObserver
-        ref="obsAddAcademicYear"
+        ref="obsAddIdea"
         tag="div"
       >
         <el-card shadow="always">
@@ -23,7 +23,7 @@
                 class="mb-3"
                 tag="div"
               >
-                <el-input v-model="formData.title" type="text" placeholder="Enter academic year" />
+                <el-input v-model="formData.title" type="text" placeholder="Enter title" />
                 <div class="text-error">
                   {{ errors[0] }}
                 </div>
@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="row-input grid grid-cols-2 gap-4">
-            <div class="col-span-2 md:col-span-1">
+            <div class="col-span-2">
               <div class="mams-label">
                 Category
               </div>
@@ -42,36 +42,12 @@
                 class="mb-3"
                 tag="div"
               >
-                <el-select v-model="formData.category" class="item-input" placeholder="Select category">
+                <el-select v-model="formData.category_id" class="item-input" placeholder="Select category">
                   <el-option
                     v-for="item in optionsCategory"
                     :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
-                <div class="text-error">
-                  {{ errors[0] }}
-                </div>
-              </validation-provider>
-            </div>
-            <div class="col-span-2 md:col-span-1">
-              <div class="mams-label">
-                Academic Year
-              </div>
-              <validation-provider
-                v-slot="{ errors }"
-                :name="'academic year'"
-                :rules="{ required: true }"
-                class="mb-3"
-                tag="div"
-              >
-                <el-select v-model="formData.academicYear" class="item-input" placeholder="Select Academic Year">
-                  <el-option
-                    v-for="item in optionsAcademicYear"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
+                    :label="item.name"
+                    :value="item.id"
                   />
                 </el-select>
                 <div class="text-error">
@@ -88,19 +64,17 @@
               <validation-provider
                 v-slot="{ errors }"
                 :name="'picture'"
-                :rules="{ required: true }"
                 class="mb-3"
                 tag="div"
               >
                 <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
+                  action="#"
+                  :before-upload="beforeUploadThumbnail"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
                 >
-                  <img v-if="formData.picture" :src="formData.picture" class="avatar">
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i class="el-icon-plus" />
                 </el-upload>
                 <div class="text-error">
                   {{ errors[0] }}
@@ -115,21 +89,17 @@
               </div>
               <el-upload
                 class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
+                action="#"
                 :on-remove="handleRemove"
+                :before-upload="beforeUpload"
                 :before-remove="beforeRemove"
                 multiple
                 :limit="3"
                 :on-exceed="handleExceed"
-                :file-list="formData.fileList"
               >
                 <el-button size="small" type="primary">
                   Click to upload
                 </el-button>
-                <div slot="tip" class="el-upload__tip">
-                  jpg/png files with a size less than 500kb
-                </div>
               </el-upload>
             </div>
           </div>
@@ -138,15 +108,40 @@
               <div class="mams-label">
                 Content
               </div>
-              <ckeditor-nuxt v-model="contentHolder" :config="editorConfig" />
+              <ckeditor-nuxt v-model="formData.content" :config="editorConfig" />
               <validation-provider
                 v-slot="{ errors }"
                 :name="'content'"
-                :rules="{ required: true }"
                 class="mb-3"
                 tag="div"
               >
                 <!-- <ckeditor v-model="formData.content" /> -->
+                <div class="text-error">
+                  {{ errors[0] }}
+                </div>
+              </validation-provider>
+            </div>
+          </div>
+          <div class="row-input grid grid-cols-1 gap-4">
+            <div class="col-span-1">
+              <div class="mams-label">
+                Anonymous
+              </div>
+              <validation-provider
+                v-slot="{ errors }"
+                :name="'status'"
+                :rules="{ required: true }"
+                class="mb-3"
+                tag="div"
+              >
+                <el-switch
+                  v-model="formData.is_anonymous"
+                  style="display: block"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-text="Public"
+                  inactive-text="Anonymous"
+                />
                 <div class="text-error">
                   {{ errors[0] }}
                 </div>
@@ -188,11 +183,11 @@ export default {
       dialogVisible: false,
       formData: {
         title: '',
-        category: '',
-        picture: '',
-        academicYear: '',
+        category_id: '',
         content: '',
-        fileList: []
+        files: [],
+        thumbnail_url: '',
+        is_anonymous: true
       },
       optionsCategory: [],
       optionsAcademicYear: [],
@@ -218,8 +213,9 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('OpenCreateAY', (val) => {
+    EventBus.$on('OpenCreateAY', (val, categories) => {
       this.dialogVisible = val
+      this.optionsCategory = categories
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -230,15 +226,22 @@ export default {
   },
   methods: {
     async handleSubmit () {
-      const isValid = await this.$refs.obsAddAcademicYear.validate()
+      const isValid = await this.$refs.obsAddIdea.validate()
       if (!isValid) {
-        this.$message.warning('Something went wrong')
         return
       }
       // eslint-disable-next-line no-console
       console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
+    },
+    beforeUploadThumbnail (file, fileList) {
+      // eslint-disable-next-line no-console
+      this.$emit('handle-import-image', file)
+    },
+    beforeUpload (file, fileList) {
+      // eslint-disable-next-line no-console
+      this.$emit('handle-import', file)
     },
     // file
     handleRemove (file, fileList) {

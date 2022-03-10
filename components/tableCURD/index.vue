@@ -7,7 +7,7 @@
     >
       <template v-for="(col, index) in propsTableHeader">
         <el-table-column
-          v-if="col.title !== 'Status'"
+          v-if="col.title !== 'Status' && col.title !== 'Picture'"
           :key="index"
           :label="col.title"
         >
@@ -16,7 +16,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="col.title== 'Status'"
+          v-if="col.title === 'Status'"
           :key="index"
           :label="col.title"
         >
@@ -24,6 +24,21 @@
             <span class="rowSpan">
               <el-tag v-if="scope.row[col.field] =='ACTIVE'" type="success"> {{ scope.row[col.field] }}</el-tag>
               <el-tag v-if="scope.row[col.field] !=='ACTIVE'" type="danger"> {{ scope.row[col.field] }}</el-tag>
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="col.field === 'thumbnail_url'"
+          :key="index"
+          :label="col.title"
+        >
+          <template slot-scope="scope">
+            <span class="rowSpan">
+              <el-image
+                style="width: 100px; height: 100px"
+                :src=" scope.row[col.field]"
+                fit="contain"
+              />
             </span>
           </template>
         </el-table-column>

@@ -159,7 +159,8 @@ export default {
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'
+            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE',
+            department: item.department ? item.department.name : ''
           }
           return formatData.push(rowData)
         })

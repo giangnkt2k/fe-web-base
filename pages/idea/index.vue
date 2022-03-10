@@ -22,6 +22,7 @@
         :props-page-sizes="pageSizes"
         :props-page-size="pageSize"
         :props-total-items="totalItems"
+        :props-hidden-delete="false"
         @handle-edit="handleEdit"
         @handle-delete="handleDelete"
         @handle-size-change="handleSizeChange"
@@ -31,10 +32,14 @@
     <create
       :props-dialog-visible="dialogPop"
       @handle-submit="handleCreate"
+      @handle-import-image="handleImportImage"
+      @handle-import="handleImport"
     />
     <edit
       :props-dialog-visible="dialogPopEdit"
       @handle-submit="handleSubmitEdit"
+      @handle-import-image="handleImportImage"
+      @handle-import="handleImport"
     />
     <dialogs-delete
       :props-dialog-visible="dialogPopDelete"
@@ -50,6 +55,7 @@ import create from '@/components/dialogs/idea/create.vue'
 import edit from '@/components/dialogs/idea/edit.vue'
 import DialogsDelete from '@/components/dialogs/dialogsDelete.vue'
 import EventBus from '@/utils/eventBus'
+import initToken from '~/mixins/auth.js'
 
 export default {
   name: 'IdeaForPersonIndex',
@@ -59,6 +65,8 @@ export default {
     edit,
     DialogsDelete
   },
+  mixins: [initToken],
+
   data () {
     return {
       dialogPop: false,
@@ -73,20 +81,12 @@ export default {
         title: 'Title'
       },
       {
-        field: 'picture',
+        field: 'thumbnail_url',
         title: 'Picture'
       },
       {
-        field: 'file',
-        title: 'File'
-      },
-      {
-        field: 'department',
-        title: 'Department'
-      },
-      {
-        field: 'academic_year',
-        title: 'Academic Year'
+        field: 'category_id',
+        title: 'Category'
       },
       {
         field: 'created_at',
@@ -99,11 +99,15 @@ export default {
       pageSize: 50,
       totalItems: 1,
       search: '',
-      dialogPopEdit: false
+      dialogPopEdit: false,
+      listCategory: [],
+      listFileUpload: [],
+      thumbnailUrl: '',
+      singleIdea: {}
     }
   },
   created () {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     handleClick () {
@@ -111,13 +115,16 @@ export default {
       console.log('click')
     },
     openDialog () {
-      EventBus.$emit('OpenCreateAY', true)
+      EventBus.$emit('OpenCreateAY', true, this.listCategory)
     },
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
+        params.files = this.listFileUpload
+        params.thumbnail_url = this.thumbnailUrl
         await idea.add(params)
         this.fetchData()
+        this.listFileUpload = []
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Create user successfully')
       } catch (e) {
@@ -125,35 +132,59 @@ export default {
         this.$store.commit('pages/setLoading', false)
       }
     },
-    handleEdit (index, value) {
-      EventBus.$emit('OpenEditAd', true, value)
+    async handleImportImage (file) {
+      this.initToken()
+      try {
+        const formData = new FormData()
+        formData.append('upload', file)
+        const image = await idea.upload(formData)
+        this.thumbnailUrl = image.data.data.url
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('e', e)
+      }
+    },
+    async handleImport (file) {
+      this.initToken()
+      try {
+        const formData = new FormData()
+        formData.append('upload', file)
+        const image = await idea.upload(formData)
+        this.listFileUpload.push(image.data.data)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('e', e)
+      }
+    },
+    async handleEdit (index, value) {
+      const data = await this.getDetailIdea(value.id)
+      // eslint-disable-next-line no-console
+      console.log('data==>', data)
+      EventBus.$emit('OpenEditIdea', true, data, this.listCategory)
+    },
+    async getDetailIdea (id) {
+      try {
+        const res = await idea.details(id)
+        this.$store.commit('pages/setLoading', false)
+        const data = res.data.data
+        return data
+      } catch (e) {
+        this.$router.push('/404')
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
     },
     async handleSubmitEdit (params, id) {
       try {
       // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
+        params.thumbnail_url = this.thumbnailUrl
+        params.files = params.files.concat(this.listFileUpload)
         await idea.update(params)
         this.fetchData()
+        this.listFileUpload = []
         this.$store.commit('pages/setLoading', false)
         this.$message.success('Edit user successfully')
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
-    },
-    handleDelete (index, value) {
-      // eslint-disable-next-line no-console
-      EventBus.$emit('OpenDelete', true, value.id)
-    },
-    async handleSubmitDelete (params) {
-      try {
-      // eslint-disable-next-line no-console
-        this.$store.commit('pages/setLoading', true)
-        await idea.destroy(params)
-
-        this.fetchData()
-        this.$store.commit('pages/setLoading', false)
-        this.$message.success('Delete successfully')
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
@@ -176,14 +207,54 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await idea.list({ query })
-        this.tableData = res.data.data
+        const res = await idea.list(query)
+        const formatData = []
+        res.data.data.length > 0 && res.data.data.map((item) => {
+          const rowData = {
+            ...item,
+            category_id: item.category.name
+          }
+          return formatData.push(rowData)
+        })
+        this.tableData = formatData
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
         this.totalItems = res.data.paging.total
+        this.getListCategory()
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    async getListCategory () {
+      try {
+        const res = await idea.getListCategory()
+        this.listCategory = res.data.data
+        // eslint-disable-next-line no-console
+        console.log('listCategory', this.listCategory)
+        this.$store.commit('pages/setLoading', false)
+      } catch (e) {
+        this.$router.push('/404')
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    handleDelete (index, value) {
+      // eslint-disable-next-line no-console
+      EventBus.$emit('OpenDelete', true, value.id)
+    },
+    async handleSubmitDelete (params) {
+      try {
+      // eslint-disable-next-line no-console
+        this.$store.commit('pages/setLoading', true)
+        await idea.destroy(params)
+
+        this.fetchData()
+        this.$store.commit('pages/setLoading', false)
+        this.$message.success('Delete successfully')
+      } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
       }

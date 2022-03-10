@@ -189,8 +189,16 @@ export default {
           delete query.page
         }
         this.$store.commit('pages/setLoading', true)
-        const res = await category.list({ })
-        this.tableData = res.data.data
+        const res = await category.list(query)
+        const formatData = []
+        res.data.data.length > 0 && res.data.data.map((item) => {
+          const rowData = {
+            ...item,
+            status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'
+          }
+          return formatData.push(rowData)
+        })
+        this.tableData = formatData
         this.currentPage = res.data.paging.page
         this.pageSize = res.data.paging.limit
         this.totalItems = res.data.paging.total
