@@ -1,9 +1,9 @@
 <template>
   <div class="app-main">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-    <right-bar v-if="!mobileSize" :props-collapse="isCollapse" />
+    <right-bar class="right-bar" :props-collapse="isCollapse" />
     <div
-      :class="{marginOff: isCollapse, mobileOn: mobileSize}"
+      :class="{marginOff: isCollapse}"
       class="main-content-container"
     >
       <top-bar @handle-change-type-menu="handleChangeTypeMenu" />
@@ -111,5 +111,23 @@ export default {
 .main-content-container {
   transition: margin-left 0.25s;
   margin-left: 210px;
+}
+
+@media only screen and (max-width: 500px) {
+    .right-bar {
+      display: none;
+    }
+    .main-content-container {
+      transition: margin-left 0.25s;
+      margin-left: 0px;
+    }
+    .marginOff {
+      margin-left: 0px !important;
+      transition: margin-left 0.5s;
+    }
+}
+
+@media only screen and (min-width: 700px) {
+    .my-responsive-component { background: cyan; }
 }
 </style>

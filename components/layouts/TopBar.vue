@@ -10,6 +10,14 @@
         <el-switch v-model="isCollapse" active-color="#304156" />
       </span>
 
+      <el-submenu index="1" class="icon-nav-mobile">
+        <template slot="title">
+          Menu
+        </template>
+        <el-menu-item v-for="(item,index) in menus" :key="index+0.1" @click="routing(item)">
+          {{ item.title }}
+        </el-menu-item>
+      </el-submenu>
       <el-submenu index="2">
         <template slot="title">
           {{ currentUser.full_name }}
@@ -26,7 +34,10 @@
 </template>
 
 <script>
+import menuMixin from '~/mixins/menu.js'
+
 export default {
+  mixins: [menuMixin],
   data () {
     return {
       activeIndex: '1',
@@ -61,6 +72,9 @@ export default {
     profile () {
       this.$router.push('/profile')
     },
+    routing (item) {
+      this.$router.push(item.link)
+    },
     logout () {
       // eslint-disable-next-line no-console
       try {
@@ -87,6 +101,11 @@ ul.el-menu-demo.el-menu--horizontal.el-menu {
   left: 17px;
   position: absolute;
 }
+.icon-nav-mobile {
+    display: none;
+    float: left !important;
+
+  }
 .logo-nav {
     top: 5px;
     left: 75px;
@@ -95,5 +114,15 @@ ul.el-menu-demo.el-menu--horizontal.el-menu {
     color: #304156;
     font-family: auto;
     font-weight: 600;
+}
+@media only screen and (max-width: 500px) {
+  .icon-nav {
+    display: none;
+  }
+
+  .icon-nav-mobile {
+    display: inline;
+    float: left;
+  }
 }
 </style>

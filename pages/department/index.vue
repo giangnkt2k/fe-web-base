@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="md:container md:mx-auto pt-6">
+    <div class="md:container md:mx-auto pt-6" style="margin:10px">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="search-div col-start-1 col-end-4 flex flex-row">
+        <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
           <el-select v-model="searchKey" clearable placeholder="Select key to search">
             <el-option
               v-for="(item, index) in optionsSearchKey"
@@ -19,7 +19,7 @@
           />
           <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
         </div>
-        <div class="create-div col-end-8">
+        <div class="create-div col-start-1 md:col-start-8 col-end-8">
           <el-button type="success" @click="openDialog">
             Create Department
           </el-button>

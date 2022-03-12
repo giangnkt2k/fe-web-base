@@ -4,6 +4,7 @@
       title="Edit Category"
       :visible.sync="dialogVisible"
       append-to-body
+      width="80%"
     >
       <ValidationObserver
         ref="obsAddCategory"

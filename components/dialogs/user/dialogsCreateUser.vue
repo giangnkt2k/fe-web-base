@@ -4,6 +4,7 @@
       title="Create New Account"
       :visible.sync="dialogVisible"
       append-to-body
+      width="80%"
     >
       <ValidationObserver
         ref="obsAddUser"

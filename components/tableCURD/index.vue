@@ -4,6 +4,7 @@
       :data="propsTableData"
       border
       :default-sort="{prop: 'id', order: 'descending'}"
+      class="displayByWidth"
     >
       <template v-for="(col, index) in propsTableHeader">
         <el-table-column
@@ -65,6 +66,28 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-card
+      v-for="(item, index) in propsTableData"
+      :key="index"
+      class="box-card displayByWidthMobile"
+    >
+      <img v-if="item['thumbnail_url']" :src="item['thumbnail_url']" class="image">
+      <div v-for="(title, indexTitle) in propsTableHeader" :key="indexTitle" class="text item flexing">
+        <div class="titleHeader font-black">
+          <span v-if="title.title !== 'Picture'">{{ title.title }}</span>
+        </div>
+        <div class="ItemValue">
+          <span v-if="title.title !== 'Picture'"> {{ item[title.field] }}</span>
+        </div>
+      </div>
+      <el-button
+        size="mini"
+        @click="handleEdit(index, item)"
+      >
+        Edit
+      </el-button>
+    </el-card>
     <div class="block">
       <el-pagination
         :current-page="currentPage"
@@ -161,5 +184,24 @@ export default {
 }
 .cell {
   word-break: break-word !important;
+}
+.displayByWidthMobile {
+  display: none;
+}
+.flexing {
+  display: flex;
+  border: none;
+  align-items: center;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 500px) {
+  .displayByWidth {
+    display: none;
+  }
+
+  .displayByWidthMobile {
+    display: block;
+    margin-bottom: 5px;
+  }
 }
 </style>

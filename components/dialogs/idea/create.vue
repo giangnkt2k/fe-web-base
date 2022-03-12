@@ -4,6 +4,7 @@
       title="Create New Idea"
       :visible.sync="dialogVisible"
       append-to-body
+      width="80%"
     >
       <ValidationObserver
         ref="obsAddIdea"

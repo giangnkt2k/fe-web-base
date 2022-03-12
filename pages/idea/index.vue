@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div class="md:container md:mx-auto pt-6">
+    <div class="md:container md:mx-auto pt-6" style="margin:0 10px 0 10px;">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="w-80 search-div col-start-1 col-end-3 flex flex-row">
+        <div class="w-80 search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
           <el-input
             v-model="search"
             placeholder="Type to search"
           />
           <el-button icon="el-icon-search" style="margin-left: 5px;" />
         </div>
-        <div class="create-div col-end-8">
+        <div class="create-div col-start-1 md:col-start-8 col-end-8">
           <el-button type="success" @click="openDialog">
             Create Idea
           </el-button>
@@ -40,6 +40,7 @@
       @handle-submit="handleSubmitEdit"
       @handle-import-image="handleImportImage"
       @handle-import="handleImport"
+      @handle-remove="handleRemove"
     />
     <dialogs-delete
       :props-dialog-visible="dialogPopDelete"
@@ -156,6 +157,13 @@ export default {
         console.log('e', e)
       }
     },
+    handleRemove (fileRemove) {
+      // eslint-disable-next-line no-console
+      console.log('remove đê', fileRemove)
+      this.listFileUpload = this.listFileUpload.filter(file => file.name !== fileRemove.name)
+      // eslint-disable-next-line no-console
+      console.log('remove luôn', this.listFileUpload)
+    },
     async handleEdit (index, value) {
       const data = await this.getDetailIdea(value.id)
       // eslint-disable-next-line no-console
@@ -167,6 +175,7 @@ export default {
         const res = await idea.details(id)
         this.$store.commit('pages/setLoading', false)
         const data = res.data.data
+        this.listFileUpload = data.files
         return data
       } catch (e) {
         this.$router.push('/404')
@@ -179,7 +188,7 @@ export default {
       // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
         params.thumbnail_url = this.thumbnailUrl
-        params.files = params.files.concat(this.listFileUpload)
+        params.files = this.listFileUpload
         await idea.update(params)
         this.fetchData()
         this.listFileUpload = []

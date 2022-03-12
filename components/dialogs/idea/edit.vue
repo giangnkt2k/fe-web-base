@@ -4,6 +4,7 @@
       title="Create Idea"
       :visible.sync="dialogVisible"
       append-to-body
+      width="80%"
     >
       <ValidationObserver
         ref="obsAddIdea"
@@ -97,6 +98,7 @@
                 multiple
                 :limit="3"
                 :on-exceed="handleExceed"
+                :file-list="fileList"
               >
                 <el-button size="small" type="primary">
                   Click to upload
@@ -194,6 +196,7 @@ export default {
       optionsCategory: [],
       optionsAcademicYear: [],
       fileListThumbnail: [],
+      fileList: [],
       editorConfig: {
         simpleUpload: {
           uploadUrl: 'https://groupbar.me/api/v1/upload',
@@ -220,6 +223,7 @@ export default {
       // eslint-disable-next-line no-console
       console.log('data get', data)
       this.fileListThumbnail = []
+      this.fileList = []
       this.dialogVisible = val
       this.optionsCategory = categories
       this.formData.id = data.id
@@ -231,6 +235,7 @@ export default {
         name: 'thumbNail',
         url: data.thumbnail_url
       })
+      this.fileList = data.files
       this.formData.is_anonymous = data.is_anonymous
       this.formData.files = data.files
       // eslint-disable-next-line no-console
@@ -264,6 +269,7 @@ export default {
     },
     // file
     handleRemove (file, fileList) {
+      this.$emit('handle-remove', file)
       // eslint-disable-next-line no-console
       console.log(file, fileList)
     },
