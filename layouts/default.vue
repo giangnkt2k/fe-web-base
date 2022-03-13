@@ -105,9 +105,7 @@ export default {
   margin-left: 65px !important;
   transition: margin-left 0.25s;
 }
-.mobileOn {
-  margin: 0 !important;
-}
+
 .main-content-container {
   transition: margin-left 0.25s;
   margin-left: 210px;
@@ -127,7 +125,4 @@ export default {
     }
 }
 
-@media only screen and (min-width: 700px) {
-    .my-responsive-component { background: cyan; }
-}
 </style>

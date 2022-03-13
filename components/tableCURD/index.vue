@@ -1,5 +1,5 @@
 <template>
-  <div class="md:container md:mx-auto pt-6 justify-center">
+  <div class="md:container md:mx-auto pt-6 px-6 justify-center">
     <el-table
       :data="propsTableData"
       border
@@ -88,12 +88,12 @@
         Edit
       </el-button>
     </el-card>
-    <div class="block">
+    <div>
       <el-pagination
         :current-page="currentPage"
         :page-sizes="propsPageSizes"
         :page-size="propsPageSize"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         :total="propsTotalItems"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"

@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-menu
-      v-if="!isCollapse"
       default-active="2"
       class="el-menu-vertical-demo sidebar-container"
       :collapse="isCollapse"
