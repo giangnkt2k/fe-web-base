@@ -297,6 +297,7 @@ export default {
         role: '',
         status: true
       }
+      this.confirmPassword = ''
     },
     handleDeleteDepartment () {
       if (this.formData.role !== 'STAFF') {

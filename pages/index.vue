@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" md:container md:mx-auto pt-6 px-6 md:px-0">
+    <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-cente">
         <div class="col-start-1 col-end-9  md:col-end-2  flex flex-col">
           <!-- filter  -->
@@ -38,21 +38,25 @@
         </div>
         <!-- main content -->
         <div class="main-content col-start-1 md:col-start-2 col-end-9">
-          <el-card shadow="always" class="block mb-8 grid grid-cols-3 gap-4 items-center">
-            <el-select v-model="searchKey" clearable placeholder="Select key to search">
-              <el-option
-                v-for="(item, index) in optionsSearchKey"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-            <el-radio v-model="radio" label="_desc">
-              Option A
-            </el-radio>
-            <el-radio v-model="radio" label="_asc">
-              Option B
-            </el-radio>
+          <el-card shadow="always" class="mb-5">
+            <div class="grid grid-cols-3 gap-4 items-center">
+              <el-select v-model="searchKey" style="width: 100%;" class="mr-5 col-start-1 col-end-4  md:col-end-2" clearable placeholder="Select key to sort">
+                <el-option
+                  v-for="(item, index) in optionsSearchKey"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-radio-group v-model="radio_choice" :disabled="searchKey === ''" class="col-start-1 col-end-3 md:col-start-2 col-end-3">
+                <el-radio label="_desc">
+                  Decrease
+                </el-radio>
+                <el-radio label="_asc">
+                  Ascending
+                </el-radio>
+              </el-radio-group>
+            </div>
           </el-card>
           <el-card shadow="always" class="item-idea flex flex-row">
             <a href="#" class="flex mr-5">
@@ -114,6 +118,17 @@
               </div>
             </div>
           </el-card>
+          <div>
+            <el-pagination
+              :current-page="currentPage"
+              :page-sizes="pageSizes"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next"
+              :total="totalItems"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -142,7 +157,40 @@ export default {
       }, {
         content: 'End date',
         timestamp: '2018-04-03 20:46'
-      }]
+      }],
+      radio_choice: '',
+      searchKey: '',
+      optionsSearchKey: [
+        {
+          value: 'like',
+          label: 'Like'
+        }, {
+          value: 'dislike',
+          label: 'Dislike'
+        }, {
+          value: 'view',
+          label: 'View'
+        }, {
+          value: 'created',
+          label: 'Created'
+        }
+      ],
+      currentPage: 1,
+      pageSizes: [10, 50, 100],
+      pageSize: 10,
+      totalItems: 1
+    }
+  },
+  watch: {
+    searchKey () {
+      if (this.searchKey === '') {
+        this.radio_choice = ''
+      }
+    },
+    radio_choice () {
+      const valueSort = this.searchKey + this.radio_choice
+      // eslint-disable-next-line no-console
+      console.log('calue', valueSort)
     }
   }
 }

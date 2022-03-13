@@ -119,8 +119,8 @@
               >
                 <el-select v-model="formData.department_id" :disabled="formData.role !== 'STAFF'" class="item-input" placeholder="Select department">
                   <el-option
-                    v-for="item in optionsDepartment"
-                    :key="item.value"
+                    v-for="(item, index) in optionsDepartment"
+                    :key="index"
                     :label="item.name"
                     :value="item.id"
                   />
@@ -295,10 +295,12 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenEditUser', (val, newVal, dataDepartments) => {
+      this.formData = {}
+      this.confirmPassword = ''
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.full_name = newVal.full_name
-      this.formData.department_id = newVal.department
+      this.formData.department_id = (newVal.department_id === '') ? null : newVal.department_id
       this.formData.date_of_birth = newVal.date_of_birth
       this.formData.email = newVal.email
       this.formData.password = ''
@@ -321,6 +323,7 @@ export default {
         this.$message.warning('Something went wrong')
         return
       }
+      this.formData.full_name = this.formData.full_name.trim()
       this.$emit('handle-submit', this.formData, this.formData.id)
       this.dialogVisible = false
     },

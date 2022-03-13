@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="md:container md:mx-auto pt-6 px-6" style="margin: 0 10px 0 10px;">
+    <div class="md:container md:mx-auto pt-6 px-6 md:px-2" style="margin: 0 10px 0 10px;">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
         <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
           <el-select v-model="searchKey" clearable placeholder="Select key to search">
@@ -20,7 +20,7 @@
           <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
         </div>
 
-        <div class="ccreate-div col-start-1 md:col-start-8 col-end-8">
+        <div class="create-div col-start-1 md:col-start-8 col-end-8">
           <el-button type="success" @click="openDialog">
             Create User
           </el-button>
@@ -185,16 +185,13 @@ export default {
         this.$store.commit('pages/setLoading', false)
       }
     },
-    handleClick () {
-      // eslint-disable-next-line no-console
-      console.log('click')
-    },
     openDialog () {
       EventBus.$emit('OpenCreateUser', true, this.listDepartment)
     },
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
+        params.full_name = params.full_name.trim()
         await user.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
@@ -209,7 +206,6 @@ export default {
     },
     async handleSubmitEdit (params, id) {
       try {
-      // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
         await user.update(params)
         this.fetchData()
@@ -221,8 +217,6 @@ export default {
       }
     },
     handleDelete (index, value) {
-      // eslint-disable-next-line no-console
-      console.log('param', value)
       EventBus.$emit('OpenDelete', true)
     },
     handleSubmitDelete () {
