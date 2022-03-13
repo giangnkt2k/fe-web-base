@@ -177,6 +177,7 @@ export default {
       pageSizes: [10, 50, 100],
       pageSize: 10,
       totalItems: 1,
+      valueSort: '',
       listData: []
     }
   },
@@ -187,24 +188,24 @@ export default {
       }
     },
     radio_choice () {
-      const valueSort = this.searchKey + this.radio_choice
+      this.valueSort = this.searchKey + this.radio_choice
       // eslint-disable-next-line no-console
-      console.log('calue', valueSort)
+      this.fetchData(this.valueSort)
     }
   },
   created () {
     this.fetchData()
   },
   methods: {
-    async fetchData () {
+    async fetchData (order) {
       try {
         const query = {
           page: this.currentPage,
-          limit: this.pageSize
+          limit: this.pageSize,
+          order_by: order
         }
-        query[this.searchKey] = this.search
-        if (query[this.searchKey] === '') {
-          delete query[this.searchKey]
+        if (query.order_by === '') {
+          delete query.order_by
         }
         if (query.limit === '') {
           delete query.limit

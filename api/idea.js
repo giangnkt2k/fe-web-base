@@ -31,3 +31,34 @@ export const details = async (id) => {
 export const destroy = async (id) => {
   return await axios.delete(`idea/${id}`)
 }
+
+export const addComment = async (params = {}) => {
+  return await axios.post('idea/comment', params)
+}
+
+export const getListComment = async (id) => {
+  return await axios.get(`idea/${id}/comment`)
+}
+export const getUserLikeIdea = async (id) => {
+  return await axios.get(`idea/${id}/like`)
+}
+
+export const likeIdea = async (id) => {
+  return await axios.post(`idea/${id}/like`)
+}
+
+export const returnLikeIdea = async (id) => {
+  return await axios.delete(`idea/${id}/like`)
+}
+
+export const getUserDisLikeIdea = async (id) => {
+  return await axios.get(`idea/${id}/dislike`)
+}
+
+export const disLikeIdea = async (id) => {
+  return await axios.post(`idea/${id}/dislike`)
+}
+
+export const returnDislikeIdea = async (id) => {
+  return await axios.delete(`idea/${id}/dislike`)
+}
