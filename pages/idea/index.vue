@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="md:container md:mx-auto pt-6 px-6 px-6">
+    <div class="md:container md:mx-auto pt-6 px-6 px-6 md:px-2">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
         <div class="w-100 search-div col-start-1 col-end-9  md:col-end-4 flex flex-row">
           <el-select v-model="searchKey" clearable placeholder="Select key to search" style="margin-right: 5px;">
