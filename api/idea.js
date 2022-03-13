@@ -4,6 +4,10 @@ export const list = async (params = {}) => {
   return await axios.get('idea/my-idea', { params })
 }
 
+export const getAll = async (params = {}) => {
+  return await axios.get('idea', { params })
+}
+
 export const add = async (params = {}) => {
   return await axios.post('idea', params)
 }

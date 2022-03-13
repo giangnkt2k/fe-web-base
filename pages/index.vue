@@ -2,18 +2,14 @@
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
       <div class="block mb-8 grid grid-cols-6 gap-4 items-cente">
-        <div class="col-start-1 col-end-9  md:col-end-2  flex flex-col">
+        <div class="col-start-1 col-end-9  md:col-end-3  flex flex-col">
           <!-- filter  -->
           <div class="block-item">
-            <el-card class="box-card">
-              <el-carousel height="150px">
-                <el-carousel-item v-for="item in 4" :key="item">
-                  <h3 class="small">
-                    {{ item }}
-                  </h3>
-                </el-carousel-item>
-              </el-carousel>
-            </el-card>
+            <el-carousel height="300px">
+              <el-carousel-item v-for="item in slides" :key="item">
+                <img :src="item">
+              </el-carousel-item>
+            </el-carousel>
           </div>
           <!-- timeLine -->
           <div class="block-item">
@@ -37,7 +33,7 @@
           </div>
         </div>
         <!-- main content -->
-        <div class="main-content col-start-1 md:col-start-2 col-end-9">
+        <div class="main-content col-start-1 md:col-start-3 col-end-9">
           <el-card shadow="always" class="mb-5">
             <div class="grid grid-cols-3 gap-4 items-center">
               <el-select v-model="searchKey" style="width: 100%;" class="mr-5 col-start-1 col-end-4  md:col-end-2" clearable placeholder="Select key to sort">
@@ -58,11 +54,11 @@
               </el-radio-group>
             </div>
           </el-card>
-          <el-card shadow="always" class="item-idea flex flex-row">
+          <el-card v-for="(item, index) in listData" :key="index" shadow="always" class="item-idea flex flex-row">
             <a href="#" class="flex mr-5">
               <el-image
                 style="width: 100px; height: 100px;"
-                src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                :src="item.thumbnail_url"
                 fit="fit"
                 class="avatar"
               />
@@ -70,49 +66,43 @@
             <div class="post-feed-item__info">
               <div class="post-meta--inline">
                 <div class="mr-5">
-                  <span>GiangNKT</span>
+                  <span>{{ item.user }}</span>
                 </div>
                 <div class="post-meta d-inline-flex align-items-center flex-wrap">
                   <div class="text-muted mr-0">
-                    <span> 5mins ago</span>
+                    <span> {{ item.created_at }}</span>
                   </div>
                 </div>
               </div>
               <div class="post-title--inline">
-                <a href="#"><h3 class="word-break mr-5 font-semibold">
-                  Day la title
+                <a href="#" @click="viewIdea(item.id)"><h3 class="word-break mr-5 font-semibold">
+                  {{ item.title }}
                 </h3></a>
                 <div class="tags">
                   <el-tag type="info" size="mini">
-                    Đẹp trai
-                  </el-tag>
-                  <el-tag type="info" size="mini">
-                    Hay ho
-                  </el-tag>
-                  <el-tag type="info" size="mini">
-                    Kì cục
+                    {{ item.category.name }}
                   </el-tag>
                 </div>
               </div>
               <div class="d-flex footer-post-item">
                 <div class="starts">
-                  <span class="stats-item text-muted">
+                  <span class="stats-item text-muted mr-2">
                     <i class="el-icon-view" />
-                    <span>2</span>
+                    <span>{{ item.views_count }}</span>
                   </span>
-                  <span class="stats-item text-muted">
+                  <span class="stats-item text-muted mr-2">
                     <font-awesome-icon icon="fa-solid fa-thumbs-up" />
-                    <span>2</span>
+                    <span>{{ item.likes_count }}</span>
                   </span>
-                  <span class="stats-item text-muted">
+                  <span class="stats-item text-muted mr-2">
                     <font-awesome-icon icon="fa-solid fa-thumbs-down" />
-                    <span>2</span>
+                    <span>{{ item.dislikes_count }}</span>
                   </span>
-                  <span class="stats-item text-muted">
+                  <span class="stats-item text-muted mr-2">
                     <i
                       class="el-icon-chat-line-square"
                     />
-                    <span>2</span>
+                    <span>{{ item.comments_count }}</span>
                   </span>
                 </div>
               </div>
@@ -136,10 +126,16 @@
 </template>
 
 <script>
+import moment from 'moment'
+import * as idea from '@/api/idea.js'
+
 export default {
   name: 'IndexPage',
   data () {
     return {
+      slides: ['https://greenwich.edu.vn/wp-content/uploads/2021/01/banner-2.jpg',
+        'https://vtv1.mediacdn.vn/thumb_w/1000/2021/7/25/da-nang-2-1627212353368273813312.jpg',
+        'https://greenwich.edu.vn/wp-content/uploads/2020/06/xet-tuyen-dai-hoc-fpt-greenwich.jpg'],
       activities: [{
         content: 'Start date',
         timestamp: '2018-04-12 20:46',
@@ -178,7 +174,8 @@ export default {
       currentPage: 1,
       pageSizes: [10, 50, 100],
       pageSize: 10,
-      totalItems: 1
+      totalItems: 1,
+      listData: []
     }
   },
   watch: {
@@ -191,6 +188,64 @@ export default {
       const valueSort = this.searchKey + this.radio_choice
       // eslint-disable-next-line no-console
       console.log('calue', valueSort)
+    }
+  },
+  created () {
+    this.fetchData()
+  },
+  methods: {
+    async fetchData () {
+      try {
+        const query = {
+          page: this.currentPage,
+          limit: this.pageSize
+        }
+        query[this.searchKey] = this.search
+        if (query[this.searchKey] === '') {
+          delete query[this.searchKey]
+        }
+        if (query.limit === '') {
+          delete query.limit
+        }
+        if (query.page === '') {
+          delete query.page
+        }
+        this.$store.commit('pages/setLoading', true)
+        const res = await idea.getAll(query)
+        const formatData = []
+        res.data.data.length > 0 && res.data.data.map((item) => {
+          const rowData = {
+            ...item,
+            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
+            user: item.user === null ? 'Anonymous' : item.user
+          }
+          return formatData.push(rowData)
+        })
+        this.listData.user = this.listData.user === null ? 'Anonymous' : this.listData.user
+        this.listData = formatData
+        this.currentPage = res.data.paging.page
+        this.pageSize = res.data.paging.limit
+        this.totalItems = res.data.paging.total
+        // eslint-disable-next-line no-console
+        console.log(this.listData)
+        this.$store.commit('pages/setLoading', false)
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      // eslint-disable-next-line no-console
+      console.log('pageSize', this.pageSize)
+      this.fetchData()
+    },
+    handleCurrentChange (val) {
+      this.currentPage = val
+      this.fetchData()
+    },
+    viewIdea (id) {
+      this.$router.push('/idea/view-idea/' + id)
     }
   }
 }
