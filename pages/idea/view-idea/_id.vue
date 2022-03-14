@@ -215,7 +215,7 @@ export default {
         this.$store.commit('pages/setLoading', true)
         const res = await idea.details(this.$route.params.id)
         const dataDetail = res.data.data
-        this.formData.created_at = moment(dataDetail.created_at, 'YYYYMMDD').fromNow()
+        this.formData.created_at = moment(dataDetail.created_at).fromNow()
         this.formData.user = dataDetail.user === null ? 'Anonymous' : dataDetail.user.full_name
         this.formData.title = dataDetail.title
         this.formData.views_count = dataDetail.views_count
@@ -269,7 +269,7 @@ export default {
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
+            created_at: moment(item.created_at).fromNow(),
             user: item.user === null ? 'Anonymous' : item.user
           }
           return formatData.push(rowData)
@@ -334,7 +334,7 @@ export default {
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
+            created_at: moment(item.created_at).fromNow(),
             user: item.user === null ? 'Anonymous' : item.user
           }
           return formatData.push(rowData)
