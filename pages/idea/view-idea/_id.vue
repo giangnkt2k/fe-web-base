@@ -82,13 +82,20 @@
             <div class="list-comment">
               <div v-for="(item, index) in commentList" :key="index">
                 <div class="item-comment my-3">
-                  <div class="item-comment-infor text-muted">
-                    <span class="text-md mr-2"> {{ item.user.full_name }}</span>
-                    <span class="tex-xs"> {{ item.created_at }} </span>
-                    <el-button v-if="item.user.id === currentUser_id" type="mini" style="float: right;" icon="el-icon-delete" circle />
+                  <div class="item-comment-infor">
+                    <span class="text-sm text-blue-600  mr-2"> {{ item.user.full_name }}</span>
+                    <span class="text-xs text-muted"> {{ item.created_at }} </span>
+                    <el-button
+                      v-if="item.user.id === currentUser_id"
+                      type="mini"
+                      style="float: right;"
+                      icon="el-icon-delete"
+                      circle
+                      @click="handleDeleteComment(item.id)"
+                    />
                   </div>
                   <div class="item-comment-content" style="border-bottom: 1px solid #b6b4b4;">
-                    <span class="text-xs"> {{ item.content }} </span>
+                    <span class="text-base"> {{ item.content }} </span>
                   </div>
                 </div>
               </div>
@@ -232,7 +239,7 @@ export default {
         const res = await idea.getUserLikeIdea(this.$route.params.id)
         // eslint-disable-next-line no-console
         console.log('res', res.data.data) // eslint-disable-next-line no-console
-        console.log('currentUser', currentUser)
+        console.log('currentUser', this.$store.getters['user/getCurrentUser'])
         const haveLike = res.data.data.filter(e => e.userId === currentUser)
         if (haveLike.length > 0) {
           this.clicked_like = true
@@ -345,9 +352,17 @@ export default {
         await idea.addComment({
           idea_id: parseInt(this.$route.params.id),
           content: this.comment
-        })
+        }).then(this.getComment())
         this.comment = ''
-        this.getComment()
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    async handleDeleteComment (id) {
+      try {
+        await idea.deleteComment(id)
+          .then(this.getComment())
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
