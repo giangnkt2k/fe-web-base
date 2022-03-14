@@ -72,6 +72,7 @@
               placeholder="Please comment"
             />
             <el-button
+              :disabled="comment === ''"
               class="my-5"
               type="primary"
               icon="el-icon-message"
@@ -207,8 +208,6 @@ export default {
     this.getDetail()
     // eslint-disable-next-line no-console
     console.log('Created', this.$route.params.id)
-
-    this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
   },
   methods: {
     async getDetail () {
@@ -224,6 +223,7 @@ export default {
         this.formData.dislikes_count = dataDetail.dislikes_count
         this.formData.comments_count = dataDetail.comments_count
         this.content = dataDetail.content
+        this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
         this.getListByCategory(res.data.data.category_id)
         this.getComment()
         this.handleUserAction()
@@ -235,7 +235,7 @@ export default {
     },
     async handleUserAction () {
       try {
-        const currentUser = this.$store.getters['user/getCurrentUser'].id
+        const currentUser = this.currentUser_id
         const res = await idea.getUserLikeIdea(this.$route.params.id)
         // eslint-disable-next-line no-console
         console.log('res', res.data.data) // eslint-disable-next-line no-console
@@ -243,14 +243,12 @@ export default {
         const haveLike = res.data.data.filter(e => e.userId === currentUser)
         if (haveLike.length > 0) {
           this.clicked_like = true
-          this.statusRegression = 1
         } else {
           try {
             const res = await idea.getUserDisLikeIdea(this.$route.params.id)
             const haveDisLike = res.data.data.filter(e => e.userId === currentUser)
             if (haveDisLike.length > 0) {
               this.clicked_dislike = true
-              this.statusRegression = -1
             }
           } catch (e) {
             this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
@@ -352,8 +350,10 @@ export default {
         await idea.addComment({
           idea_id: parseInt(this.$route.params.id),
           content: this.comment
-        }).then(this.getComment())
+        })
+        await this.getComment()
         this.comment = ''
+        this.formData.comments_count += 1
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
@@ -362,7 +362,8 @@ export default {
     async handleDeleteComment (id) {
       try {
         await idea.deleteComment(id)
-          .then(this.getComment())
+        await this.getComment()
+        this.formData.comments_count -= 1
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
