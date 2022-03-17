@@ -39,6 +39,11 @@ export const addComment = async (params = {}) => {
 export const getListComment = async (id) => {
   return await axios.get(`idea/${id}/comment`)
 }
+
+export const deleteComment = async (id) => {
+  return await axios.delete(`idea/comment/${id}`)
+}
+
 export const getUserLikeIdea = async (id) => {
   return await axios.get(`idea/${id}/like`)
 }

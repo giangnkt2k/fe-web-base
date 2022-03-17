@@ -75,9 +75,9 @@
                 </div>
               </div>
               <div class="post-title--inline">
-                <a href="#" @click="viewIdea(item.id)"><h3 class="word-break mr-5 font-semibold">
+                <span @click="viewIdea(item.id)"><h3 class="word-break mr-5 font-semibold">
                   {{ item.title }}
-                </h3></a>
+                </h3></span>
                 <div class="tags">
                   <el-tag type="info" size="mini">
                     {{ item.category.name }}

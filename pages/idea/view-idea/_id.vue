@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
-      <div class="block mb-8 grid grid-cols-6 gap-4 items-cente">
+      <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
         <!-- main content -->
         <div class="main-content col-start-1 md:col-end-6 col-end-9">
           <el-card shadow="always" class="item-idea">
@@ -74,12 +74,13 @@
             <el-switch
               v-model="is_anonymous_cmt"
               class="mt-6"
-              style="float: right;"
+              style="float: left;"
               active-color="#13ce66"
               inactive-color="#ff4949"
               active-text="Anonymous"
             />
             <el-button
+              :disabled="comment === ''"
               class="my-5 mr-2"
               type="primary"
               icon="el-icon-message"
@@ -91,13 +92,13 @@
               <div v-for="(item, index) in commentList" :key="index">
                 <div class="item-comment my-3">
                   <div class="item-comment-infor text-muted">
-                    <span v-if="!item.is_anonymous" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
-                    <span v-else class="text-md mr-2 text-sky-600"> Anonymous</span>
+                    <span v-if="item.is_anonymous !== true" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
+                    <span v-if="item.is_anonymous === true" class="text-md mr-2 text-sky-900">Anonymous</span>
                     <span class="tex-xs"> {{ item.created_at }} </span>
                     <el-button v-if="item.user.id === currentUser_id" type="mini" style="float: right;" icon="el-icon-delete" circle />
                   </div>
                   <div class="item-comment-content" style="border-bottom: 1px solid #b6b4b4;">
-                    <span class="text-xs"> {{ item.content }} </span>
+                    <span class="text-base"> {{ item.content }} </span>
                   </div>
                 </div>
               </div>
@@ -210,8 +211,6 @@ export default {
     this.getDetail()
     // eslint-disable-next-line no-console
     console.log('Created', this.$route.params.id)
-
-    this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
   },
   methods: {
     async getDetail () {
@@ -219,7 +218,7 @@ export default {
         this.$store.commit('pages/setLoading', true)
         const res = await idea.details(this.$route.params.id)
         const dataDetail = res.data.data
-        this.formData.created_at = moment(dataDetail.created_at, 'YYYYMMDD').fromNow()
+        this.formData.created_at = moment(dataDetail.created_at).fromNow()
         this.formData.user = dataDetail.user === null ? 'Anonymous' : dataDetail.user.full_name
         this.formData.title = dataDetail.title
         this.formData.views_count = dataDetail.views_count
@@ -227,6 +226,7 @@ export default {
         this.formData.dislikes_count = dataDetail.dislikes_count
         this.formData.comments_count = dataDetail.comments_count
         this.content = dataDetail.content
+        this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
         this.getListByCategory(res.data.data.category_id)
         this.getComment()
         this.handleUserAction()
@@ -238,22 +238,20 @@ export default {
     },
     async handleUserAction () {
       try {
-        const currentUser = this.$store.getters['user/getCurrentUser'].id
+        const currentUser = this.currentUser_id
         const res = await idea.getUserLikeIdea(this.$route.params.id)
         // eslint-disable-next-line no-console
         console.log('res', res.data.data) // eslint-disable-next-line no-console
-        console.log('currentUser', currentUser)
+        console.log('currentUser', this.$store.getters['user/getCurrentUser'])
         const haveLike = res.data.data.filter(e => e.userId === currentUser)
         if (haveLike.length > 0) {
           this.clicked_like = true
-          this.statusRegression = 1
         } else {
           try {
             const res = await idea.getUserDisLikeIdea(this.$route.params.id)
             const haveDisLike = res.data.data.filter(e => e.userId === currentUser)
             if (haveDisLike.length > 0) {
               this.clicked_dislike = true
-              this.statusRegression = -1
             }
           } catch (e) {
             this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
@@ -274,7 +272,7 @@ export default {
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
+            created_at: moment(item.created_at).fromNow(),
             user: item.user === null ? 'Anonymous' : item.user
           }
           return formatData.push(rowData)
@@ -339,7 +337,7 @@ export default {
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
-            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
+            created_at: moment(item.created_at).fromNow(),
             user: item.user === null ? 'Anonymous' : item.user
           }
           return formatData.push(rowData)
@@ -357,8 +355,19 @@ export default {
           content: this.comment,
           is_anonymous: this.is_anonymous_cmt
         })
+        await this.getComment()
         this.comment = ''
-        this.getComment()
+        this.formData.comments_count += 1
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$store.commit('pages/setLoading', false)
+      }
+    },
+    async handleDeleteComment (id) {
+      try {
+        await idea.deleteComment(id)
+        await this.getComment()
+        this.formData.comments_count -= 1
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
