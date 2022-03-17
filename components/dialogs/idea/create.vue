@@ -226,15 +226,19 @@ export default {
     this.dialogVisible = this.propsDialogVisible
   },
   methods: {
-    async handleSubmit () {
-      const isValid = await this.$refs.obsAddIdea.validate()
-      if (!isValid) {
-        return
-      }
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
-      this.$emit('handle-submit', this.formData)
-      this.dialogVisible = false
+    handleSubmit () {
+      this.$confirm('Are you sure to create this idea ?')
+        .then(async () => {
+          const isValid = await this.$refs.obsAddIdea.validate()
+          if (!isValid) {
+            return
+          }
+          // eslint-disable-next-line no-console
+          console.log('fdata', this.formData)
+          this.$emit('handle-submit', this.formData)
+          this.dialogVisible = false
+        })
+        .catch((_) => {})
     },
     beforeUploadThumbnail (file, fileList) {
       // eslint-disable-next-line no-console

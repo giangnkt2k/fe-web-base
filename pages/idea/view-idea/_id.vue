@@ -71,8 +71,16 @@
               :rows="2"
               placeholder="Please comment"
             />
+            <el-switch
+              v-model="is_anonymous_cmt"
+              class="mt-6"
+              style="float: right;"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="Anonymous"
+            />
             <el-button
-              class="my-5"
+              class="my-5 mr-2"
               type="primary"
               icon="el-icon-message"
               size="mini"
@@ -83,7 +91,8 @@
               <div v-for="(item, index) in commentList" :key="index">
                 <div class="item-comment my-3">
                   <div class="item-comment-infor text-muted">
-                    <span class="text-md mr-2"> {{ item.user.full_name }}</span>
+                    <span v-if="!item.is_anonymous" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
+                    <span v-else class="text-md mr-2 text-sky-600"> Anonymous</span>
                     <span class="tex-xs"> {{ item.created_at }} </span>
                     <el-button v-if="item.user.id === currentUser_id" type="mini" style="float: right;" icon="el-icon-delete" circle />
                   </div>
@@ -193,7 +202,8 @@ export default {
       comment: '',
       commentList: [],
       statusRegression: 0,
-      currentUser_id: ''
+      currentUser_id: '',
+      is_anonymous_cmt: false
     }
   },
   created () {
@@ -344,7 +354,8 @@ export default {
       try {
         await idea.addComment({
           idea_id: parseInt(this.$route.params.id),
-          content: this.comment
+          content: this.comment,
+          is_anonymous: this.is_anonymous_cmt
         })
         this.comment = ''
         this.getComment()
