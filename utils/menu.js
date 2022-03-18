@@ -11,9 +11,9 @@ export default [
     routerName: '',
     title: 'Dashboard',
     link: '/dashboard',
-    icon: 'el-icon-menu',
+    icon: 'el-icon-s-data',
     active: false,
-    role: ['ADMIN', 'QAM', 'QAC']
+    role: ['QAM']
   },
   {
     routerName: '',
@@ -49,7 +49,7 @@ export default [
   },
   {
     routerName: '',
-    title: 'Idea',
+    title: 'Your idea',
     icon: 'el-icon-document',
     active: false,
     link: '/idea',

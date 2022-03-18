@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
-      <div class="block mb-8 grid grid-cols-6 gap-4 items-cente">
+      <div class="block mb-8 grid grid-cols-6 gap-4">
         <div class="col-start-1 col-end-9  md:col-end-3  flex flex-col">
           <!-- filter  -->
           <div class="block-item">
@@ -34,6 +34,24 @@
         </div>
         <!-- main content -->
         <div class="main-content col-start-1 md:col-start-3 col-end-9">
+          <el-card v-if="$store.getters['user/getCurrentUser'].role === 'QAM'" shadow="always" class="mb-5">
+            <div class="grid grid-cols-3 gap-4 items-center">
+              <el-select v-model="academic_year" style="width: 100%;" class="mr-5 col-start-1 col-end-4  md:col-end-2" clearable placeholder="Select academic year">
+                <el-option
+                  v-for="(item, index) in optionsAcademicYear"
+                  :key="index"
+                  :label="item.title"
+                  :value="item.id"
+                />
+              </el-select>
+              <el-button :disabled="academic_year === ''" type="success" icon="el-icon-receiving" class="col-start-1 col-end-3 md:col-start-2 col-end-2" @click="downloadCSV">
+                Export CSV
+              </el-button>
+              <el-button type="success" icon="el-icon-s-management" class="col-start-1 col-end-3 md:col-start-3 col-end-3" @click="downloadZip">
+                Export Zip
+              </el-button>
+            </div>
+          </el-card>
           <el-card shadow="always" class="mb-5">
             <div class="grid grid-cols-3 gap-4 items-center">
               <el-select v-model="searchKey" style="width: 100%;" class="mr-5 col-start-1 col-end-4  md:col-end-2" clearable placeholder="Select key to sort">
@@ -66,7 +84,9 @@
             <div class="post-feed-item__info">
               <div class="post-meta--inline">
                 <div class="mr-5">
-                  <span>{{ item.user }}</span>
+                  <p class="text-cyan-500" style="color: green">
+                    {{ item.user }}
+                  </p>
                 </div>
                 <div class="post-meta d-inline-flex align-items-center flex-wrap">
                   <div class="text-muted mr-0">
@@ -158,6 +178,7 @@ export default {
       }],
       radio_choice: '',
       searchKey: '',
+      academic_year: '',
       optionsSearchKey: [
         {
           value: 'like',
@@ -173,36 +194,47 @@ export default {
           label: 'Created'
         }
       ],
+      optionsAcademicYear: [],
       currentPage: 1,
       pageSizes: [10, 50, 100],
       pageSize: 10,
       totalItems: 1,
       valueSort: '',
-      listData: []
+      listData: [],
+      res: {}
     }
   },
   watch: {
     searchKey () {
       if (this.searchKey === '') {
         this.radio_choice = ''
+      } else {
+        this.valueSort = this.searchKey + this.radio_choice
+        // eslint-disable-next-line no-console
+        this.fetchData(this.valueSort)
       }
     },
     radio_choice () {
       this.valueSort = this.searchKey + this.radio_choice
       // eslint-disable-next-line no-console
-      this.fetchData(this.valueSort)
+      this.fetchData(this.valueSort, this.academic_year)
+    },
+    academic_year () {
+      this.fetchData(this.valueSort, this.academic_year)
     }
   },
   created () {
     this.fetchData()
+    this.fetchAcadeicYear()
   },
   methods: {
-    async fetchData (order) {
+    async fetchData (order, academicYear) {
       try {
         const query = {
           page: this.currentPage,
           limit: this.pageSize,
-          order_by: order
+          order_by: order,
+          aca_year_id: academicYear
         }
         if (query.order_by === '') {
           delete query.order_by
@@ -213,28 +245,52 @@ export default {
         if (query.page === '') {
           delete query.page
         }
+        if (query.aca_year_id === '') {
+          delete query.aca_year_id
+        }
+        // eslint-disable-next-line no-console
         this.$store.commit('pages/setLoading', true)
-        const res = await idea.getAll(query)
+        // eslint-disable-next-line no-console
+        console.log('current User', this.$store.getters['user/getCurrentUser'])
+        const role = this.$store.getters['user/getCurrentUser'].role
+
+        if (role === 'STAFF') {
+          this.res = await idea.getAll(query)
+        } else {
+          this.res = await idea.advGetAll(query)
+        }
         const formatData = []
-        res.data.data.length > 0 && res.data.data.map((item) => {
+        this.res.data.data.length > 0 && this.res.data.data.map((item) => {
           const rowData = {
             ...item,
-            created_at: moment(item.created_at, 'YYYYMMDD').fromNow(),
-            user: item.user === null ? 'Anonymous' : item.user
+            created_at: moment(item.created_at).fromNow(),
+            user: item.user === null ? 'Anonymous' : item.user.full_name
           }
           return formatData.push(rowData)
         })
         this.listData.user = this.listData.user === null ? 'Anonymous' : this.listData.user
         this.listData = formatData
-        this.currentPage = res.data.paging.page
-        this.pageSize = res.data.paging.limit
-        this.totalItems = res.data.paging.total
+        this.currentPage = this.res.data.paging.page
+        this.pageSize = this.res.data.paging.limit
+        this.totalItems = this.res.data.paging.total
         // eslint-disable-next-line no-console
         console.log(this.listData)
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
         this.$store.commit('pages/setLoading', false)
+      }
+    },
+    async fetchAcadeicYear () {
+      try {
+        if (this.$store.getters['user/getCurrentUser'].role === 'QAM') {
+          const res = await idea.listQamAcademic()
+          // eslint-disable-next-line no-console
+          this.optionsAcademicYear = res.data.data
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
       }
     },
     handleSizeChange (val) {
@@ -249,6 +305,22 @@ export default {
     },
     viewIdea (id) {
       this.$router.push('/idea/view-idea/' + id)
+    },
+    downloadCSV () {
+      try {
+        window.open('https://groupbar.me/api/v1/qam/export-ideas?aca_year_id=' + this.academic_year)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
+    },
+    downloadZip () {
+      try {
+        window.open('https://groupbar.me/api/v1/qam/export-docs')
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
     }
   }
 }

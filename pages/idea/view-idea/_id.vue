@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
-      <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
+      <div class="block mb-8 grid grid-cols-6 gap-4">
         <!-- main content -->
         <div class="main-content col-start-1 md:col-end-6 col-end-9">
           <el-card shadow="always" class="item-idea">
@@ -18,46 +18,49 @@
             </div>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="content" />
-            <div class="btn-rate flex flex-row">
+            <div class="btn-rate flex flex-row mt-8">
               <div class="like-zone mr-2">
                 <el-button
                   v-if="clicked_like"
                   size="mini"
                   type="success"
-                  icon="el-icon-check"
+                  icon="el-icon-caret-top"
+                  circle
+                  class="mr-1"
                   @click="handleClickLike"
-                >
-                  {{ formData.likes_count }}
-                </el-button>
+                />
                 <el-button
                   v-else
                   size="mini"
                   type="infor"
-                  icon="el-icon-check"
+                  icon="el-icon-caret-top"
+                  class="mr-1"
+                  circle
                   @click="handleClickLike"
-                >
-                  {{ formData.likes_count }}
-                </el-button>
+                />
+                {{ formData.likes_count }}
               </div>
               <div class="dislike-zone">
                 <el-button
                   v-if="clicked_dislike"
                   size="mini"
                   type="danger"
-                  icon="el-icon-close"
+                  class="mr-1 ml-2"
+                  icon="el-icon-caret-bottom"
+                  circle
                   @click="handleClickDislike"
-                >
-                  {{ formData.dislikes_count }}
-                </el-button>
+                />
+
                 <el-button
                   v-else
                   size="mini"
                   type="infor"
-                  icon="el-icon-close"
+                  class="mr-1 ml-2"
+                  icon="el-icon-caret-bottom"
+                  circle
                   @click="handleClickDislike"
-                >
-                  {{ formData.dislikes_count }}
-                </el-button>
+                />
+                {{ formData.dislikes_count }}
               </div>
             </div>
           </el-card>
@@ -216,7 +219,14 @@ export default {
     async getDetail () {
       try {
         this.$store.commit('pages/setLoading', true)
-        const res = await idea.details(this.$route.params.id)
+        let res = {}
+        const role = this.$store.getters['user/getCurrentUser'].role
+
+        if (role === 'STAFF') {
+          res = await idea.details(this.$route.params.id)
+        } else {
+          res = await idea.advDetails(this.$route.params.id)
+        }
         const dataDetail = res.data.data
         this.formData.created_at = moment(dataDetail.created_at).fromNow()
         this.formData.user = dataDetail.user === null ? 'Anonymous' : dataDetail.user.full_name
@@ -265,15 +275,24 @@ export default {
     },
     async getListByCategory (category) {
       try {
-        const res = await idea.getAll({
-          category_id: category
-        })
+        let res = {}
+        const role = this.$store.getters['user/getCurrentUser'].role
+
+        if (role === 'STAFF') {
+          res = await idea.getAll({
+            category_id: category
+          })
+        } else {
+          res = await idea.advGetAll({
+            category_id: category
+          })
+        }
         const formatData = []
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {
             ...item,
             created_at: moment(item.created_at).fromNow(),
-            user: item.user === null ? 'Anonymous' : item.user
+            user: item.user === null ? 'Anonymous' : item.user.full_name
           }
           return formatData.push(rowData)
         })
@@ -332,7 +351,14 @@ export default {
     },
     async getComment () {
       try {
-        const res = await idea.getListComment(this.$route.params.id)
+        let res = {}
+        const role = this.$store.getters['user/getCurrentUser'].role
+
+        if (role === 'STAFF') {
+          res = await idea.getListComment(this.$route.params.id)
+        } else {
+          res = await idea.advGetListComment(this.$route.params.id)
+        }
         const formatData = []
         res.data.data.length > 0 && res.data.data.map((item) => {
           const rowData = {

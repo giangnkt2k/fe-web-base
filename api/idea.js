@@ -67,3 +67,29 @@ export const disLikeIdea = async (id) => {
 export const returnDislikeIdea = async (id) => {
   return await axios.delete(`idea/${id}/dislike`)
 }
+
+// adv
+export const advGetAll = async (params = {}) => {
+  return await axios.get('adv/idea', { params })
+}
+
+export const advGetListComment = async (id) => {
+  return await axios.get(`adv/idea/${id}/comment`)
+}
+
+export const advDetails = async (id) => {
+  return await axios.get(`adv/idea/${id}`)
+}
+
+// qam
+export const listQamAcademic = async () => {
+  return await axios.get('qam/academic-year')
+}
+
+export const exportCSVIdea = async (params = {}) => {
+  return await axios.get('qam/export-ideas', { params })
+}
+
+export const exportZip = async () => {
+  return await axios.get('qam/export-docs')
+}
