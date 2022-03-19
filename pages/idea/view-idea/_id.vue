@@ -253,9 +253,6 @@ export default {
         try {
           const currentUser = this.currentUser_id
           const res = await idea.getUserLikeIdea(this.$route.params.id)
-          // eslint-disable-next-line no-console
-          console.log('res', res.data.data) // eslint-disable-next-line no-console
-          console.log('currentUser', this.$store.getters['user/getCurrentUser'])
           const haveLike = res.data.data.filter(e => e.userId === currentUser)
           if (haveLike.length > 0) {
             this.clicked_like = true

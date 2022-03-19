@@ -19,6 +19,7 @@ import TopBar from '@/components/layouts/TopBar.vue'
 import loading from '@/components/elements/loading/index.vue'
 import { currentUser } from '@/api/user'
 import menuMixin from '~/mixins/menu.js'
+
 export default {
   name: 'DefaultLayoutTemplate',
   components: {

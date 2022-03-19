@@ -273,8 +273,6 @@ export default {
           this.currentPage = this.res.data.paging.page
           this.pageSize = this.res.data.paging.limit
           this.totalItems = this.res.data.paging.total
-          // eslint-disable-next-line no-console
-          console.log(this.listData)
           this.$store.commit('pages/setLoading', false)
         } catch (e) {
           this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
@@ -287,7 +285,6 @@ export default {
         try {
           if (this.$store.getters['user/getCurrentUser'].role === 'QAM') {
             const res = await idea.listQamAcademic()
-            // eslint-disable-next-line no-console
             this.optionsAcademicYear = res.data.data
           }
         } catch (e) {
@@ -298,8 +295,6 @@ export default {
     },
     handleSizeChange (val) {
       this.pageSize = val
-      // eslint-disable-next-line no-console
-      console.log('pageSize', this.pageSize)
       this.fetchData()
     },
     handleCurrentChange (val) {
