@@ -207,7 +207,9 @@ export default {
       commentList: [],
       statusRegression: 0,
       currentUser_id: '',
-      is_anonymous_cmt: false
+      is_anonymous_cmt: false,
+      is_like: '',
+      is_dislike: ''
     }
   },
   created () {
@@ -236,11 +238,12 @@ export default {
           this.formData.likes_count = dataDetail.likes_count
           this.formData.dislikes_count = dataDetail.dislikes_count
           this.formData.comments_count = dataDetail.comments_count
+          this.clicked_like = dataDetail.is_like
+          this.clicked_dislike = dataDetail.is_dislike
           this.content = dataDetail.content
           this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
           this.getListByCategory(res.data.data.category_id)
           this.getComment()
-          this.handleUserAction()
           this.$store.commit('pages/setLoading', false)
         } catch (e) {
           this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
