@@ -156,7 +156,7 @@ export default {
   data () {
     return {
       slides: ['https://greenwich.edu.vn/wp-content/uploads/2021/01/banner-2.jpg',
-        'https://vtv1.mediacdn.vn/thumb_w/1000/2021/7/25/da-nang-2-1627212353368273813312.jpg',
+        'https://vtv1.mediacdn.vn/thumb_w/500/2021/7/25/da-nang-2-1627212353368273813312.jpg',
         'https://greenwich.edu.vn/wp-content/uploads/2020/06/xet-tuyen-dai-hoc-fpt-greenwich.jpg'],
       activities: [{
         content: 'Start date',
@@ -201,7 +201,8 @@ export default {
       totalItems: 1,
       valueSort: '',
       listData: [],
-      res: {}
+      res: {},
+      currentUser: {}
     }
   },
   watch: {
@@ -228,70 +229,72 @@ export default {
     this.fetchAcadeicYear()
   },
   methods: {
-    async fetchData (order, academicYear) {
-      try {
-        const query = {
-          page: this.currentPage,
-          limit: this.pageSize,
-          order_by: order,
-          aca_year_id: academicYear
-        }
-        if (query.order_by === '') {
-          delete query.order_by
-        }
-        if (query.limit === '') {
-          delete query.limit
-        }
-        if (query.page === '') {
-          delete query.page
-        }
-        if (query.aca_year_id === '') {
-          delete query.aca_year_id
-        }
-        // eslint-disable-next-line no-console
-        this.$store.commit('pages/setLoading', true)
-        // eslint-disable-next-line no-console
-        console.log('current User', this.$store.getters['user/getCurrentUser'])
-        const role = this.$store.getters['user/getCurrentUser'].role
-
-        if (role === 'STAFF') {
-          this.res = await idea.getAll(query)
-        } else {
-          this.res = await idea.advGetAll(query)
-        }
-        const formatData = []
-        this.res.data.data.length > 0 && this.res.data.data.map((item) => {
-          const rowData = {
-            ...item,
-            created_at: moment(item.created_at).fromNow(),
-            user: item.user === null ? 'Anonymous' : item.user.full_name
+    fetchData (order, academicYear) {
+      setTimeout(async () => {
+        try {
+          const query = {
+            page: this.currentPage,
+            limit: this.pageSize,
+            order_by: order,
+            aca_year_id: academicYear
           }
-          return formatData.push(rowData)
-        })
-        this.listData.user = this.listData.user === null ? 'Anonymous' : this.listData.user
-        this.listData = formatData
-        this.currentPage = this.res.data.paging.page
-        this.pageSize = this.res.data.paging.limit
-        this.totalItems = this.res.data.paging.total
-        // eslint-disable-next-line no-console
-        console.log(this.listData)
-        this.$store.commit('pages/setLoading', false)
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
-    },
-    async fetchAcadeicYear () {
-      try {
-        if (this.$store.getters['user/getCurrentUser'].role === 'QAM') {
-          const res = await idea.listQamAcademic()
+          if (query.order_by === '') {
+            delete query.order_by
+          }
+          if (query.limit === '') {
+            delete query.limit
+          }
+          if (query.page === '') {
+            delete query.page
+          }
+          if (query.aca_year_id === '') {
+            delete query.aca_year_id
+          }
+          this.$store.commit('pages/setLoading', true)
+
+          const role = this.$store.getters['user/getCurrentUser'].role
+
+          if (role === 'STAFF') {
+            this.res = await idea.getAll(query)
+          } else {
+            this.res = await idea.advGetAll(query)
+          }
+          const formatData = []
+          this.res.data.data.length > 0 && this.res.data.data.map((item) => {
+            const rowData = {
+              ...item,
+              created_at: moment(item.created_at).fromNow(),
+              user: item.user === null ? 'Anonymous' : item.user.full_name
+            }
+            return formatData.push(rowData)
+          })
+          this.listData.user = this.listData.user === null ? 'Anonymous' : this.listData.user
+          this.listData = formatData
+          this.currentPage = this.res.data.paging.page
+          this.pageSize = this.res.data.paging.limit
+          this.totalItems = this.res.data.paging.total
           // eslint-disable-next-line no-console
-          this.optionsAcademicYear = res.data.data
+          console.log(this.listData)
+          this.$store.commit('pages/setLoading', false)
+        } catch (e) {
+          this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+          this.$store.commit('pages/setLoading', false)
         }
-      } catch (e) {
+      }, 500)
+    },
+    fetchAcadeicYear () {
+      setTimeout(async () => {
+        try {
+          if (this.$store.getters['user/getCurrentUser'].role === 'QAM') {
+            const res = await idea.listQamAcademic()
+            // eslint-disable-next-line no-console
+            this.optionsAcademicYear = res.data.data
+          }
+        } catch (e) {
         // eslint-disable-next-line no-console
-        console.log(e)
-      }
+          console.log(e)
+        }
+      }, 500)
     },
     handleSizeChange (val) {
       this.pageSize = val

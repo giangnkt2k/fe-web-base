@@ -188,7 +188,7 @@ export default {
   data () {
     return {
       slides: ['https://greenwich.edu.vn/wp-content/uploads/2021/01/banner-2.jpg',
-        'https://vtv1.mediacdn.vn/thumb_w/1000/2021/7/25/da-nang-2-1627212353368273813312.jpg',
+        'https://vtv1.mediacdn.vn/thumb_w/500/2021/7/25/da-nang-2-1627212353368273813312.jpg',
         'https://greenwich.edu.vn/wp-content/uploads/2020/06/xet-tuyen-dai-hoc-fpt-greenwich.jpg'],
       listData: [],
       content: '',
@@ -216,91 +216,97 @@ export default {
     console.log('Created', this.$route.params.id)
   },
   methods: {
-    async getDetail () {
-      try {
-        this.$store.commit('pages/setLoading', true)
-        let res = {}
-        const role = this.$store.getters['user/getCurrentUser'].role
+    getDetail () {
+      setTimeout(async () => {
+        try {
+          this.$store.commit('pages/setLoading', true)
+          let res = {}
+          const role = this.$store.getters['user/getCurrentUser'].role
 
-        if (role === 'STAFF') {
-          res = await idea.details(this.$route.params.id)
-        } else {
-          res = await idea.advDetails(this.$route.params.id)
+          if (role === 'STAFF') {
+            res = await idea.details(this.$route.params.id)
+          } else {
+            res = await idea.advDetails(this.$route.params.id)
+          }
+          const dataDetail = res.data.data
+          this.formData.created_at = moment(dataDetail.created_at).fromNow()
+          this.formData.user = dataDetail.user === null ? 'Anonymous' : dataDetail.user.full_name
+          this.formData.title = dataDetail.title
+          this.formData.views_count = dataDetail.views_count
+          this.formData.likes_count = dataDetail.likes_count
+          this.formData.dislikes_count = dataDetail.dislikes_count
+          this.formData.comments_count = dataDetail.comments_count
+          this.content = dataDetail.content
+          this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
+          this.getListByCategory(res.data.data.category_id)
+          this.getComment()
+          this.handleUserAction()
+          this.$store.commit('pages/setLoading', false)
+        } catch (e) {
+          this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+          this.$store.commit('pages/setLoading', false)
         }
-        const dataDetail = res.data.data
-        this.formData.created_at = moment(dataDetail.created_at).fromNow()
-        this.formData.user = dataDetail.user === null ? 'Anonymous' : dataDetail.user.full_name
-        this.formData.title = dataDetail.title
-        this.formData.views_count = dataDetail.views_count
-        this.formData.likes_count = dataDetail.likes_count
-        this.formData.dislikes_count = dataDetail.dislikes_count
-        this.formData.comments_count = dataDetail.comments_count
-        this.content = dataDetail.content
-        this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
-        this.getListByCategory(res.data.data.category_id)
-        this.getComment()
-        this.handleUserAction()
-        this.$store.commit('pages/setLoading', false)
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
+      }, 500)
     },
-    async handleUserAction () {
-      try {
-        const currentUser = this.currentUser_id
-        const res = await idea.getUserLikeIdea(this.$route.params.id)
-        // eslint-disable-next-line no-console
-        console.log('res', res.data.data) // eslint-disable-next-line no-console
-        console.log('currentUser', this.$store.getters['user/getCurrentUser'])
-        const haveLike = res.data.data.filter(e => e.userId === currentUser)
-        if (haveLike.length > 0) {
-          this.clicked_like = true
-        } else {
-          try {
-            const res = await idea.getUserDisLikeIdea(this.$route.params.id)
-            const haveDisLike = res.data.data.filter(e => e.userId === currentUser)
-            if (haveDisLike.length > 0) {
-              this.clicked_dislike = true
+    handleUserAction () {
+      setTimeout(async () => {
+        try {
+          const currentUser = this.currentUser_id
+          const res = await idea.getUserLikeIdea(this.$route.params.id)
+          // eslint-disable-next-line no-console
+          console.log('res', res.data.data) // eslint-disable-next-line no-console
+          console.log('currentUser', this.$store.getters['user/getCurrentUser'])
+          const haveLike = res.data.data.filter(e => e.userId === currentUser)
+          if (haveLike.length > 0) {
+            this.clicked_like = true
+          } else {
+            try {
+              const res = await idea.getUserDisLikeIdea(this.$route.params.id)
+              const haveDisLike = res.data.data.filter(e => e.userId === currentUser)
+              if (haveDisLike.length > 0) {
+                this.clicked_dislike = true
+              }
+            } catch (e) {
+              this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+              this.$store.commit('pages/setLoading', false)
             }
-          } catch (e) {
-            this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-            this.$store.commit('pages/setLoading', false)
           }
+        } catch (e) {
+          this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+          this.$store.commit('pages/setLoading', false)
         }
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
+      }, 500)
     },
-    async getListByCategory (category) {
-      try {
-        let res = {}
-        const role = this.$store.getters['user/getCurrentUser'].role
+    getListByCategory (category) {
+      setTimeout(async () => {
+        try {
+          let res = {}
+          const role = this.$store.getters['user/getCurrentUser'].role
 
-        if (role === 'STAFF') {
-          res = await idea.getAll({
-            category_id: category
-          })
-        } else {
-          res = await idea.advGetAll({
-            category_id: category
-          })
-        }
-        const formatData = []
-        res.data.data.length > 0 && res.data.data.map((item) => {
-          const rowData = {
-            ...item,
-            created_at: moment(item.created_at).fromNow(),
-            user: item.user === null ? 'Anonymous' : item.user.full_name
+          if (role === 'STAFF') {
+            res = await idea.getAll({
+              category_id: category
+            })
+          } else {
+            res = await idea.advGetAll({
+              category_id: category
+            })
           }
-          return formatData.push(rowData)
-        })
-        this.listData = formatData
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
+          const formatData = []
+          res.data.data.length > 0 && res.data.data.map((item) => {
+            const rowData = {
+              ...item,
+              created_at: moment(item.created_at).fromNow(),
+              user: item.user === null ? 'Anonymous' : item.user.full_name
+            }
+            return formatData.push(rowData)
+          })
+          this.listData = formatData
+        } catch (e) {
+          this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+          this.$store.commit('pages/setLoading', false)
+        }
+      }, 500)
     },
     viewIdea (id) {
       this.$router.push('/idea/view-idea/' + id)
@@ -349,30 +355,32 @@ export default {
       }
       this.clicked_dislike = !this.clicked_dislike
     },
-    async getComment () {
-      try {
-        let res = {}
-        const role = this.$store.getters['user/getCurrentUser'].role
+    getComment () {
+      setTimeout(async () => {
+        try {
+          let res = {}
+          const role = this.$store.getters['user/getCurrentUser'].role
 
-        if (role === 'STAFF') {
-          res = await idea.getListComment(this.$route.params.id)
-        } else {
-          res = await idea.advGetListComment(this.$route.params.id)
-        }
-        const formatData = []
-        res.data.data.length > 0 && res.data.data.map((item) => {
-          const rowData = {
-            ...item,
-            created_at: moment(item.created_at).fromNow(),
-            user: item.user === null ? 'Anonymous' : item.user
+          if (role === 'STAFF') {
+            res = await idea.getListComment(this.$route.params.id)
+          } else {
+            res = await idea.advGetListComment(this.$route.params.id)
           }
-          return formatData.push(rowData)
-        })
-        this.commentList = formatData
-      } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
-        this.$store.commit('pages/setLoading', false)
-      }
+          const formatData = []
+          res.data.data.length > 0 && res.data.data.map((item) => {
+            const rowData = {
+              ...item,
+              created_at: moment(item.created_at).fromNow(),
+              user: item.user === null ? 'Anonymous' : item.user
+            }
+            return formatData.push(rowData)
+          })
+          this.commentList = formatData
+        } catch (e) {
+          this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+          this.$store.commit('pages/setLoading', false)
+        }
+      }, 500)
     },
     async handleSendComment () {
       try {
