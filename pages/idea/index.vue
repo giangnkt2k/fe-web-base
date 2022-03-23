@@ -1,29 +1,31 @@
 <template>
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 px-6 md:px-2">
-      <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="w-100 search-div col-start-1 col-end-9  md:col-end-4 flex flex-row">
-          <el-select v-model="searchKey" clearable placeholder="Select key to search" style="margin-right: 5px;">
-            <el-option
-              v-for="(item, index) in optionsSearchKey"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
+      <el-card class="mb-8">
+        <div class="block grid grid-cols-6 gap-4 items-center">
+          <div class="w-100 search-div col-start-1 col-end-9  md:col-end-4 flex flex-row">
+            <el-select v-model="searchKey" clearable placeholder="Select key to search" style="margin-right: 5px;">
+              <el-option
+                v-for="(item, index) in optionsSearchKey"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-model="search"
+              :disabled="searchKey === ''"
+              placeholder="Type to search"
             />
-          </el-select>
-          <el-input
-            v-model="search"
-            :disabled="searchKey === ''"
-            placeholder="Type to search"
-          />
-          <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
+            <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
+          </div>
+          <div class="create-div col-start-1 md:col-start-8 col-end-8">
+            <el-button :disabled="!can_comment" type="success" @click="openDialog">
+              Create Idea
+            </el-button>
+          </div>
         </div>
-        <div class="create-div col-start-1 md:col-start-8 col-end-8">
-          <el-button type="success" @click="openDialog">
-            Create Idea
-          </el-button>
-        </div>
-      </div>
+      </el-card>
       <components-table
         :props-table-data="tableData"
         :props-table-header="tableHeader"
@@ -121,13 +123,26 @@ export default {
       listFileUpload: [],
       thumbnailUrl: '',
       singleIdea: {},
-      searchKey: ''
+      searchKey: '',
+      can_comment: ''
     }
   },
   created () {
     this.fetchData()
+    this.getStatusAcaYear()
   },
   methods: {
+    async getStatusAcaYear () {
+      try {
+        const res = await idea.checkCurrentAca()
+        const data = res.data.data
+        // eslint-disable-next-line no-console
+        console.log('datata', data)
+        this.can_comment = data.can_post_comment
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+      }
+    },
     handleSearch () {
       if (this.search !== '') {
         this.fetchData()

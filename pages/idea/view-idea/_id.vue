@@ -73,6 +73,7 @@
               type="textarea"
               :rows="2"
               placeholder="Please comment"
+              :disabled="!can_comment"
             />
             <el-switch
               v-model="is_anonymous_cmt"
@@ -81,6 +82,7 @@
               active-color="#13ce66"
               inactive-color="#ff4949"
               active-text="Anonymous"
+              :disabled="!can_comment"
             />
             <el-button
               :disabled="comment === ''"
@@ -210,11 +212,13 @@ export default {
       currentUser: {},
       is_anonymous_cmt: false,
       is_like: '',
-      is_dislike: ''
+      is_dislike: '',
+      can_comment: true
     }
   },
   created () {
     this.getDetail()
+    this.getStatusAcaYear()
     // eslint-disable-next-line no-console
     console.log('Created', this.$route.params.id)
   },
@@ -252,6 +256,17 @@ export default {
           this.$store.commit('pages/setLoading', false)
         }
       }, 500)
+    },
+    async getStatusAcaYear () {
+      try {
+        const res = await idea.checkCurrentAca()
+        const data = res.data.data
+        // eslint-disable-next-line no-console
+        console.log('datata', data)
+        this.can_comment = data.can_post_comment
+      } catch (e) {
+        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+      }
     },
     handleUserAction () {
       setTimeout(async () => {

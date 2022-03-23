@@ -96,3 +96,12 @@ export const exportCSVIdea = async (params = {}) => {
 export const exportZip = async () => {
   return await axios.get('qam/export-docs')
 }
+
+// check academic
+export const getCurrentAca = async (params = {}) => {
+  return await axios.get('current-academic-year')
+}
+
+export const checkCurrentAca = async (params = {}) => {
+  return await axios.get('current-academic-year/check')
+}

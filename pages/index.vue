@@ -14,7 +14,10 @@
           <!-- timeLine -->
           <div class="block-item">
             <el-card class="box-card">
-              <div class="block">
+              <div class="block my-3">
+                <div class="block mb-2">
+                  {{ aca_name }}
+                </div>
                 <el-timeline>
                   <el-timeline-item
                     v-for="(activity, index) in activities"
@@ -176,6 +179,7 @@ export default {
         content: 'End date',
         timestamp: '2018-04-03 20:46'
       }],
+      aca_name: '',
       radio_choice: '',
       searchKey: '',
       academic_year: '',
@@ -227,6 +231,7 @@ export default {
   created () {
     this.fetchData()
     this.fetchAcadeicYear()
+    this.getCurrnetAcadeicYear()
   },
   methods: {
     fetchData (order, academicYear) {
@@ -292,6 +297,36 @@ export default {
           console.log(e)
         }
       }, 500)
+    },
+    async getCurrnetAcadeicYear () {
+      try {
+        const res = await idea.getCurrentAca()
+        const data = res.data.data
+        // eslint-disable-next-line no-console
+        console.log('acaca', data)
+        this.aca_name = data.title
+        this.activities = [{
+          content: 'Start date',
+          timestamp: data.start_date,
+          size: 'large',
+          type: 'primary',
+          icon: 'el-icon-more'
+        }, {
+          content: 'First closure date',
+          timestamp: data.first_closure_date,
+          color: '#0bbd87'
+        }, {
+          content: 'Final closure date',
+          timestamp: data.final_closure_date,
+          size: 'large'
+        }, {
+          content: 'End date',
+          timestamp: data.end_date
+        }]
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e)
+      }
     },
     handleSizeChange (val) {
       this.pageSize = val
