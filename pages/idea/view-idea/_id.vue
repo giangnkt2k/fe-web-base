@@ -95,8 +95,8 @@
               <div v-for="(item, index) in commentList" :key="index">
                 <div class="item-comment my-3">
                   <div class="item-comment-infor text-muted">
-                    <span v-if="item.is_anonymous !== true" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
-                    <span v-if="item.is_anonymous === true" class="text-md mr-2 text-sky-900">Anonymous</span>
+                    <span v-if="item.user_id !== 0" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
+                    <span v-else-if="item.user_id === 0" class="text-md mr-2 text-sky-900">Anonymous</span>
                     <span class="tex-xs"> {{ item.created_at }} </span>
                     <el-button v-if="item.user.id === currentUser_id" type="mini" style="float: right;" icon="el-icon-delete" circle />
                   </div>
@@ -207,6 +207,7 @@ export default {
       commentList: [],
       statusRegression: 0,
       currentUser_id: '',
+      currentUser: {},
       is_anonymous_cmt: false,
       is_like: '',
       is_dislike: ''
@@ -242,6 +243,7 @@ export default {
           this.clicked_dislike = dataDetail.is_dislike
           this.content = dataDetail.content
           this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
+          this.currentUser = this.$store.getters['user/getCurrentUser']
           this.getListByCategory(res.data.data.category_id)
           this.getComment()
           this.$store.commit('pages/setLoading', false)

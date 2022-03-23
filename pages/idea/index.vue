@@ -156,7 +156,7 @@ export default {
       try {
         const formData = new FormData()
         formData.append('upload', file)
-        const image = await idea.upload(formData)
+        const image = await idea.uploadCommon(formData)
         this.thumbnailUrl = image.data.data.url
       } catch (e) {
         // eslint-disable-next-line no-console

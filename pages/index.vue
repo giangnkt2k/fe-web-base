@@ -112,12 +112,12 @@
                   </span>
                   <span class="stats-item text-muted mr-2">
                     <!-- <font-awesome-icon icon="fa-solid fa-thumbs-up" /> -->
-                    <i class="el-icon-success" />
+                    <i class="el-icon-caret-top" />
                     <span>{{ item.likes_count }}</span>
                   </span>
                   <span class="stats-item text-muted mr-2">
                     <!-- <font-awesome-icon icon="fa-solid fa-thumbs-down" /> -->
-                    <i class="el-icon-error" />
+                    <i class="el-icon-caret-bottom" />
                     <span>{{ item.dislikes_count }}</span>
                   </span>
                   <span class="stats-item text-muted mr-2">

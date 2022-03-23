@@ -16,6 +16,9 @@ export const upload = async (params = {}) => {
   return await axios.post('upload', params)
 }
 
+export const uploadCommon = async (params = {}) => {
+  return await axios.post('upload-common', params)
+}
 export const update = async (params = {}) => {
   return await axios.put(`idea/${params.id}`, params)
 }
