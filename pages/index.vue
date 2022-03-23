@@ -47,7 +47,7 @@
               <el-button :disabled="academic_year === ''" type="success" icon="el-icon-receiving" class="col-start-1 col-end-3 md:col-start-2 col-end-2" @click="downloadCSV">
                 Export CSV
               </el-button>
-              <el-button type="success" icon="el-icon-s-management" class="col-start-1 col-end-3 md:col-start-3 col-end-3" @click="downloadZip">
+              <el-button :disabled="academic_year === ''" type="success" icon="el-icon-s-management" class="col-start-1 col-end-3 md:col-start-3 col-end-3" @click="downloadZip">
                 Export Zip
               </el-button>
             </div>
@@ -314,7 +314,7 @@ export default {
     },
     downloadZip () {
       try {
-        window.open('https://groupbar.me/api/v1/qam/export-docs')
+        window.open('https://groupbar.me/api/v1/qam/export-docs?aca_year_id=' + this.academic_year)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e)
