@@ -15,7 +15,7 @@
           <div class="block-item">
             <el-card class="box-card">
               <div class="block my-3">
-                <div class="block mb-2">
+                <div class="block mb-2 " style="color: #304156">
                   {{ aca_name }}
                 </div>
                 <el-timeline>
@@ -307,21 +307,21 @@ export default {
         this.aca_name = data.title
         this.activities = [{
           content: 'Start date',
-          timestamp: data.start_date,
+          timestamp: data.start_date.moment().format('MMM Do YY'),
           size: 'large',
           type: 'primary',
           icon: 'el-icon-more'
         }, {
           content: 'First closure date',
-          timestamp: data.first_closure_date,
+          timestamp: data.first_closure_date.moment().format('MMM Do YY'),
           color: '#0bbd87'
         }, {
           content: 'Final closure date',
-          timestamp: data.final_closure_date,
+          timestamp: data.final_closure_date.moment().format('MMM Do YY'),
           size: 'large'
         }, {
           content: 'End date',
-          timestamp: data.end_date
+          timestamp: data.end_date.moment().format('MMM Do YY')
         }]
       } catch (e) {
         // eslint-disable-next-line no-console

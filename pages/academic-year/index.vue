@@ -1,30 +1,32 @@
 <template>
   <div>
     <div class="md:container md:mx-auto pt-6 px-6 md:px2">
-      <div class="block mb-8 grid grid-cols-6 gap-4 items-center">
-        <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
-          <el-select v-model="searchKey" clearable placeholder="Select key to search">
-            <el-option
-              v-for="(item, index) in optionsSearchKey"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
+      <el-card class="mb-8">
+        <div class="block  grid grid-cols-6 gap-4 items-center">
+          <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
+            <el-select v-model="searchKey" clearable placeholder="Select key to search">
+              <el-option
+                v-for="(item, index) in optionsSearchKey"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-input
+              v-model="search"
+              :disabled="searchKey === ''"
+              style="margin-left: 5px;"
+              placeholder="Type to search"
             />
-          </el-select>
-          <el-input
-            v-model="search"
-            :disabled="searchKey === ''"
-            style="margin-left: 5px;"
-            placeholder="Type to search"
-          />
-          <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
+            <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
+          </div>
+          <div class="create-div col-start-1 md:col-start-8 col-end-8">
+            <el-button type="success" @click="openDialog">
+              Create Academic Year
+            </el-button>
+          </div>
         </div>
-        <div class="create-div col-start-1 md:col-start-8 col-end-8">
-          <el-button type="success" @click="openDialog">
-            Create Academic Year
-          </el-button>
-        </div>
-      </div>
+      </el-card>
       <components-table
         :props-table-data="tableData"
         :props-table-header="tableHeader"
@@ -55,6 +57,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import * as academicYear from '@/api/academicYear'
 import ComponentsTable from '@/components/tableCURD/index.vue'
 import create from '@/components/dialogs/academinYear/create.vue'
@@ -208,10 +211,17 @@ export default {
         const res = await academicYear.list(query)
         const formatData = []
         res.data.data.length > 0 && res.data.data.map((item) => {
+          // eslint-disable-next-line no-console
+          console.log('item: ' + item.start_date)
           const rowData = {
             ...item,
             status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'
           }
+          rowData.start_date = moment(item.start_date).format('l')
+          rowData.end_date = moment(item.end_date).format('l')
+          rowData.final_closure_date = moment(item.final_closure_date).format('l')
+          rowData.first_closure_date = moment(item.first_closure_date).format('l')
+
           return formatData.push(rowData)
         })
         this.tableData = formatData
