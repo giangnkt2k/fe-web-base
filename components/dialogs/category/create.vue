@@ -4,7 +4,8 @@
       title="Create New Category"
       :visible.sync="dialogVisible"
       append-to-body
-      width="80%"
+      width="50%"
+      :close-on-click-modal="false"
     >
       <ValidationObserver
         ref="obsAddCategory"

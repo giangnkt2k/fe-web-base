@@ -5,6 +5,7 @@
       :visible.sync="dialogVisible"
       append-to-body
       width="80%"
+      :close-on-click-modal="false"
     >
       <ValidationObserver
         ref="obsAddIdea"
