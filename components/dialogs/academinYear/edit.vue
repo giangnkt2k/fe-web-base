@@ -107,8 +107,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active "
+                  inactive-text="Inactive "
                 />
                 <div class="text-error">
                   {{ errors[0] }}

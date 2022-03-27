@@ -9,7 +9,7 @@
                 class="w-32 h-32 rounded-full mx-auto"
                 :src="currentUser.avatar"
                 alt="avatar null"
-              />
+              >
             </div>
             <div class="p-2">
               <h3
@@ -62,7 +62,7 @@
                   </tr> -->
                 </tbody>
               </table>
-              <div class="text-center my-3"></div>
+              <div class="text-center my-3" />
             </div>
           </el-card>
         </div>
@@ -86,9 +86,7 @@
           <form class="space-y-5">
             <!-- Full name -->
             <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Full name</label
-              >
+              <label class="block mb-1 font-bold text-gray-500">Full name</label>
               <input
                 v-model="currentUser.full_name"
                 type="text"
@@ -100,7 +98,7 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- Gender-->
             <div>
@@ -112,7 +110,7 @@
                     class="form-radio"
                     name="accountType"
                     value="personal"
-                  />
+                  >
                   <span class="ml-2">Male</span>
                 </label>
 
@@ -122,7 +120,7 @@
                     class="form-radio"
                     name="accountType"
                     value="busines"
-                  />
+                  >
                   <span class="ml-2">Female</span>
                 </label>
 
@@ -132,7 +130,7 @@
                     class="form-radio"
                     name="accountType"
                     value="busines"
-                  />
+                  >
                   <span class="ml-2">Other</span>
                 </label>
               </div>
@@ -145,14 +143,11 @@
                   v-model="currentUser.date_of_birth"
                   type="date"
                   class="text-gray-500"
-                >
-                </el-date-picker>
+                />
               </div>
             </div>
             <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Phone Number</label
-              >
+              <label class="block mb-1 font-bold text-gray-500">Phone Number</label>
               <input
                 v-model="currentUser.gender"
                 type="text"
@@ -164,7 +159,7 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- Email-->
             <div>
@@ -180,13 +175,11 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- Current Password-->
             <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Current Password</label
-              >
+              <label class="block mb-1 font-bold text-gray-500">Current Password</label>
               <input
                 type="password"
                 class="
@@ -197,13 +190,11 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- New Password-->
             <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >New Password</label
-              >
+              <label class="block mb-1 font-bold text-gray-500">New Password</label>
               <input
                 type="password"
                 class="
@@ -214,13 +205,11 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- Comfirm Password-->
             <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Comfirm Password</label
-              >
+              <label class="block mb-1 font-bold text-gray-500">Comfirm Password</label>
               <input
                 type="password"
                 class="
@@ -231,17 +220,15 @@
                   outline-none
                   focus:border-blue-500
                 "
-              />
+              >
             </div>
             <!-- About me -->
             <div>
               <div>
-                <label class="block mb-1 font-bold text-gray-500"
-                  >About me</label
-                >
+                <label class="block mb-1 font-bold text-gray-500">About me</label>
                 <textarea
                   class="rounded-md border-2 w-full h-48 p-2"
-                ></textarea>
+                />
               </div>
             </div>
             <!-- Save -->
@@ -269,49 +256,49 @@
 </template>
 <script>
 export default {
-  name: "UserProfile",
+  name: 'UserProfile',
 
-  data() {
+  data () {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
+        disabledDate (time) {
+          return time.getTime() > Date.now()
         },
         shortcuts: [
           {
-            text: "Today",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            },
+            text: 'Today',
+            onClick (picker) {
+              picker.$emit('pick', new Date())
+            }
           },
           {
-            text: "Yesterday",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            },
+            text: 'Yesterday',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24)
+              picker.$emit('pick', date)
+            }
           },
           {
-            text: "A week ago",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            },
-          },
-        ],
+            text: 'A week ago',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', date)
+            }
+          }
+        ]
       },
-      value1: "",
-      value2: "",
-    };
+      value1: '',
+      value2: ''
+    }
   },
   computed: {
-    currentUser() {
-      return this.$store.getters["user/getCurrentUser"];
-    },
-  },
-};
+    currentUser () {
+      return this.$store.getters['user/getCurrentUser']
+    }
+  }
+}
 </script>
 
 <style>

@@ -142,9 +142,17 @@ export default {
         await department.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Create department successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -161,9 +169,17 @@ export default {
         await department.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Edit department successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -179,9 +195,17 @@ export default {
 
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Delete successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Delete successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -195,7 +219,11 @@ export default {
         // eslint-disable-next-line no-console
         this.listLeader = listLeader.data.data
       } catch (e) {
-        // this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -234,7 +262,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },

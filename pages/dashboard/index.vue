@@ -173,7 +173,11 @@ export default {
         // eslint-disable-next-line no-console
         console.log('depart', this.departmentList)
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
       }
     },
     async getCurrent () {
@@ -184,7 +188,11 @@ export default {
         this.overview.total_idea = data.total_idea
         this.overview.total_interactive = data.total_interactive
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
       }
     }
   }

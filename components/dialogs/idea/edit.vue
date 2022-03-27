@@ -143,8 +143,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="Public"
-                  inactive-text="Anonymous"
+                  active-text="Anonymous"
+                  inactive-text="Public"
                 />
                 <div class="text-error">
                   {{ errors[0] }}

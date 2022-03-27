@@ -70,7 +70,7 @@
                   Decrease
                 </el-radio>
                 <el-radio label="_asc">
-                  Ascending
+                  Increase
                 </el-radio>
               </el-radio-group>
             </div>

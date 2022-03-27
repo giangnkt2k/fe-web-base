@@ -110,7 +110,7 @@ export default {
       // pagination default
       currentPage: 1,
       pageSizes: [10, 50, 100],
-      pageSize: 50,
+      pageSize: 10,
       totalItems: 1,
       optionsSearchKey: [{
         value: 'name',
