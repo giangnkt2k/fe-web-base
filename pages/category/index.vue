@@ -77,18 +77,19 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'name',
-        title: 'Category name'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      }],
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'name',
+          title: 'Category name'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        }],
       // pagination default
       currentPage: '',
       pageSizes: [10, 50, 100],

@@ -36,8 +36,20 @@
       <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
         <div class="col-start-1 md:col-end-1 col-end-3">
           <el-card shadow="hover">
-            <div />
-            <BarChart v-if="barChartData !== {}" :data="barChartData" :options="barChartOptions" :height="400" />
+            <div class="block my-5">
+              <el-select v-model="user_id" placeholder="Select user">
+                <el-option
+                  v-for="item in userList"
+                  :key="item.id"
+                  :label="item.full_name"
+                  :value="item.id"
+                />
+              </el-select>
+            </div>
+            <div class="text-current text-2xl text-center font-medium">
+              Statistic of users
+            </div>
+            <RadarChart :user="user_id" :options="lineChartOptions" :height="400" />
           </el-card>
         </div>
         <div class="md:col-start-2 md:col-end-2 col-start-1 col-end-3">
@@ -59,6 +71,19 @@
           </el-card>
         </div>
       </div>
+      <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
+        <div class="col-start-1 md:col-end-1 col-end-3">
+          <el-card shadow="hover">
+            <div />
+            <DonutChart v-if="barChartData !== {}" :data="barChartData" :options="pieOprions" :height="400" />
+          </el-card>
+        </div>
+        <div class="md:col-start-2 md:col-end-2 col-start-1 col-end-3">
+          <el-card shadow="hover">
+            <BarChart v-if="barChartData !== {}" :data="barChartData" :options="barChartOptions" :height="400" />
+          </el-card>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -66,13 +91,17 @@
 <script>
 import BarChart from '@/components/BarChart.js'
 import LineChart from '@/components/LineChart.js'
+import RadarChart from '@/components/RadarChart.js'
+import DonutChart from '@/components/DonutChart.js'
 import * as dashboard from '@/api/dashboard.js'
 
 export default {
   name: 'DashBoard',
   components: {
     BarChart,
-    LineChart
+    LineChart,
+    DonutChart,
+    RadarChart
   },
   data () {
     return {
@@ -114,6 +143,21 @@ export default {
           ]
         }
       },
+      pieOprions: {
+        responsive: true,
+        legend: {
+          display: 'top'
+        },
+        title: {
+          display: true,
+          text: 'Ideas in Category',
+          fontSize: 24,
+          fontColor: '#6b7280'
+        },
+        tooltips: {
+          backgroundColor: '#17BF62'
+        }
+      },
       lineChartOptions: {
         responsive: true,
         legend: {
@@ -152,7 +196,9 @@ export default {
         }
       },
       departmentList: [],
+      userList: [],
       department_id: '',
+      user_id: '',
       overview: {
         total_user: '',
         total_idea: '',
@@ -163,8 +209,24 @@ export default {
   created () {
     this.getDepartment()
     this.getCurrent()
+    this.getUserList()
   },
   methods: {
+    async getUserList () {
+      try {
+        const users = await dashboard.userList()
+        // eslint-disable-next-line no-console
+        this.userList = users.data.data
+        // eslint-disable-next-line no-console
+        console.log('users', this.departmentList)
+      } catch (e) {
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
+      }
+    },
     async getDepartment () {
       try {
         const department = await dashboard.departmentList()

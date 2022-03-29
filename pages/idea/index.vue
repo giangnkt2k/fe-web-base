@@ -84,26 +84,27 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'title',
-        title: 'Title'
-      },
-      {
-        field: 'thumbnail_url',
-        title: 'Picture'
-      },
-      {
-        field: 'category_id',
-        title: 'Category'
-      },
-      {
-        field: 'created_at',
-        title: 'Created At'
-      }
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'title',
+          title: 'Title'
+        },
+        {
+          field: 'thumbnail_url',
+          title: 'Picture'
+        },
+        {
+          field: 'category_id',
+          title: 'Category'
+        },
+        {
+          field: 'created_at',
+          title: 'Created At'
+        }
       ],
       optionsSearchKey: [{
         value: 'title',

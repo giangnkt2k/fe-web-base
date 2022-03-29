@@ -78,34 +78,35 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'title',
-        title: 'Name of term'
-      },
-      {
-        field: 'start_date',
-        title: 'Start date'
-      },
-      {
-        field: 'end_date',
-        title: 'End date'
-      },
-      {
-        field: 'first_closure_date',
-        title: 'First closure date'
-      },
-      {
-        field: 'final_closure_date',
-        title: 'Final closure date'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      }
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'title',
+          title: 'Name of term'
+        },
+        {
+          field: 'start_date',
+          title: 'Start date'
+        },
+        {
+          field: 'end_date',
+          title: 'End date'
+        },
+        {
+          field: 'first_closure_date',
+          title: 'First closure date'
+        },
+        {
+          field: 'final_closure_date',
+          title: 'Final closure date'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        }
       ],
       // pagination default
       currentPage: 1,
@@ -151,9 +152,17 @@ export default {
         await academicYear.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Create academic year successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -167,9 +176,17 @@ export default {
         await academicYear.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Edit academic year successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -185,9 +202,18 @@ export default {
 
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
+        this.$notify({
+          title: 'Success',
+          message: 'Delete successfully',
+          type: 'success'
+        })
         this.$message.success('Delete successfully')
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -231,7 +257,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },

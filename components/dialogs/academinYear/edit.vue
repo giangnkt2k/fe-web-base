@@ -46,7 +46,7 @@
               >
                 <el-date-picker
                   v-model="start_end"
-                  type="daterange"
+                  type="datetimerange"
                   align="right"
                   unlink-panels
                   range-separator="-"
@@ -75,7 +75,7 @@
               >
                 <el-date-picker
                   v-model="first_final"
-                  type="daterange"
+                  type="datetimerange"
                   align="right"
                   unlink-panels
                   range-separator="-"
@@ -202,14 +202,17 @@ export default {
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.title = newVal.title
-      this.formData.start_date = newVal.start_date
-      this.formData.end_date = newVal.end_date
-      this.formData.first_closure_date = newVal.first_closure_date
-      this.formData.final_closure_date = newVal.final_closure_date
+      this.formData.start_date = moment(newVal.start_date).format()
+      this.formData.end_date = moment(newVal.end_date).format()
+      this.formData.first_closure_date = moment(newVal.first_closure_date).format()
+      this.formData.final_closure_date = moment(newVal.final_closure_date).format()
       this.formData.status = (newVal.status === 'ACTIVE')
       this.start_end = [newVal.start_date, newVal.end_date]
       this.first_final = [newVal.first_closure_date, newVal.final_closure_date]
+      // eslint-disable-next-line no-console
+      console.log('OpenEditAd', this.formData)
     })
+
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
     })

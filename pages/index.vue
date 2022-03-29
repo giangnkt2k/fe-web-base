@@ -223,9 +223,6 @@ export default {
       this.valueSort = this.searchKey + this.radio_choice
       // eslint-disable-next-line no-console
       this.fetchData(this.valueSort, this.academic_year)
-    },
-    academic_year () {
-      this.fetchData(this.valueSort, this.academic_year)
     }
   },
   created () {

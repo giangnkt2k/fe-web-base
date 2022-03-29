@@ -53,7 +53,6 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -82,7 +81,6 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}

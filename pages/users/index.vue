@@ -79,30 +79,31 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'full_name',
-        title: 'Full Name'
-      },
-      {
-        field: 'email',
-        title: 'Email'
-      },
-      {
-        field: 'department',
-        title: 'Department'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      },
-      {
-        field: 'role',
-        title: 'Role'
-      }],
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'full_name',
+          title: 'Full Name'
+        },
+        {
+          field: 'email',
+          title: 'Email'
+        },
+        {
+          field: 'department',
+          title: 'Department'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        },
+        {
+          field: 'role',
+          title: 'Role'
+        }],
       // pagination default
       currentPage: 1,
       pageSizes: [10, 50, 100],

@@ -1,186 +1,187 @@
 <template>
-  <div>
-    <div class="md:container md:mx-auto pt-6 px-6 md:px-2">
-      <div class="block mb-8 grid grid-cols-6 gap-4">
-        <!-- main content -->
-        <div class="main-content col-start-1 md:col-end-6 col-end-9">
-          <el-card shadow="always" class="item-idea">
-            <div class="header">
-              <span class="text-md text-muted mr-5">Author: <span class="italic ml-1">{{ formData.user }}</span></span>
-              <span class="text-md text-muted mr-5">{{ formData.created_at }}</span>
-              <span class="stats-item text-muted mr-2">
-                <i class="el-icon-view" />
-                <span>{{ formData.views_count }}</span>
-              </span>
-            </div>
-            <div class="title my-8 text-xl antialiased font-semibold">
-              {{ formData.title }}
-            </div>
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="content" />
-            <div class="btn-rate flex flex-row mt-8">
-              <div class="like-zone mr-2">
-                <el-button
-                  v-if="clicked_like"
-                  size="mini"
-                  type="success"
-                  icon="el-icon-caret-top"
-                  circle
-                  class="mr-1"
-                  @click="handleClickLike"
-                />
-                <el-button
-                  v-else
-                  size="mini"
-                  type="infor"
-                  icon="el-icon-caret-top"
-                  class="mr-1"
-                  circle
-                  @click="handleClickLike"
-                />
-                {{ formData.likes_count }}
-              </div>
-              <div class="dislike-zone">
-                <el-button
-                  v-if="clicked_dislike"
-                  size="mini"
-                  type="danger"
-                  class="mr-1 ml-2"
-                  icon="el-icon-caret-bottom"
-                  circle
-                  @click="handleClickDislike"
-                />
-
-                <el-button
-                  v-else
-                  size="mini"
-                  type="infor"
-                  class="mr-1 ml-2"
-                  icon="el-icon-caret-bottom"
-                  circle
-                  @click="handleClickDislike"
-                />
-                {{ formData.dislikes_count }}
-              </div>
-            </div>
-          </el-card>
-          <el-card shadow="always" class="item-idea">
-            <div slot="header" class="clearfix">
-              <span class="text-xs">Comment({{ formData.comments_count }})</span>
-            </div>
-            <el-input
-              v-model="comment"
-              type="textarea"
-              :rows="2"
-              placeholder="Please comment"
-              :disabled="!can_comment"
-            />
-            <el-switch
-              v-model="is_anonymous_cmt"
-              class="mt-6"
-              style="float: left;"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-text="Anonymous"
-              :disabled="!can_comment"
+  <div class="grid grid-cols-12 gap-4 pt-6 px-6 md:px-2">
+    <div class="col-span-2">
+      <div class=" grid grid-flow-row auto-rows-max mt-8 justify-center">
+        <div class="btn-rate">
+          <div class="like-zone">
+            <el-button
+              v-if="clicked_like"
+              type="success"
+              icon="el-icon-caret-top"
+              circle
+              @click="handleClickLike"
             />
             <el-button
-              :disabled="comment === ''"
-              class="my-5 mr-2"
-              type="primary"
-              icon="el-icon-message"
-              size="mini"
-              style="float: right;"
-              @click="handleSendComment"
+              v-else
+              type="infor"
+              icon="el-icon-caret-top"
+              circle
+              @click="handleClickLike"
             />
-            <div class="list-comment">
-              <div v-for="(item, index) in commentList" :key="index">
-                <div class="item-comment my-3">
-                  <div class="item-comment-infor text-muted">
-                    <span v-if="item.user_id !== 0" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
-                    <span v-else-if="item.user_id === 0" class="text-md mr-2 text-sky-900">Anonymous</span>
-                    <span class="tex-xs"> {{ item.created_at }} </span>
-                    <el-button
-                      v-if="item.user.id === currentUser_id"
-                      type="mini"
-                      style="float: right;"
-                      icon="el-icon-delete"
-                      circle
-                      @click="handleDeleteComment(item.id)"
-                    />
-                  </div>
-                  <div class="item-comment-content" style="border-bottom: 1px solid #b6b4b4;">
-                    <span class="text-base"> {{ item.content }} </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-card>
-        </div>
-        <div class="col-start-1 col-end-9  md:col-start-6  flex flex-col">
-          <!-- filter  -->
-          <div class="block-item mb-5">
-            <el-carousel height="150px">
-              <el-carousel-item v-for="item in slides" :key="item">
-                <img :src="item">
-              </el-carousel-item>
-            </el-carousel>
           </div>
-          <!-- timeLine -->
-          <div class="block-item">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span class="text-xs">List idea same category</span>
-              </div>
-              <div v-for="(item, index) in listData" :key="index" class="item-idea flex flex-row" style="border-bottom: 1px solid #e5e7eb">
-                <div class="post-feed-item__info">
-                  <div class="post-meta--inline">
-                    <div class="mr-5 text-xs">
-                      <span>{{ item.user }}</span>
-                    </div>
-                    <div class="post-meta d-inline-flex align-items-center flex-wrap">
-                      <div class="text-muted mr-0 text-xs">
-                        <span> {{ item.created_at }}</span>
+          <div class="rate-zone text-center my-1">
+            <span class="font-medium text-xl">{{ formData.likes_count - formData.dislikes_count }}</span>
+          </div>
+          <div class="dislike-zone">
+            <el-button
+              v-if="clicked_dislike"
+              type="danger"
+              icon="el-icon-caret-bottom"
+              circle
+              @click="handleClickDislike"
+            />
+
+            <el-button
+              v-else
+              type="infor"
+              icon="el-icon-caret-bottom"
+              circle
+              @click="handleClickDislike"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-10">
+      <div>
+        <div class="md:container md:mx-auto">
+          <div class="block mb-8 grid grid-cols-6 gap-4">
+            <!-- main content -->
+            <div class="main-content col-start-1 md:col-end-6 col-end-9">
+              <el-card shadow="always" class="item-idea">
+                <div class="header">
+                  <span class="text-md text-muted mr-5">Author: <span class="italic ml-1">{{ formData.user }}</span></span>
+                  <span class="text-md text-muted mr-5">{{ formData.created_at }}</span>
+                  <span class="stats-item text-muted mr-2">
+                    <i class="el-icon-view" />
+                    <span>{{ formData.views_count }}</span>
+                  </span>
+                </div>
+                <div class="title my-8 text-xl antialiased font-semibold">
+                  {{ formData.title }}
+                </div>
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <span v-html="content" />
+              </el-card>
+              <el-card shadow="always" class="item-idea">
+                <div slot="header" class="clearfix">
+                  <span class="text-xs">Comment({{ formData.comments_count }})</span>
+                </div>
+                <el-input
+                  v-model="comment"
+                  type="textarea"
+                  :rows="2"
+                  placeholder="Please comment"
+                  :disabled="!can_comment || currentUser.role !=='STAFF'"
+                />
+                <el-switch
+                  v-model="is_anonymous_cmt"
+                  class="mt-6"
+                  style="float: left;"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-text="Anonymous"
+                  :disabled="!can_comment || currentUser.role !=='STAFF'"
+                />
+                <el-button
+                  :disabled="comment === ''"
+                  class="my-5 mr-2"
+                  type="primary"
+                  icon="el-icon-message"
+                  size="mini"
+                  style="float: right;"
+                  @click="handleSendComment"
+                />
+                <div class="list-comment">
+                  <div v-for="(item, index) in commentList" :key="index">
+                    <div class="item-comment my-3">
+                      <div class="item-comment-infor text-muted">
+                        <span v-if="item.user_id !== 0" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
+                        <span v-else-if="item.user_id === 0" class="text-md mr-2 text-sky-900">Anonymous</span>
+                        <span class="tex-xs"> {{ item.created_at }} </span>
+                        <el-button
+                          v-if="item.user.id === currentUser_id"
+                          type="mini"
+                          style="float: right;"
+                          icon="el-icon-delete"
+                          circle
+                          @click="handleDeleteComment(item.id)"
+                        />
+                      </div>
+                      <div class="item-comment-content" style="border-bottom: 1px solid #b6b4b4;">
+                        <span class="text-base"> {{ item.content }} </span>
                       </div>
                     </div>
                   </div>
-                  <div class="post-title--inline">
-                    <a href="#" @click="viewIdea(item.id)"><h3 class="word-break mr-5 font-semibold text-sm">
-                      {{ item.title }}
-                    </h3></a>
-                    <div class="tags">
-                      <el-tag type="info" size="mini text-xs">
-                        {{ item.category.name }}
-                      </el-tag>
-                    </div>
-                  </div>
-                  <div class="d-flex footer-post-item">
-                    <div class="starts">
-                      <span class="stats-item text-muted mr-2">
-                        <i class="el-icon-view" />
-                        <span class="text-xs">{{ item.views_count }}</span>
-                      </span>
-                      <span class="stats-item text-muted mr-2">
-                        <!-- <font-awesome-icon icon="fa-solid fa-thumbs-up" /> -->
-                        <i class="el-icon-success" />
-                        <span class="text-xs">{{ item.likes_count }}</span>
-                      </span>
-                      <span class="stats-item text-muted mr-2">
-                        <!-- <font-awesome-icon icon="fa-solid fa-thumbs-down" /> -->
-                        <i class="el-icon-error" />
-                        <span class="text-xs">{{ item.dislikes_count }}</span>
-                      </span>
-                      <span class="stats-item text-muted mr-2">
-                        <i
-                          class="el-icon-chat-line-square"
-                        />
-                        <span class="text-xs">{{ item.comments_count }}</span>
-                      </span>
-                    </div>
-                  </div>
                 </div>
+              </el-card>
+            </div>
+            <div class="col-start-1 col-end-9  md:col-start-6  flex flex-col">
+              <!-- filter  -->
+              <div class="block-item mb-5">
+                <el-carousel height="150px">
+                  <el-carousel-item v-for="item in slides" :key="item">
+                    <img :src="item">
+                  </el-carousel-item>
+                </el-carousel>
               </div>
-            </el-card>
+              <!-- timeLine -->
+              <div class="block-item">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span class="text-xs">List idea same category</span>
+                  </div>
+                  <div v-for="(item, index) in listData" :key="index" class="item-idea flex flex-row" style="border-bottom: 1px solid #e5e7eb">
+                    <div class="post-feed-item__info">
+                      <div class="post-meta--inline">
+                        <div class="mr-5 text-xs">
+                          <span>{{ item.user }}</span>
+                        </div>
+                        <div class="post-meta d-inline-flex align-items-center flex-wrap">
+                          <div class="text-muted mr-0 text-xs">
+                            <span> {{ item.created_at }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="post-title--inline">
+                        <a href="#" @click="viewIdea(item.id)"><h3 class="word-break mr-5 font-semibold text-sm">
+                          {{ item.title }}
+                        </h3></a>
+                        <div class="tags">
+                          <el-tag type="info" size="mini text-xs">
+                            {{ item.category.name }}
+                          </el-tag>
+                        </div>
+                      </div>
+                      <div class="d-flex footer-post-item">
+                        <div class="starts">
+                          <span class="stats-item text-muted mr-2">
+                            <i class="el-icon-view" />
+                            <span class="text-xs">{{ item.views_count }}</span>
+                          </span>
+                          <span class="stats-item text-muted mr-2">
+                            <!-- <font-awesome-icon icon="fa-solid fa-thumbs-up" /> -->
+                            <i class="el-icon-success" />
+                            <span class="text-xs">{{ item.likes_count }}</span>
+                          </span>
+                          <span class="stats-item text-muted mr-2">
+                            <!-- <font-awesome-icon icon="fa-solid fa-thumbs-down" /> -->
+                            <i class="el-icon-error" />
+                            <span class="text-xs">{{ item.dislikes_count }}</span>
+                          </span>
+                          <span class="stats-item text-muted mr-2">
+                            <i
+                              class="el-icon-chat-line-square"
+                            />
+                            <span class="text-xs">{{ item.comments_count }}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </el-card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -481,4 +482,13 @@ export default {
 .list-comment {
   margin-top: 80px;
 }
+.btn-rate {
+  position: fixed;
+  width: fit-content;
+  box-sizing: border-box;
+  border: 1px solid #EBEEF5;
+  color: #303133;
+  transition: .3s;
+  padding: 5px;
+  }
 </style>

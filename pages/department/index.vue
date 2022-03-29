@@ -79,22 +79,23 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'name',
-        title: 'Name'
-      },
-      {
-        field: 'leader_id',
-        title: 'Leader'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      }
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'name',
+          title: 'Name'
+        },
+        {
+          field: 'leader_id',
+          title: 'Leader'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        }
       ],
       // pagination default
       currentPage: 1,
