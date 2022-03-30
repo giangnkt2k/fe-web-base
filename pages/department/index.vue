@@ -4,17 +4,8 @@
       <el-card class="mb-8">
         <div class="block grid grid-cols-6 gap-4 items-center">
           <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
-            <el-select v-model="searchKey" clearable placeholder="Select key to search">
-              <el-option
-                v-for="(item, index) in optionsSearchKey"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
             <el-input
               v-model="search"
-              :disabled="searchKey === ''"
               style="margin-left: 5px;"
               placeholder="Type to search"
             />
@@ -115,11 +106,6 @@ export default {
       listLeader: []
     }
   },
-  watch: {
-    searchKey () {
-      this.search = ''
-    }
-  },
   created () {
     this.fetchData()
   },
@@ -129,9 +115,7 @@ export default {
       console.log('click')
     },
     handleSearch () {
-      if (this.search !== '') {
-        this.fetchData()
-      }
+      this.fetchData()
     },
     openDialog () {
       EventBus.$emit('OpenCreateAY', true)
@@ -232,11 +216,11 @@ export default {
       try {
         const query = {
           page: this.currentPage,
-          limit: this.pageSize
+          limit: this.pageSize,
+          search: this.search
         }
-        query[this.searchKey] = this.search
-        if (query[this.searchKey] === '') {
-          delete query[this.searchKey]
+        if (this.search === '') {
+          delete query.search
         }
         if (query.limit === '') {
           delete query.limit

@@ -33,8 +33,9 @@ export default {
                 label: 'Interactive',
                 data: data.users_interactive,
                 backgroundColor: '#294fc2',
-                borderColor: '#294fc2',
-                borderWidth: 2
+                borderColor: '#3cba9f',
+                tension: 0.1,
+                fill: false
               }
             ]
           }
