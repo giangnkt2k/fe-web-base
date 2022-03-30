@@ -161,24 +161,25 @@ export default {
       slides: ['https://greenwich.edu.vn/wp-content/uploads/2021/01/banner-2.jpg',
         'https://vtv1.mediacdn.vn/thumb_w/500/2021/7/25/da-nang-2-1627212353368273813312.jpg',
         'https://greenwich.edu.vn/wp-content/uploads/2020/06/xet-tuyen-dai-hoc-fpt-greenwich.jpg'],
-      activities: [{
-        content: 'Start date',
-        timestamp: '2018-04-12 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more'
-      }, {
-        content: 'First closure date',
-        timestamp: '2018-04-03 20:46',
-        color: '#0bbd87'
-      }, {
-        content: 'Final closure date',
-        timestamp: '2018-04-03 20:46',
-        size: 'large'
-      }, {
-        content: 'End date',
-        timestamp: '2018-04-03 20:46'
-      }],
+      activities: [
+        {
+          content: 'Start date',
+          timestamp: '2018-04-12 20:46',
+          size: 'large',
+          type: 'primary',
+          icon: 'el-icon-more'
+        }, {
+          content: 'First closure date',
+          timestamp: '2018-04-03 20:46',
+          color: '#0bbd87'
+        }, {
+          content: 'Final closure date',
+          timestamp: '2018-04-03 20:46',
+          size: 'large'
+        }, {
+          content: 'End date',
+          timestamp: '2018-04-03 20:46'
+        }],
       aca_name: '',
       radio_choice: '',
       searchKey: '',
@@ -304,22 +305,24 @@ export default {
         this.aca_name = data.title
         this.activities = [{
           content: 'Start date',
-          timestamp: data.start_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.start_date).format('MMM Do YY'),
           size: 'large',
           type: 'primary',
           icon: 'el-icon-more'
         }, {
           content: 'First closure date',
-          timestamp: data.first_closure_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.first_closure_date).format('MMM Do YY'),
           color: '#0bbd87'
         }, {
           content: 'Final closure date',
-          timestamp: data.final_closure_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.final_closure_date).format('MMM Do YY'),
           size: 'large'
         }, {
           content: 'End date',
-          timestamp: data.end_date.moment().format('MMM Do YY')
+          timestamp: moment(data.end_date).format('MMM Do YY')
         }]
+        // eslint-disable-next-line no-console
+        console.log('this data', this.activities)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e)

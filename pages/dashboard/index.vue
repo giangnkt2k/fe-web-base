@@ -184,9 +184,8 @@ export default {
             {
               ticks: {
                 beginAtZero: true,
-                max: 7,
-                min: 0,
-                stepSize: 1
+                stepSize: 1,
+                callback (value) { if (value % 1 === 0) { return value } }
               },
               gridLines: {
                 display: true
