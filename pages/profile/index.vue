@@ -5,11 +5,21 @@
         <div class="max-w-full mx-11">
           <el-card class="bg-white shadow-xl rounded-lg py-3">
             <div class="photo-wrapper p-2">
-              <img
+              <!-- <img
                 class="w-32 h-32 rounded-full mx-auto"
                 :src="currentUser.avatar"
                 alt="avatar null"
+              > -->
+              <el-upload
+                class="avatar-uploader"
+                action="#"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
               >
+                <img v-if="formData.avatar" :src="formData.avatar" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
             </div>
             <div class="p-2">
               <h3
@@ -76,9 +86,7 @@
               <form class="space-y-5">
                 <!-- Full name -->
                 <div>
-                  <label class="block mb-1 font-bold text-gray-500"
-                    >Full name</label
-                  >
+                  <label class="block mb-1 font-bold text-gray-500">Full name</label>
                   <validation-provider
                     v-slot="{ errors }"
                     :name="'name'"
@@ -86,7 +94,7 @@
                     class="mb-3"
                     tag="div"
                   >
-                    <el-input v-model="name" type="text" placeholder="Name" />
+                    <el-input v-model="formData.name" type="text" placeholder="Name" />
                     <div class="text-error">
                       {{ errors[0] }}
                     </div>
@@ -96,46 +104,43 @@
                 <div>
                   <label class="block mb-1 font-bold text-gray-500">
                     Gender</label>
-              <validation-provider
-              v-slot="{ errors }"
-              :name="'gender'"
-              :rules="{ required: false }"
-              class="mb-3"
-              tag="div"
-            >
-              <el-radio v-model="gender" label="Male">
-                Male
-              </el-radio>
-              <el-radio v-model="gender" label="Female">
-                Female
-              </el-radio>
-              <el-radio v-model="gender" label="Other">
-                Other
-              </el-radio>
-              <div class="text-error">
-                {{ errors[0] }}
-              </div>
-            </validation-provider>
-
+                  <validation-provider
+                    v-slot="{ errors }"
+                    :name="'gender'"
+                    :rules="{ required: false }"
+                    class="mb-3"
+                    tag="div"
+                  >
+                    <el-radio v-model="formData.gender" label="Male">
+                      Male
+                    </el-radio>
+                    <el-radio v-model="formData.gender" label="Female">
+                      Female
+                    </el-radio>
+                    <el-radio v-model="formData.gender" label="Other">
+                      Other
+                    </el-radio>
+                    <div class="text-error">
+                      {{ errors[0] }}
+                    </div>
+                  </validation-provider>
                 </div>
                 <!-- DOB-->
                 <div>
                   <label class="block mb-1 font-bold text-gray-500">DOB </label>
                   <div class="block">
                     <el-date-picker
-                      v-model="currentUser.date_of_birth"
+                      v-model="formData.date_of_birth"
                       type="date"
                       class="text-gray-500"
-                    >
-                    </el-date-picker>
+                    />
                   </div>
                 </div>
 
                 <!-- Email-->
                 <div>
                   <label class="block mb-1 font-bold text-gray-500">
-                    Email</label
-                  >
+                    Email</label>
                   <validation-provider
                     v-slot="{ errors }"
                     :name="'email'"
@@ -143,7 +148,7 @@
                     class="mb-3"
                     tag="div"
                   >
-                    <el-input v-model="email" type="text" placeholder="Email" />
+                    <el-input v-model="formData.email" type="text" placeholder="Email" />
                     <div class="text-error">
                       {{ errors[0] }}
                     </div>
@@ -152,12 +157,10 @@
                 <!-- About me -->
                 <div>
                   <div>
-                    <label class="block mb-1 font-bold text-gray-500"
-                      >About me</label
-                    >
+                    <label class="block mb-1 font-bold text-gray-500">About me</label>
                     <textarea
                       class="rounded-md border-2 w-full h-48 p-2"
-                    ></textarea>
+                    />
                   </div>
                 </div>
 
@@ -187,9 +190,7 @@
               <form class="space-y-5">
                 <!-- New Password-->
                 <div>
-                  <label class="block mb-1 font-bold text-gray-500"
-                    >New Password</label
-                  >
+                  <label class="block mb-1 font-bold text-gray-500">New Password</label>
                   <input
                     type="password"
                     class="
@@ -200,13 +201,11 @@
                       outline-none
                       focus:border-blue-500
                     "
-                  />
+                  >
                 </div>
                 <!-- Comfirm Password-->
                 <div>
-                  <label class="block mb-1 font-bold text-gray-500"
-                    >Comfirm Password</label
-                  >
+                  <label class="block mb-1 font-bold text-gray-500">Comfirm Password</label>
                   <input
                     type="password"
                     class="
@@ -217,7 +216,7 @@
                       outline-none
                       focus:border-blue-500
                     "
-                  />
+                  >
                 </div>
                 <!-- Save -->
                 <button
@@ -245,13 +244,14 @@
   </div>
 </template>
 <script>
-import { ValidationObserver, ValidationProvider } from "vee-validate";
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import * as idea from '@/api/idea.js'
 
 export default {
-  name: "UserProfile",
+  name: 'UserProfile',
   components: {
     ValidationObserver,
-    ValidationProvider,
+    ValidationProvider
   },
 
   data () {
@@ -285,35 +285,72 @@ export default {
           }
         ]
       },
-      activeName: "first",
-      value1: "",
-      value2: "",
-    };
+      activeName: 'first',
+      value1: '',
+      value2: '',
+      formData: {
+        avatar: '',
+        name: '',
+        email: '',
+        gnder: '',
+        date_of_birth: ''
+      }
+    }
   },
   computed: {
-    currentUser() {
-      return this.$store.getters["user/getCurrentUser"];
-    },
+    currentUser () {
+      return this.$store.getters['user/getCurrentUser']
+    }
   },
-  created() {
-    this.handleData();
+  created () {
+    this.handleData()
   },
-
-
 
   methods: {
-    handleData() {
+    handleData () {
       setTimeout(() => {
-        this.name = this.$store.getters["user/getCurrentUser"].full_name;
-        this.email = this.$store.getters["user/getCurrentUser"].email;
-        this.gender = this.$store.getters["user/getCurrentUser"].gender;
-      }, 500);
+        this.formData.name = this.$store.getters['user/getCurrentUser'].full_name
+        this.formData.email = this.$store.getters['user/getCurrentUser'].email
+        this.formData.gender = this.$store.getters['user/getCurrentUser'].gender
+        this.formData.date_of_birth = this.$store.getters['user/getCurrentUser'].date_of_birth
+      }, 500)
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleClick (tab, event) {
+      // eslint-disable-next-line no-console
+      console.log(tab, event)
     },
-  },
-};
+    async   beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 2048 / 2048 < 2
+
+      if (!isJPG) {
+        this.$message.error('Avatar picture must be JPG format!')
+      }
+      if (!isLt2M) {
+        this.$message.error('Avatar picture size can not exceed 2MB!')
+      }
+      this.initToken()
+      try {
+        const formData = new FormData()
+        formData.append('upload', file)
+        // eslint-disable-next-line no-console
+        console.log('file', file)
+
+        const image = await idea.uploadCommon(formData)
+        this.formData.avatar = image.data.data.url
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('e', e)
+      }
+      return isJPG && isLt2M
+    },
+    handleAvatarSuccess (res, file) {
+      // eslint-disable-next-line no-console
+      console.log('file', file)
+      this.formData.avatar = URL.createObjectURL(file.raw)
+    }
+  }
+}
 </script>
 
 <style>

@@ -27,3 +27,7 @@ export const departmentList = async (params = {}) => {
 export const userList = async (params = {}) => {
   return await axios.get('qam/users', { params })
 }
+
+export const ideaByDay = async (params = {}) => {
+  return await axios.get('qam/stats/idea-by-day', { params })
+}
