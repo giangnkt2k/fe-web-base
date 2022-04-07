@@ -44,7 +44,7 @@
                 class="mb-3"
                 tag="div"
               >
-                <el-select v-model="formData.leader_id" filterable placeholder="Select leadder">
+                <el-select v-model="formData.leader_id" filterable placeholder="Select leader">
                   <el-option
                     v-for="(item, index) in optionsLeader"
                     :key="index"
@@ -75,8 +75,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active"
+                  inactive-text="Inactive"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -88,7 +88,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Create</el-button>
+        <el-button :disabled="disabledCreate" type="primary" @click="handleSubmit">Create</el-button>
       </span>
     </el-dialog>
   </div>
@@ -119,7 +119,8 @@ export default {
         leader_id: '',
         status: true
       },
-      optionsLeader: []
+      optionsLeader: [],
+      disabledCreate: false
     }
   },
   watch: {
@@ -133,7 +134,9 @@ export default {
     }
   },
   mounted () {
+    // eslint-disable-next-line no-console
     EventBus.$on('OpenCreateAY', (val) => {
+      this.disabledCreate = false
       this.dialogVisible = val
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
@@ -151,8 +154,12 @@ export default {
       this.$emit('handle-list-leader')
     },
     async handleSubmit () {
+      this.disabledCreate = true
       const isValid = await this.$refs.obsAddDepartment.validate()
+      // eslint-disable-next-line no-console
+      console.log('isValid', isValid)
       if (!isValid) {
+        this.disabledCreate = false
         return
       }
       this.$emit('handle-submit', this.formData)
@@ -162,6 +169,7 @@ export default {
         leader_id: '',
         status: true
       }
+      await this.$refs.obsAddDepartment.reset()
     }
   }
 }

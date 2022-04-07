@@ -70,7 +70,7 @@
                   Decrease
                 </el-radio>
                 <el-radio label="_asc">
-                  Ascending
+                  Increase
                 </el-radio>
               </el-radio-group>
             </div>
@@ -108,19 +108,37 @@
                 </div>
               </div>
               <div class="d-flex footer-post-item">
-                <div class="starts">
+                <div class="starts flex flex-row">
                   <span class="stats-item text-muted mr-2">
                     <i class="el-icon-view" />
                     <span>{{ item.views_count }}</span>
                   </span>
-                  <span class="stats-item text-muted mr-2">
+                  <span class="stats-item text-muted mr-2 flex flex-row">
                     <!-- <font-awesome-icon icon="fa-solid fa-thumbs-up" /> -->
-                    <i class="el-icon-caret-top" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                    </svg>
                     <span>{{ item.likes_count }}</span>
                   </span>
-                  <span class="stats-item text-muted mr-2">
+                  <span class="stats-item text-muted mr-2 flex flex-row">
                     <!-- <font-awesome-icon icon="fa-solid fa-thumbs-down" /> -->
-                    <i class="el-icon-caret-bottom" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
+                    </svg>
                     <span>{{ item.dislikes_count }}</span>
                   </span>
                   <span class="stats-item text-muted mr-2">
@@ -161,24 +179,25 @@ export default {
       slides: ['https://greenwich.edu.vn/wp-content/uploads/2021/01/banner-2.jpg',
         'https://vtv1.mediacdn.vn/thumb_w/500/2021/7/25/da-nang-2-1627212353368273813312.jpg',
         'https://greenwich.edu.vn/wp-content/uploads/2020/06/xet-tuyen-dai-hoc-fpt-greenwich.jpg'],
-      activities: [{
-        content: 'Start date',
-        timestamp: '2018-04-12 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more'
-      }, {
-        content: 'First closure date',
-        timestamp: '2018-04-03 20:46',
-        color: '#0bbd87'
-      }, {
-        content: 'Final closure date',
-        timestamp: '2018-04-03 20:46',
-        size: 'large'
-      }, {
-        content: 'End date',
-        timestamp: '2018-04-03 20:46'
-      }],
+      activities: [
+        {
+          content: 'Start date',
+          timestamp: '2018-04-12 20:46',
+          size: 'large',
+          type: 'primary',
+          icon: 'el-icon-more'
+        }, {
+          content: 'First closure date',
+          timestamp: '2018-04-03 20:46',
+          color: '#0bbd87'
+        }, {
+          content: 'Final closure date',
+          timestamp: '2018-04-03 20:46',
+          size: 'large'
+        }, {
+          content: 'End date',
+          timestamp: '2018-04-03 20:46'
+        }],
       aca_name: '',
       radio_choice: '',
       searchKey: '',
@@ -222,9 +241,6 @@ export default {
     radio_choice () {
       this.valueSort = this.searchKey + this.radio_choice
       // eslint-disable-next-line no-console
-      this.fetchData(this.valueSort, this.academic_year)
-    },
-    academic_year () {
       this.fetchData(this.valueSort, this.academic_year)
     }
   },
@@ -307,22 +323,24 @@ export default {
         this.aca_name = data.title
         this.activities = [{
           content: 'Start date',
-          timestamp: data.start_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.start_date).format('MMM Do YY'),
           size: 'large',
           type: 'primary',
           icon: 'el-icon-more'
         }, {
           content: 'First closure date',
-          timestamp: data.first_closure_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.first_closure_date).format('MMM Do YY'),
           color: '#0bbd87'
         }, {
           content: 'Final closure date',
-          timestamp: data.final_closure_date.moment().format('MMM Do YY'),
+          timestamp: moment(data.final_closure_date).format('MMM Do YY'),
           size: 'large'
         }, {
           content: 'End date',
-          timestamp: data.end_date.moment().format('MMM Do YY')
+          timestamp: moment(data.end_date).format('MMM Do YY')
         }]
+        // eslint-disable-next-line no-console
+        console.log('this data', this.activities)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e)

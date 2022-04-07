@@ -1,10 +1,10 @@
-import { Line } from 'vue-chartjs'
+import { Radar } from 'vue-chartjs'
 import * as dashboard from '@/api/dashboard.js'
 
 export default {
-  extends: Line,
+  extends: Radar,
   props: {
-    department: {
+    user: {
       require: true,
       type: Number
     }
@@ -13,7 +13,7 @@ export default {
     this.fetchData()
   },
   watch: {
-    department () {
+    user () {
       this.fetchData()
     }
   },
@@ -22,20 +22,21 @@ export default {
       try {
         if (this.department !== '') {
           this.$store.commit('pages/setLoading', true)
-          const res = await dashboard.statsUser({
-            department_id: this.department
+          const res = await dashboard.statsStatisicUser({
+            id: this.user
           })
           const data = res.data.data
+
+          const power = [data.like_count, data.dislike_count, data.comment_count, data.post_idea_count, data.view_count]
+
           const lineChartData = {
-            labels: data.users_name,
+            labels: ['Like', 'Dislike', 'Comment', 'Post idea', 'View idea'],
             datasets: [
               {
-                label: 'Interactive',
-                data: data.users_interactive,
-                backgroundColor: '#294fc2',
-                borderColor: '#3cba9f',
-                tension: 0.1,
-                fill: false
+                label: 'count',
+                data: power,
+                backgroundColor: '#cf03fc',
+                borderWidth: 2
               }
             ]
           }

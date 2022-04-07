@@ -75,8 +75,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active"
+                  inactive-text="Inactive"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -88,7 +88,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Create</el-button>
+        <el-button type="primary" @click="handleSubmit">Update</el-button>
       </span>
     </el-dialog>
   </div>
@@ -119,7 +119,8 @@ export default {
         leader_id: '',
         status: true
       },
-      optionsLeader: []
+      optionsLeader: [],
+      formDataChecked: {}
     }
   },
   watch: {
@@ -141,6 +142,7 @@ export default {
       this.formData.name = newVal.name
       this.formData.leader_id = newVal.leader_id
       this.formData.status = (newVal.status === 'ACTIVE')
+      this.formDataChecked = JSON.parse(JSON.stringify(this.formData))
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -160,8 +162,13 @@ export default {
       }
       // eslint-disable-next-line no-console
       console.log('fdata', this.formData)
-      this.$emit('handle-submit', this.formData)
-      this.dialogVisible = false
+      if (JSON.stringify(this.formDataChecked) === JSON.stringify(this.formData)) {
+        this.dialogVisible = false
+      } else {
+        this.$emit('handle-submit', this.formData)
+        this.dialogVisible = false
+      }
+
       this.formData = {
         name: '',
         leader_id: '',

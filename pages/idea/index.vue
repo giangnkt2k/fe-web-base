@@ -3,18 +3,10 @@
     <div class="md:container md:mx-auto pt-6 px-6 px-6 md:px-2">
       <el-card class="mb-8">
         <div class="block grid grid-cols-6 gap-4 items-center">
-          <div class="w-100 search-div col-start-1 col-end-9  md:col-end-4 flex flex-row">
-            <el-select v-model="searchKey" clearable placeholder="Select key to search" style="margin-right: 5px;">
-              <el-option
-                v-for="(item, index) in optionsSearchKey"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
             <el-input
               v-model="search"
-              :disabled="searchKey === ''"
+              style="margin-left: 5px;"
               placeholder="Type to search"
             />
             <el-button icon="el-icon-search" style="margin-left: 5px;" @click="handleSearch" />
@@ -84,26 +76,27 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'title',
-        title: 'Title'
-      },
-      {
-        field: 'thumbnail_url',
-        title: 'Picture'
-      },
-      {
-        field: 'category_id',
-        title: 'Category'
-      },
-      {
-        field: 'created_at',
-        title: 'Created At'
-      }
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'title',
+          title: 'Title'
+        },
+        {
+          field: 'thumbnail_url',
+          title: 'Picture'
+        },
+        {
+          field: 'category_id',
+          title: 'Category'
+        },
+        {
+          field: 'created_at',
+          title: 'Created At'
+        }
       ],
       optionsSearchKey: [{
         value: 'title',
@@ -140,13 +133,15 @@ export default {
         console.log('datata', data)
         this.can_comment = data.can_post_comment
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
       }
     },
     handleSearch () {
-      if (this.search !== '') {
-        this.fetchData()
-      }
+      this.fetchData()
     },
     openDialog () {
       EventBus.$emit('OpenCreateAY', true, this.listCategory)
@@ -160,9 +155,17 @@ export default {
         this.fetchData()
         this.listFileUpload = []
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Create user successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -212,7 +215,11 @@ export default {
         return data
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -226,9 +233,17 @@ export default {
         this.fetchData()
         this.listFileUpload = []
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Edit user successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -236,11 +251,11 @@ export default {
       try {
         const query = {
           page: this.currentPage,
-          limit: this.pageSize
+          limit: this.pageSize,
+          search: this.search
         }
-        query[this.searchKey] = this.search
-        if (query[this.searchKey] === '') {
-          delete query[this.searchKey]
+        if (this.search === '') {
+          delete query.search
         }
         if (query.limit === '') {
           delete query.limit
@@ -266,7 +281,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -279,7 +298,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -295,9 +318,17 @@ export default {
 
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Delete successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Delete successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },

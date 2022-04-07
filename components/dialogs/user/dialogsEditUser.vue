@@ -41,14 +41,14 @@
                 :rules="{ required: false }"
                 class="mb-3"
                 tag="div"
-                format="MM/dd/yyyy"
-                value-format="yyyy-MM-dd"
               >
                 <el-date-picker
                   v-model="formData.date_of_birth"
                   class="item-input"
                   type="date"
                   placeholder="Pick a Date"
+                  format="MM/dd/yyyy"
+                  value-format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -206,8 +206,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="ACTIVE"
-                  inactive-text="INACTIVE"
+                  active-text="Active"
+                  inactive-text="Inactive"
                 />
                 <div class="text-error">
                   {{ errors[0] }}

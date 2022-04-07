@@ -53,7 +53,6 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -82,7 +81,6 @@
                   start-placeholder="Start date"
                   end-placeholder="End date"
                   :picker-options="pickerOptions"
-                  format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -107,8 +105,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active"
+                  inactive-text="Inactive"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -120,7 +118,7 @@
       </ValidationObserver>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Create</el-button>
+        <el-button :disabled="disabledCreate" type="primary" @click="handleSubmit">Create</el-button>
       </span>
     </el-dialog>
   </div>
@@ -147,6 +145,7 @@ export default {
   data () {
     return {
       dialogVisible: false,
+      disabledCreate: false,
       formData: {
         title: '',
         start_date: '',
@@ -199,6 +198,7 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenCreateAY', (val) => {
+      this.disabledCreate = false
       this.dialogVisible = val
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
@@ -224,23 +224,26 @@ export default {
       }
     },
     async handleSubmit () {
+      this.disabledCreate = true
       const isValid = await this.$refs.obsAddAcademicYear.validate()
       if (!isValid) {
-        this.$message.warning('Something went wrong')
+        this.disabledCreate = false
         return
       }
       // eslint-disable-next-line no-console
       console.log(this.validateDate())
       if (this.validateDate() === false) {
-        this.$message.warning('Error date: start date <= first closure date < final closure date <= end date')
+        this.$notify({
+          title: 'Warning',
+          message: 'Error date: start date <= first closure date < final closure date <= end date',
+          type: 'warning'
+        })
         return
       }
       this.formData.start_date = this.start_end[0]
       this.formData.end_date = this.start_end[1]
       this.formData.first_closure_date = this.first_final[0]
       this.formData.final_closure_date = this.first_final[1]
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
       this.formData = {
@@ -253,6 +256,7 @@ export default {
       }
       this.start_end = ''
       this.first_final = ''
+      this.$refs.obsAddAcademicYear.reset()
     }
   }
 }

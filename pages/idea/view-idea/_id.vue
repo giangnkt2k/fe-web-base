@@ -18,51 +18,112 @@
             </div>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="content" />
-            <div class="btn-rate flex flex-row mt-8">
-              <div class="like-zone mr-2">
-                <el-button
-                  v-if="clicked_like"
-                  size="mini"
-                  type="success"
-                  icon="el-icon-caret-top"
-                  circle
-                  class="mr-1"
-                  @click="handleClickLike"
-                />
-                <el-button
-                  v-else
-                  size="mini"
-                  type="infor"
-                  icon="el-icon-caret-top"
-                  class="mr-1"
-                  circle
-                  @click="handleClickLike"
-                />
-                {{ formData.likes_count }}
+            <div class="mt-5">
+              <div class="inforLike mb-1">
+                <div class="flex flex-row">
+                  <span class="icon mr-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-4" viewBox="0 0 20 20" fill="#b0b3b7">
+                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                    </svg>
+                  </span>
+                  <span class="mr-2 text-slate-500">{{ formData.likes_count }}</span>
+                  <span class="icon mr-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-4" viewBox="0 0 20 20" fill="#b0b3b7">
+                      <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
+                    </svg>
+                  </span>
+                  <span class="mr-2 text-slate-500">
+                    {{ formData.dislikes_count }}
+                  </span>
+                </div>
               </div>
-              <div class="dislike-zone">
-                <el-button
-                  v-if="clicked_dislike"
-                  size="mini"
-                  type="danger"
-                  class="mr-1 ml-2"
-                  icon="el-icon-caret-bottom"
-                  circle
-                  @click="handleClickDislike"
-                />
-
-                <el-button
-                  v-else
-                  size="mini"
-                  type="infor"
-                  class="mr-1 ml-2"
-                  icon="el-icon-caret-bottom"
-                  circle
-                  @click="handleClickDislike"
-                />
-                {{ formData.dislikes_count }}
+              <div class="btn-rate flex flex-row">
+                <div class="like-zone mr-2">
+                  <el-button
+                    v-if="clicked_like"
+                    type="success"
+                    size="mini"
+                    class="mr-1 btn-icon"
+                    @click="handleClickLike"
+                  >
+                    <div class="flex flex-row">
+                      <span class="icon mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                        </svg>
+                      </span>
+                      <span>Like</span>
+                    </div>
+                  </el-button>
+                  <el-button
+                    v-else
+                    type="infor"
+                    size="mini"
+                    class="mr-1 btn-icon"
+                    @click="handleClickLike"
+                  >
+                    <div class="flex flex-row">
+                      <span class="icon mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                        </svg>
+                      </span>
+                      <span> Like </span>
+                    </div>
+                  </el-button>
+                </div>
+                <div class="dislike-zone">
+                  <el-button
+                    v-if="clicked_dislike"
+                    type="danger"
+                    size="mini"
+                    class="mr-1 ml-2 btn-icon"
+                    @click="handleClickDislike"
+                  >
+                    <div class="flex flex-row">
+                      <span class="icon mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
+                        </svg>
+                      </span>
+                      <span> Dislike </span>
+                    </div>
+                  </el-button>
+                  <el-button
+                    v-else
+                    type="infor"
+                    size="mini"
+                    class="mr-1 ml-2 btn-icon"
+                    @click="handleClickDislike"
+                  >
+                    <div class="flex flex-row">
+                      <span class="icon mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
+                        </svg>
+                      </span>
+                      <span> Dislike </span>
+                    </div>
+                  </el-button>
+                </div>
               </div>
             </div>
+          </el-card>
+          <el-card v-if="listFile.length > 0" shadow="always" class="item-idea">
+            <div slot="header" class="clearfix">
+              <span class="text-xs">Files</span>
+            </div>
+            <el-tag
+              v-for="(item, index) in listFile"
+              :key="index"
+              type=""
+              effect="light"
+              class="mr-1"
+            >
+              <el-link :href="item.url">
+                {{ item.name }}
+              </el-link>
+            </el-tag>
           </el-card>
           <el-card shadow="always" class="item-idea">
             <div slot="header" class="clearfix">
@@ -73,7 +134,7 @@
               type="textarea"
               :rows="2"
               placeholder="Please comment"
-              :disabled="!can_comment"
+              :disabled="!can_comment || currentUser.role !=='STAFF'"
             />
             <el-switch
               v-model="is_anonymous_cmt"
@@ -82,7 +143,7 @@
               active-color="#13ce66"
               inactive-color="#ff4949"
               active-text="Anonymous"
-              :disabled="!can_comment"
+              :disabled="!can_comment || currentUser.role !=='STAFF'"
             />
             <el-button
               :disabled="comment === ''"
@@ -100,7 +161,14 @@
                     <span v-if="item.user_id !== 0" class="text-md mr-2 text-sky-600"> {{ item.user.full_name }}</span>
                     <span v-else-if="item.user_id === 0" class="text-md mr-2 text-sky-900">Anonymous</span>
                     <span class="tex-xs"> {{ item.created_at }} </span>
-                    <el-button v-if="item.user.id === currentUser_id" type="mini" style="float: right;" icon="el-icon-delete" circle />
+                    <el-button
+                      v-if="item.user.id === currentUser_id"
+                      type="mini"
+                      style="float: right;"
+                      icon="el-icon-delete"
+                      circle
+                      @click="handleDeleteComment(item.id)"
+                    />
                   </div>
                   <div class="item-comment-content" style="border-bottom: 1px solid #b6b4b4;">
                     <span class="text-base"> {{ item.content }} </span>
@@ -184,7 +252,6 @@
 <script>
 import moment from 'moment'
 import * as idea from '@/api/idea.js'
-
 export default {
   name: 'ViewPage',
   data () {
@@ -203,6 +270,7 @@ export default {
         likes_count: '',
         dislikes_count: ''
       },
+      listFile: [],
       clicked_like: false,
       clicked_dislike: false,
       comment: '',
@@ -245,6 +313,7 @@ export default {
           this.formData.comments_count = dataDetail.comments_count
           this.clicked_like = dataDetail.is_like
           this.clicked_dislike = dataDetail.is_dislike
+          this.listFile = dataDetail.files
           this.content = dataDetail.content
           this.currentUser_id = this.$store.getters['user/getCurrentUser'].id
           this.currentUser = this.$store.getters['user/getCurrentUser']
@@ -473,5 +542,11 @@ export default {
 }
 .list-comment {
   margin-top: 80px;
+}
+.el-button {
+  list-style: initial !important;
+}
+.btn-icon {
+  line-height: initial;
 }
 </style>

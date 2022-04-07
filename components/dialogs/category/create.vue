@@ -50,8 +50,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active"
+                  inactive-text="Inactive "
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -120,7 +120,6 @@ export default {
     async handleSubmit () {
       const isValid = await this.$refs.obsAddCategory.validate()
       if (!isValid) {
-        this.$message.warning('Something went wrong')
         return
       }
 
@@ -129,6 +128,7 @@ export default {
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
       this.formData = {}
+      await this.$refs.obsAddCategory.reset()
     }
   }
 }

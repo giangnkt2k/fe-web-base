@@ -4,17 +4,8 @@
       <el-card class="mb-8">
         <div class="block  grid grid-cols-6 gap-4 items-center">
           <div class="search-div col-start-1 col-end-8  md:col-end-4 flex flex-row">
-            <el-select v-model="searchKey" clearable placeholder="Select key to search">
-              <el-option
-                v-for="(item, index) in optionsSearchKey"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
             <el-input
               v-model="search"
-              :disabled="searchKey === ''"
               style="margin-left: 5px;"
               placeholder="Type to search"
             />
@@ -78,39 +69,40 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'title',
-        title: 'Name of term'
-      },
-      {
-        field: 'start_date',
-        title: 'Start date'
-      },
-      {
-        field: 'end_date',
-        title: 'End date'
-      },
-      {
-        field: 'first_closure_date',
-        title: 'First closure date'
-      },
-      {
-        field: 'final_closure_date',
-        title: 'Final closure date'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      }
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'title',
+          title: 'Name of term'
+        },
+        {
+          field: 'start_date',
+          title: 'Start date'
+        },
+        {
+          field: 'end_date',
+          title: 'End date'
+        },
+        {
+          field: 'first_closure_date',
+          title: 'First closure date'
+        },
+        {
+          field: 'final_closure_date',
+          title: 'Final closure date'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        }
       ],
       // pagination default
       currentPage: 1,
       pageSizes: [10, 50, 100],
-      pageSize: 50,
+      pageSize: 10,
       totalItems: 1,
       optionsSearchKey: [{
         value: 'name',
@@ -138,9 +130,7 @@ export default {
       console.log('click')
     },
     handleSearch () {
-      if (this.search !== '') {
-        this.fetchData()
-      }
+      this.fetchData()
     },
     openDialog () {
       EventBus.$emit('OpenCreateAY', true)
@@ -151,9 +141,17 @@ export default {
         await academicYear.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Create academic year successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -167,9 +165,17 @@ export default {
         await academicYear.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit user successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Edit academic year successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -185,9 +191,18 @@ export default {
 
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
+        this.$notify({
+          title: 'Success',
+          message: 'Delete successfully',
+          type: 'success'
+        })
         this.$message.success('Delete successfully')
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -195,11 +210,11 @@ export default {
       try {
         const query = {
           page: this.currentPage,
-          limit: this.pageSize
+          limit: this.pageSize,
+          search: this.search
         }
-        query[this.searchKey] = this.search
-        if (query[this.searchKey] === '') {
-          delete query[this.searchKey]
+        if (this.search === '') {
+          delete query.search
         }
         if (query.limit === '') {
           delete query.limit
@@ -231,7 +246,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },

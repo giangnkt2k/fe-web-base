@@ -9,7 +9,7 @@
                 class="w-32 h-32 rounded-full mx-auto"
                 :src="currentUser.avatar"
                 alt="avatar null"
-              />
+              >
             </div>
             <div class="p-2">
               <h3
@@ -53,7 +53,7 @@
                   </tr> -->
                 </tbody>
               </table>
-              <div class="text-center my-3"></div>
+              <div class="text-center my-3" />
             </div>
           </el-card>
         </div>
@@ -254,36 +254,36 @@ export default {
     ValidationProvider,
   },
 
-  data() {
+  data () {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
+        disabledDate (time) {
+          return time.getTime() > Date.now()
         },
         shortcuts: [
           {
-            text: "Today",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            },
+            text: 'Today',
+            onClick (picker) {
+              picker.$emit('pick', new Date())
+            }
           },
           {
-            text: "Yesterday",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            },
+            text: 'Yesterday',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24)
+              picker.$emit('pick', date)
+            }
           },
           {
-            text: "A week ago",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            },
-          },
-        ],
+            text: 'A week ago',
+            onClick (picker) {
+              const date = new Date()
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', date)
+            }
+          }
+        ]
       },
       activeName: "first",
       value1: "",

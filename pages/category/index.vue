@@ -4,17 +4,8 @@
       <el-card class="mb-8">
         <div class="block grid grid-cols-6 gap-4 items-center">
           <div class="search-div col-start-1 col-end-8 md:col-end-4 flex flex-row">
-            <el-select v-model="searchKey" clearable placeholder="Select key to search">
-              <el-option
-                v-for="(item, index) in optionsSearchKey"
-                :key="index"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
             <el-input
               v-model="search"
-              :disabled="searchKey === ''"
               style="margin-left: 5px;"
               placeholder="Type to search"
             />
@@ -77,18 +68,19 @@ export default {
       dialogPop: false,
       dialogPopDelete: false,
       tableData: [],
-      tableHeader: [{
-        field: 'id',
-        title: 'ID'
-      },
-      {
-        field: 'name',
-        title: 'Category name'
-      },
-      {
-        field: 'status',
-        title: 'Status'
-      }],
+      tableHeader: [
+        {
+          field: 'id',
+          title: 'ID'
+        },
+        {
+          field: 'name',
+          title: 'Category name'
+        },
+        {
+          field: 'status',
+          title: 'Status'
+        }],
       // pagination default
       currentPage: '',
       pageSizes: [10, 50, 100],
@@ -106,11 +98,6 @@ export default {
       dialogPopEdit: false
     }
   },
-  watch: {
-    searchKey () {
-      this.search = ''
-    }
-  },
   created () {
     this.fetchData()
   },
@@ -120,9 +107,7 @@ export default {
       console.log('click')
     },
     handleSearch () {
-      if (this.search !== '') {
-        this.fetchData()
-      }
+      this.fetchData()
     },
     openDialog () {
       EventBus.$emit('OpenCreateCategory', true)
@@ -133,9 +118,17 @@ export default {
         await category.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Create category successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Create category successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -151,9 +144,17 @@ export default {
         await category.update(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Edit category successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Edit category successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -168,9 +169,17 @@ export default {
 
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
-        this.$message.success('Delete successfully')
+        this.$notify({
+          title: 'Success',
+          message: 'Delete successfully',
+          type: 'success'
+        })
       } catch (e) {
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },
@@ -207,7 +216,11 @@ export default {
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')
-        this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
         this.$store.commit('pages/setLoading', false)
       }
     },

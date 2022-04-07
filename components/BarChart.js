@@ -9,8 +9,13 @@ export default {
       this.$store.commit('pages/setLoading', true)
       const res = await dashboard.statsIdea()
       const data = res.data.data
+      const newTitle = []
+      data.title.length > 0 && data.title.map((tt) => {
+        const newT = tt.slice(0, 8)
+        return newTitle.push(newT)
+      })
       const barChartData = {
-        labels: data.title,
+        labels: newTitle,
         datasets: [
           {
             label: 'Like',

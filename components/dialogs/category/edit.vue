@@ -50,8 +50,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="On"
-                  inactive-text="Off"
+                  active-text="Active"
+                  inactive-text="Inactive"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -107,10 +107,12 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenEditCategory', (val, newVal) => {
+      // eslint-disable-next-line no-console
+      console.log('newVal', newVal)
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.name = newVal.name
-      this.formData.status = newVal.status
+      this.formData.status = (newVal.status === 'ACTIVE')
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false

@@ -29,7 +29,7 @@
           Logout
         </el-menu-item>
       </el-submenu>
-      <el-submenu index="4">
+      <el-submenu v-if="currentUser.role !== 'ADMIN' && currentUser.role !== 'QAM'" index="4">
         <template slot="title">
           <el-badge :value="newest" :hidden="newest === 0" class="item-badge">
             <i class="el-icon-bell" />

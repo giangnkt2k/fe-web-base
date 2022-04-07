@@ -141,8 +141,8 @@
                   style="display: block"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  active-text="Public"
-                  inactive-text="Anonymous"
+                  active-text="Anonymous"
+                  inactive-text="Public"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
@@ -227,17 +227,17 @@ export default {
     this.dialogVisible = this.propsDialogVisible
   },
   methods: {
-    handleSubmit () {
+    async handleSubmit () {
+      const isValid = await this.$refs.obsAddIdea.validate()
+      if (!isValid) {
+        return
+      }
+
       this.$confirm('Are you sure to create this idea ?')
-        .then(async () => {
-          const isValid = await this.$refs.obsAddIdea.validate()
-          if (!isValid) {
-            return
-          }
-          // eslint-disable-next-line no-console
-          console.log('fdata', this.formData)
+        .then(() => {
           this.$emit('handle-submit', this.formData)
           this.dialogVisible = false
+          this.$refs.obsAddIdea.reset()
         })
         .catch((_) => {})
     },

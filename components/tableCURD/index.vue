@@ -7,9 +7,14 @@
         :default-sort="{prop: 'id', order: 'descending'}"
         class="displayByWidth"
       >
+        <el-table-column
+          type="index"
+          width="50"
+          label="#"
+        />
         <template v-for="(col, index) in propsTableHeader">
           <el-table-column
-            v-if="col.title !== 'Status' && col.title !== 'Picture'"
+            v-if="col.title !== 'Status' && col.title !== 'Picture' && col.title !== 'Index'"
             :key="index"
             :label="col.title"
           >
