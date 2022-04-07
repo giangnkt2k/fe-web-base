@@ -32,15 +32,6 @@
                   </tr>
                   <tr>
                     <td class="px-2 py-2 text-gray-500 font-semibold">
-                      <div>Phone</div>
-                    </td>
-                    <!-- get phone number -->
-                    <td class="px-2 py-2">
-                      <div>{{ currentUser.gender }}</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="px-2 py-2 text-gray-500 font-semibold">
                       <div>Email</div>
                     </td>
                     <td class="px-2 py-2">
@@ -79,197 +70,189 @@
           rounded-lg
         "
       >
-        <div class="px-6 py-4">
-          <div class="font-bold text-xl mb-2 flex justify-center">
-            <div>Edit Profile</div>
-          </div>
-          <form class="space-y-5">
-            <!-- Full name -->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Full name</label
-              >
-              <input
-                v-model="currentUser.full_name"
-                type="text"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- Gender-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"> Gender</label>
-              <div class="mt-2">
-                <label class="inline-flex items-center">
-                  <input
-                    type="radio"
-                    class="form-radio"
-                    name="accountType"
-                    value="personal"
-                  />
-                  <span class="ml-2">Male</span>
-                </label>
-
-                <label class="inline-flex items-center ml-6">
-                  <input
-                    type="radio"
-                    class="form-radio"
-                    name="accountType"
-                    value="busines"
-                  />
-                  <span class="ml-2">Female</span>
-                </label>
-
-                <label class="inline-flex items-center ml-6">
-                  <input
-                    type="radio"
-                    class="form-radio"
-                    name="accountType"
-                    value="busines"
-                  />
-                  <span class="ml-2">Other</span>
-                </label>
-              </div>
-            </div>
-            <!-- DOB-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500">DOB </label>
-              <div class="block">
-                <el-date-picker
-                  v-model="currentUser.date_of_birth"
-                  type="date"
-                  class="text-gray-500"
-                >
-                </el-date-picker>
-              </div>
-            </div>
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Phone Number</label
-              >
-              <input
-                v-model="currentUser.gender"
-                type="text"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- Email-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"> Email</label>
-              <input
-                v-model="currentUser.email"
-                type="email"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- Current Password-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Current Password</label
-              >
-              <input
-                type="password"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- New Password-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >New Password</label
-              >
-              <input
-                type="password"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- Comfirm Password-->
-            <div>
-              <label class="block mb-1 font-bold text-gray-500"
-                >Comfirm Password</label
-              >
-              <input
-                type="password"
-                class="
-                  w-full
-                  border-2 border-gray-200
-                  p-3
-                  rounded
-                  outline-none
-                  focus:border-blue-500
-                "
-              />
-            </div>
-            <!-- About me -->
-            <div>
-              <div>
-                <label class="block mb-1 font-bold text-gray-500"
-                  >About me</label
-                >
-                <textarea
-                  class="rounded-md border-2 w-full h-48 p-2"
-                ></textarea>
-              </div>
-            </div>
-            <!-- Save -->
-            <button
-              class="
-                block
-                w-full
-                bg-yellow-400
-                hover:bg-yellow-300
-                p-4
-                rounded
-                text-yellow-900
-                hover:text-yellow-800
-                transition
-                duration-300
-              "
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="Profile" name="first">
+            <ValidationObserver ref="obsAddAcademicYear" tag="div">
+              <form class="space-y-5">
+                <!-- Full name -->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500"
+                    >Full name</label
+                  >
+                  <validation-provider
+                    v-slot="{ errors }"
+                    :name="'name'"
+                    :rules="{ required: true, numeric: false }"
+                    class="mb-3"
+                    tag="div"
+                  >
+                    <el-input v-model="name" type="text" placeholder="Name" />
+                    <div class="text-error">
+                      {{ errors[0] }}
+                    </div>
+                  </validation-provider>
+                </div>
+                <!-- Gender-->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500">
+                    Gender</label>
+              <validation-provider
+              v-slot="{ errors }"
+              :name="'gender'"
+              :rules="{ required: false }"
+              class="mb-3"
+              tag="div"
             >
-              Save
-            </button>
-          </form>
-        </div>
+              <el-radio v-model="gender" label="Male">
+                Male
+              </el-radio>
+              <el-radio v-model="gender" label="Female">
+                Female
+              </el-radio>
+              <el-radio v-model="gender" label="Other">
+                Other
+              </el-radio>
+              <div class="text-error">
+                {{ errors[0] }}
+              </div>
+            </validation-provider>
+
+                </div>
+                <!-- DOB-->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500">DOB </label>
+                  <div class="block">
+                    <el-date-picker
+                      v-model="currentUser.date_of_birth"
+                      type="date"
+                      class="text-gray-500"
+                    >
+                    </el-date-picker>
+                  </div>
+                </div>
+
+                <!-- Email-->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500">
+                    Email</label
+                  >
+                  <validation-provider
+                    v-slot="{ errors }"
+                    :name="'email'"
+                    :rules="{ required: true }"
+                    class="mb-3"
+                    tag="div"
+                  >
+                    <el-input v-model="email" type="text" placeholder="Email" />
+                    <div class="text-error">
+                      {{ errors[0] }}
+                    </div>
+                  </validation-provider>
+                </div>
+                <!-- About me -->
+                <div>
+                  <div>
+                    <label class="block mb-1 font-bold text-gray-500"
+                      >About me</label
+                    >
+                    <textarea
+                      class="rounded-md border-2 w-full h-48 p-2"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <!-- Save -->
+                <button
+                  class="
+                    block
+                    w-full
+                    bg-yellow-400
+                    hover:bg-yellow-300
+                    p-4
+                    rounded
+                    text-yellow-900
+                    hover:text-yellow-800
+                    transition
+                    duration-300
+                  "
+                >
+                  Save
+                </button>
+              </form>
+            </ValidationObserver>
+          </el-tab-pane>
+
+          <el-tab-pane label="Password" name="second">
+            <ValidationObserver ref="obsAddAcademicYear" tag="div">
+              <form class="space-y-5">
+                <!-- New Password-->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500"
+                    >New Password</label
+                  >
+                  <input
+                    type="password"
+                    class="
+                      w-full
+                      border-2 border-gray-200
+                      p-3
+                      rounded
+                      outline-none
+                      focus:border-blue-500
+                    "
+                  />
+                </div>
+                <!-- Comfirm Password-->
+                <div>
+                  <label class="block mb-1 font-bold text-gray-500"
+                    >Comfirm Password</label
+                  >
+                  <input
+                    type="password"
+                    class="
+                      w-full
+                      border-2 border-gray-200
+                      p-3
+                      rounded
+                      outline-none
+                      focus:border-blue-500
+                    "
+                  />
+                </div>
+                <!-- Save -->
+                <button
+                  class="
+                    block
+                    w-full
+                    bg-yellow-400
+                    hover:bg-yellow-300
+                    p-4
+                    rounded
+                    text-yellow-900
+                    hover:text-yellow-800
+                    transition
+                    duration-300
+                  "
+                >
+                  Save
+                </button>
+              </form>
+            </ValidationObserver>
+          </el-tab-pane>
+        </el-tabs>
       </el-card>
     </div>
   </div>
 </template>
 <script>
+import { ValidationObserver, ValidationProvider } from "vee-validate";
+
 export default {
   name: "UserProfile",
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
 
   data() {
     return {
@@ -302,6 +285,7 @@ export default {
           },
         ],
       },
+      activeName: "first",
       value1: "",
       value2: "",
     };
@@ -309,6 +293,24 @@ export default {
   computed: {
     currentUser() {
       return this.$store.getters["user/getCurrentUser"];
+    },
+  },
+  created() {
+    this.handleData();
+  },
+
+
+
+  methods: {
+    handleData() {
+      setTimeout(() => {
+        this.name = this.$store.getters["user/getCurrentUser"].full_name;
+        this.email = this.$store.getters["user/getCurrentUser"].email;
+        this.gender = this.$store.getters["user/getCurrentUser"].gender;
+      }, 500);
+    },
+    handleClick(tab, event) {
+      console.log(tab, event);
     },
   },
 };
