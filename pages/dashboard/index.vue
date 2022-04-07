@@ -36,6 +36,19 @@
       <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
         <div class="col-start-1 md:col-end-1 col-end-3">
           <el-card shadow="hover">
+            <div />
+            <DonutChart v-if="barChartData !== {}" :data="barChartData" :options="pieOprions" :height="400" />
+          </el-card>
+        </div>
+        <div class="md:col-start-2 md:col-end-2 col-start-1 col-end-3">
+          <el-card shadow="hover">
+            <BarChart v-if="barChartData !== {}" :data="barChartData" :options="barChartOptions" :height="400" />
+          </el-card>
+        </div>
+      </div>
+      <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
+        <div class="col-start-1 md:col-end-1 col-end-3">
+          <el-card shadow="hover">
             <div class="block my-5">
               <el-select v-model="user_id" placeholder="Select user">
                 <el-option
@@ -68,19 +81,6 @@
               Interactive of users
             </div>
             <LineChart :department="department_id" :options="lineChartOptions" :height="400" />
-          </el-card>
-        </div>
-      </div>
-      <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
-        <div class="col-start-1 md:col-end-1 col-end-3">
-          <el-card shadow="hover">
-            <div />
-            <DonutChart v-if="barChartData !== {}" :data="barChartData" :options="pieOprions" :height="400" />
-          </el-card>
-        </div>
-        <div class="md:col-start-2 md:col-end-2 col-start-1 col-end-3">
-          <el-card shadow="hover">
-            <BarChart v-if="barChartData !== {}" :data="barChartData" :options="barChartOptions" :height="400" />
           </el-card>
         </div>
       </div>

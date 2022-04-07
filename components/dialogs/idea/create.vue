@@ -157,11 +157,32 @@
         <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="Posting conditions"
+      :visible.sync="dialogVisibleAccept"
+      append-to-body
+      width="30%"
+      :close-on-click-modal="false"
+    >
+      <div class="my-3 text-bold">
+        Do you agree to post in {{ aca_year }} ?
+      </div>
+      <el-checkbox v-model="checkedPosting">
+        Agree
+      </el-checkbox>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleAccept = false">Cancel</el-button>
+        <el-button :disabled="!checkedPosting" type="primary" @click="handleSubmitPosting">Confirm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import * as idea from '@/api/idea.js'
 import EventBus from '@/utils/eventBus'
 // import ckeditor from '@/components/ckeditor/index.vue'
 
@@ -178,11 +199,17 @@ export default {
       type: Boolean,
       default: false,
       required: true
+    },
+    propsDialogVisibleAccept: {
+      type: Boolean,
+      default: false,
+      required: true
     }
   },
   data () {
     return {
       dialogVisible: false,
+      dialogVisibleAccept: false,
       formData: {
         title: '',
         category_id: '',
@@ -191,6 +218,7 @@ export default {
         thumbnail_url: '',
         is_anonymous: true
       },
+      checkedPosting: false,
       optionsCategory: [],
       optionsAcademicYear: [],
       editorConfig: {
@@ -201,7 +229,9 @@ export default {
           }
         }
       },
-      contentHolder: ''
+      contentHolder: '',
+      submit: false,
+      aca_year: ''
     }
   },
   watch: {
@@ -225,37 +255,59 @@ export default {
   },
   created () {
     this.dialogVisible = this.propsDialogVisible
+    this.getCurrnetAcadeicYear()
   },
   methods: {
-    async handleSubmit () {
+    handleContract () {
+      this.dialogVisibleAccept = true
+    },
+    handleSubmitPosting () {
+      this.dialogVisibleAccept = false
+      this.send()
+    },
+    handleSubmit () {
+      this.handleContract()
+    },
+
+    async send () {
       const isValid = await this.$refs.obsAddIdea.validate()
       if (!isValid) {
         return
       }
+      this.$emit('handle-submit', this.formData)
+      this.dialogVisible = false
+      this.$refs.obsAddIdea.reset()
+    },
 
-      this.$confirm('Are you sure to create this idea ?')
-        .then(() => {
-          this.$emit('handle-submit', this.formData)
-          this.dialogVisible = false
-          this.$refs.obsAddIdea.reset()
-        })
-        .catch((_) => {})
+    async getCurrnetAcadeicYear () {
+      try {
+        const res = await idea.getCurrentAca()
+        const data = res.data.data
+        // eslint-disable-next-line no-console
+        console.log('acaca', data)
+        this.aca_year = data.title
+        // eslint-disable-next-line no-console
+        console.log('this data', this.activities)
+      } catch (e) {
+      // eslint-disable-next-line no-console
+        console.log(e)
+      }
     },
     beforeUploadThumbnail (file, fileList) {
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       this.$emit('handle-import-image', file)
     },
     beforeUpload (file, fileList) {
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       this.$emit('handle-import', file)
     },
     // file
     handleRemove (file, fileList) {
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       console.log(file, fileList)
     },
     handlePreview (file) {
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       console.log(file)
     },
     handleExceed (files, fileList) {
