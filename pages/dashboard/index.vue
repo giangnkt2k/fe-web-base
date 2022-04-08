@@ -46,7 +46,7 @@
           </el-card>
         </div>
       </div>
-      <div class="block mb-8  gap-4 items-center items-baseline">
+      <!-- <div class="block mb-8  gap-4 items-center items-baseline">
         <el-card shadow="hover">
           <div class="block my-5">
             <el-select v-model="acaYearId" placeholder="Select academic year">
@@ -61,26 +61,26 @@
           <div class="text-current text-2xl text-center font-medium">
             Idea by day
           </div>
-          <LineChart2 :aca_year_id="acaYearId" :options="lineChartOptions2" :height="height" />
+          <LineChart2 :aca_year_id="acaYearId" :options="lineChartOptions2" :width="400" :height="200" />
         </el-card>
-      </div>
+      </div> -->
       <div class="block mb-8 grid grid-cols-2 gap-4 items-center items-baseline">
         <div class="col-start-1 md:col-end-1 col-end-3">
           <el-card shadow="hover">
             <div class="block my-5">
-              <el-select v-model="user_id" placeholder="Select user">
+              <el-select v-model="acaYearId" placeholder="Select academic year">
                 <el-option
-                  v-for="item in userList"
-                  :key="item.id"
-                  :label="item.full_name"
+                  v-for="(item, index) in optionsAcademicYear"
+                  :key="index"
+                  :label="item.title"
                   :value="item.id"
                 />
               </el-select>
             </div>
             <div class="text-current text-2xl text-center font-medium">
-              Statistic of users
+              Idea by day
             </div>
-            <RadarChart :user="user_id" :options="lineChartOptions" :height="400" />
+            <LineChart2 :aca_year_id="acaYearId" :options="lineChartOptions2" :width="400" :height="height" />
           </el-card>
         </div>
         <div class="md:col-start-2 md:col-end-2 col-start-1 col-end-3">
@@ -110,7 +110,7 @@
 import BarChart from '@/components/BarChart.js'
 import LineChart from '@/components/LineChart.js'
 import LineChart2 from '@/components/LineChart2.js'
-import RadarChart from '@/components/RadarChart.js'
+// import RadarChart from '@/components/RadarChart.js'
 import DonutChart from '@/components/DonutChart.js'
 import * as dashboard from '@/api/dashboard.js'
 import * as idea from '@/api/idea.js'
@@ -121,8 +121,8 @@ export default {
     BarChart,
     LineChart,
     DonutChart,
-    LineChart2,
-    RadarChart
+    LineChart2
+    // RadarChart
   },
   props: {
     height: {
@@ -224,6 +224,7 @@ export default {
       },
       lineChartOptions2: {
         responsive: true,
+        maintainAspectRatio: false,
         legend: {
           display: 'top'
         },
@@ -241,15 +242,9 @@ export default {
           yAxes: [
             {
               ticks: {
-                beginAtZero: true,
-                stepSize: 5,
-                callback (value) { if (value % 1 === 0) { return value } }
-              },
-              gridLines: {
-                display: true
+                beginAtZero: true
               }
-            }
-          ]
+            }]
         }
       },
       departmentList: [],

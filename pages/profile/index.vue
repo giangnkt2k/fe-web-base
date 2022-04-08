@@ -5,14 +5,10 @@
         <div class="max-w-full mx-11">
           <el-card class="bg-white shadow-xl rounded-lg py-3">
             <div class="photo-wrapper p-2">
-              <!-- <img
-                class="w-32 h-32 rounded-full mx-auto"
-                :src="currentUser.avatar"
-                alt="avatar null"
-              > -->
               <el-upload
                 class="avatar-uploader"
                 action="#"
+                style="text-align-last: center;"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
@@ -154,18 +150,9 @@
                     </div>
                   </validation-provider>
                 </div>
-                <!-- About me -->
-                <div>
-                  <div>
-                    <label class="block mb-1 font-bold text-gray-500">About me</label>
-                    <textarea
-                      class="rounded-md border-2 w-full h-48 p-2"
-                    />
-                  </div>
-                </div>
 
                 <!-- Save -->
-                <button
+                <el-button
                   class="
                     block
                     w-full
@@ -178,9 +165,10 @@
                     transition
                     duration-300
                   "
+                  @click="saveProfile"
                 >
                   Save
-                </button>
+                </el-button>
               </form>
             </ValidationObserver>
           </el-tab-pane>
@@ -191,35 +179,39 @@
                 <!-- New Password-->
                 <div>
                   <label class="block mb-1 font-bold text-gray-500">New Password</label>
-                  <input
-                    type="password"
-                    class="
-                      w-full
-                      border-2 border-gray-200
-                      p-3
-                      rounded
-                      outline-none
-                      focus:border-blue-500
-                    "
+                  <validation-provider
+                    v-slot="{ errors }"
+                    :name="'password'"
+                    :rules="{ required: true, min:6 }"
+                    class="mb-3"
+                    tag="div"
+                    vid="password"
                   >
+                    <el-input v-model="formData.password" type="password" placeholder="Enter your password" />
+                    <div class="text-error">
+                      {{ errors[0] }}
+                    </div>
+                  </validation-provider>
                 </div>
                 <!-- Comfirm Password-->
                 <div>
                   <label class="block mb-1 font-bold text-gray-500">Comfirm Password</label>
-                  <input
-                    type="password"
-                    class="
-                      w-full
-                      border-2 border-gray-200
-                      p-3
-                      rounded
-                      outline-none
-                      focus:border-blue-500
-                    "
+                  <validation-provider
+                    v-slot="{ errors }"
+                    :name="'confirm password'"
+                    rules="required|confirmed:password"
+                    class="mb-3"
+                    tag="div"
+                    data-vv-as="password"
                   >
+                    <el-input v-model="confirmPassword" type="password" placeholder="Enter your password" data-vv-as="password" />
+                    <div class="text-error">
+                      {{ errors[0] }}
+                    </div>
+                  </validation-provider>
                 </div>
                 <!-- Save -->
-                <button
+                <el-button
                   class="
                     block
                     w-full
@@ -232,9 +224,10 @@
                     transition
                     duration-300
                   "
+                  @click="savePassword"
                 >
                   Save
-                </button>
+                </el-button>
               </form>
             </ValidationObserver>
           </el-tab-pane>
@@ -245,7 +238,8 @@
 </template>
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import * as idea from '@/api/idea.js'
+import * as profile from '@/api/profile.js'
+import initToken from '~/mixins/auth.js'
 
 export default {
   name: 'UserProfile',
@@ -253,7 +247,7 @@ export default {
     ValidationObserver,
     ValidationProvider
   },
-
+  mixins: [initToken],
   data () {
     return {
       pickerOptions: {
@@ -289,12 +283,15 @@ export default {
       value1: '',
       value2: '',
       formData: {
+        id: '',
         avatar: '',
         name: '',
         email: '',
         gnder: '',
-        date_of_birth: ''
-      }
+        date_of_birth: '',
+        password: ''
+      },
+      confirmPassword: ''
     }
   },
   computed: {
@@ -310,16 +307,61 @@ export default {
     handleData () {
       setTimeout(() => {
         this.formData.name = this.$store.getters['user/getCurrentUser'].full_name
+        this.formData.id = this.$store.getters['user/getCurrentUser'].id
         this.formData.email = this.$store.getters['user/getCurrentUser'].email
         this.formData.gender = this.$store.getters['user/getCurrentUser'].gender
         this.formData.date_of_birth = this.$store.getters['user/getCurrentUser'].date_of_birth
+        this.formData.avatar = this.$store.getters['user/getCurrentUser'].avatar
       }, 500)
     },
     handleClick (tab, event) {
       // eslint-disable-next-line no-console
       console.log(tab, event)
     },
-    async   beforeAvatarUpload (file) {
+    async saveProfile () {
+      try {
+        const data = await profile.update({
+          full_name: this.formData.full_name,
+          avatar: this.formData.avatar,
+          gender: this.formData.gender,
+          date_of_birth: this.formData.date_of_birth
+        })
+        // eslint-disable-next-line no-console
+        console.log('file image', data)
+        this.$notify({
+          title: 'Success',
+          message: 'Update successfully',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
+      }
+    },
+    async savePassword () {
+      try {
+        const data = await profile.update({
+          password: this.formData.password
+        })
+        // eslint-disable-next-line no-console
+        console.log('file image', data)
+        this.$notify({
+          title: 'Success',
+          message: 'Update successfully',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$notify({
+          title: 'Error',
+          message: e.response.data.status_code + ' ' + e.response.data.message,
+          type: 'error'
+        })
+      }
+    },
+    async beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 2048 / 2048 < 2
 
@@ -333,10 +375,7 @@ export default {
       try {
         const formData = new FormData()
         formData.append('upload', file)
-        // eslint-disable-next-line no-console
-        console.log('file', file)
-
-        const image = await idea.uploadCommon(formData)
+        const image = await profile.upload(formData)
         this.formData.avatar = image.data.data.url
       } catch (e) {
         // eslint-disable-next-line no-console

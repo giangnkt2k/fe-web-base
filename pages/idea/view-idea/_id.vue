@@ -287,8 +287,6 @@ export default {
   created () {
     this.getDetail()
     this.getStatusAcaYear()
-    // eslint-disable-next-line no-console
-    console.log('Created', this.$route.params.id)
   },
   methods: {
     getDetail () {

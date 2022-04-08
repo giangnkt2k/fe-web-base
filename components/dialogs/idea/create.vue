@@ -236,8 +236,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -283,11 +281,7 @@ export default {
       try {
         const res = await idea.getCurrentAca()
         const data = res.data.data
-        // eslint-disable-next-line no-console
-        console.log('acaca', data)
         this.aca_year = data.title
-        // eslint-disable-next-line no-console
-        console.log('this data', this.activities)
       } catch (e) {
       // eslint-disable-next-line no-console
         console.log(e)
@@ -305,10 +299,6 @@ export default {
     handleRemove (file, fileList) {
     // eslint-disable-next-line no-console
       console.log(file, fileList)
-    },
-    handlePreview (file) {
-    // eslint-disable-next-line no-console
-      console.log(file)
     },
     handleExceed (files, fileList) {
       this.$message.warning(`The limit is 3, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally`)
