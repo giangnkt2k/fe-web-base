@@ -285,8 +285,6 @@ export default {
         const users = await dashboard.userList()
         // eslint-disable-next-line no-console
         this.userList = users.data.data
-        // eslint-disable-next-line no-console
-        console.log('users', this.departmentList)
       } catch (e) {
         this.$notify({
           title: 'Error',
@@ -300,8 +298,6 @@ export default {
         const department = await dashboard.departmentList()
         // eslint-disable-next-line no-console
         this.departmentList = department.data.data
-        // eslint-disable-next-line no-console
-        console.log('depart', this.departmentList)
       } catch (e) {
         this.$notify({
           title: 'Error',

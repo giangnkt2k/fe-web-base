@@ -97,8 +97,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -122,9 +120,6 @@ export default {
       if (!isValid) {
         return
       }
-
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
       this.formData = {}

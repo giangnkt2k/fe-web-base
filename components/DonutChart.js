@@ -34,8 +34,6 @@ export default {
         }
         ]
       }
-      // eslint-disable-next-line no-console
-      console.log('barChartData', barChartData)
       this.renderChart(barChartData, this.options)
 
       // eslint-disable-next-line no-console

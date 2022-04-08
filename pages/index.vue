@@ -318,8 +318,6 @@ export default {
       try {
         const res = await idea.getCurrentAca()
         const data = res.data.data
-        // eslint-disable-next-line no-console
-        console.log('acaca', data)
         this.aca_name = data.title
         this.activities = [{
           content: 'Start date',
@@ -339,8 +337,6 @@ export default {
           content: 'End date',
           timestamp: moment(data.end_date).format('MMM Do YY')
         }]
-        // eslint-disable-next-line no-console
-        console.log('this data', this.activities)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e)

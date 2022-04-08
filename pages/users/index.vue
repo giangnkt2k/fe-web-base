@@ -246,8 +246,6 @@ export default {
     },
     handleSizeChange (val) {
       this.pageSize = val
-      // eslint-disable-next-line no-console
-      console.log('pageSize', this.pageSize)
       this.fetchData()
     },
     handleCurrentChange (val) {

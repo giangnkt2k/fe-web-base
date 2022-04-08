@@ -260,8 +260,6 @@ export default {
       deep: true
     },
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {

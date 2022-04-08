@@ -60,8 +60,6 @@ export default {
     this.middlewareRouter()
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
-      // eslint-disable-next-line no-console
-      console.log('windowWidth: ' + window.innerWidth)
     })
   },
   methods: {

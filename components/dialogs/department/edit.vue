@@ -125,8 +125,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -135,8 +133,6 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenEditAd', (val, newVal) => {
-      // eslint-disable-next-line no-console
-      console.log(newVal)
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.name = newVal.name
@@ -160,8 +156,6 @@ export default {
       if (!isValid) {
         return
       }
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       if (JSON.stringify(this.formDataChecked) === JSON.stringify(this.formData)) {
         this.dialogVisible = false
       } else {

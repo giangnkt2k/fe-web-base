@@ -129,8 +129,6 @@ export default {
       try {
         const res = await idea.checkCurrentAca()
         const data = res.data.data
-        // eslint-disable-next-line no-console
-        console.log('datata', data)
         this.can_comment = data.can_post_comment
       } catch (e) {
         this.$notify({
@@ -194,16 +192,10 @@ export default {
       }
     },
     handleRemove (fileRemove) {
-      // eslint-disable-next-line no-console
-      console.log('remove đê', fileRemove)
       this.listFileUpload = this.listFileUpload.filter(file => file.name !== fileRemove.name)
-      // eslint-disable-next-line no-console
-      console.log('remove luôn', this.listFileUpload)
     },
     async handleEdit (index, value) {
       const data = await this.getDetailIdea(value.id)
-      // eslint-disable-next-line no-console
-      console.log('data==>', data)
       EventBus.$emit('OpenEditIdea', true, data, this.listCategory)
     },
     async getDetailIdea (id) {
@@ -293,8 +285,6 @@ export default {
       try {
         const res = await idea.getListCategory()
         this.listCategory = res.data.data
-        // eslint-disable-next-line no-console
-        console.log('listCategory', this.listCategory)
         this.$store.commit('pages/setLoading', false)
       } catch (e) {
         this.$router.push('/404')

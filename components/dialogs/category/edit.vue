@@ -97,8 +97,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -107,8 +105,6 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenEditCategory', (val, newVal) => {
-      // eslint-disable-next-line no-console
-      console.log('newVal', newVal)
       this.dialogVisible = val
       this.formData.id = newVal.id
       this.formData.name = newVal.name
@@ -128,8 +124,6 @@ export default {
         this.$message.warning('Something went wrong')
         return
       }
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
     }

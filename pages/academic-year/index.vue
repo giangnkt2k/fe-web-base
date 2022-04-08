@@ -125,10 +125,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    handleClick () {
-      // eslint-disable-next-line no-console
-      console.log('click')
-    },
     handleSearch () {
       this.fetchData()
     },
@@ -226,8 +222,6 @@ export default {
         const res = await academicYear.list(query)
         const formatData = []
         res.data.data.length > 0 && res.data.data.map((item) => {
-          // eslint-disable-next-line no-console
-          console.log('item: ' + item.start_date)
           const rowData = {
             ...item,
             status: (item.status === true) ? 'ACTIVE' : 'INACTIVE'

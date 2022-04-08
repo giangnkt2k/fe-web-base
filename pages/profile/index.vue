@@ -384,8 +384,6 @@ export default {
       return isJPG && isLt2M
     },
     handleAvatarSuccess (res, file) {
-      // eslint-disable-next-line no-console
-      console.log('file', file)
       this.formData.avatar = URL.createObjectURL(file.raw)
     }
   }

@@ -102,10 +102,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    handleClick () {
-      // eslint-disable-next-line no-console
-      console.log('click')
-    },
     handleSearch () {
       this.fetchData()
     },
@@ -133,8 +129,6 @@ export default {
       }
     },
     handleEdit (index, value) {
-      // eslint-disable-next-line no-console
-      console.log('param', value)
       EventBus.$emit('OpenEditCategory', true, value)
     },
     async handleSubmitEdit (params, id) {

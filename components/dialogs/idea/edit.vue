@@ -211,8 +211,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -221,8 +219,6 @@ export default {
   },
   mounted () {
     EventBus.$on('OpenEditIdea', (val, data, categories) => {
-      // eslint-disable-next-line no-console
-      console.log('data get', data)
       this.fileListThumbnail = []
       this.fileList = []
       this.dialogVisible = val
@@ -239,8 +235,6 @@ export default {
       this.fileList = data.files
       this.formData.is_anonymous = data.is_anonymous
       this.formData.files = data.files
-      // eslint-disable-next-line no-console
-      console.log('formdata', this.formData)
     })
     EventBus.$on('hideDeleteConfirmDialog', () => {
       this.dialogVisible = false
@@ -255,8 +249,6 @@ export default {
       if (!isValid) {
         return
       }
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
     },
@@ -271,8 +263,6 @@ export default {
     // file
     handleRemove (file, fileList) {
       this.$emit('handle-remove', file)
-      // eslint-disable-next-line no-console
-      console.log(file, fileList)
     },
     handlePreview (file) {
       // eslint-disable-next-line no-console

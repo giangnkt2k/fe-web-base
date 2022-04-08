@@ -188,8 +188,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -230,8 +228,6 @@ export default {
         this.disabledCreate = false
         return
       }
-      // eslint-disable-next-line no-console
-      console.log(this.validateDate())
       if (this.validateDate() === false) {
         this.$notify({
           title: 'Warning',

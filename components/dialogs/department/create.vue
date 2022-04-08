@@ -125,8 +125,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -156,8 +154,6 @@ export default {
     async handleSubmit () {
       this.disabledCreate = true
       const isValid = await this.$refs.obsAddDepartment.validate()
-      // eslint-disable-next-line no-console
-      console.log('isValid', isValid)
       if (!isValid) {
         this.disabledCreate = false
         return

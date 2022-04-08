@@ -328,8 +328,6 @@ export default {
       try {
         const res = await idea.checkCurrentAca()
         const data = res.data.data
-        // eslint-disable-next-line no-console
-        console.log('datata', data)
         this.can_comment = data.can_post_comment
       } catch (e) {
         this.$message.error(e.response.data.status_code + ' ' + e.response.data.message)

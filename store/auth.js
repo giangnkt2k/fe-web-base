@@ -26,8 +26,6 @@ export const mutations = {
     state.token = token
   },
   logout (state) {
-    // eslint-disable-next-line no-console
-    console.log('logout ==>')
     state.token = ''
     axios.defaults.headers.common.Authorization = ''
     destroyToken()

@@ -189,8 +189,6 @@ export default {
   },
   watch: {
     dialogVisible (newVal) {
-      // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible)
       this.$emit('input', newVal)
     },
     propsDialogVisible (newVal) {
@@ -209,8 +207,6 @@ export default {
       this.formData.status = (newVal.status === 'ACTIVE')
       this.start_end = [newVal.start_date, newVal.end_date]
       this.first_final = [newVal.first_closure_date, newVal.final_closure_date]
-      // eslint-disable-next-line no-console
-      console.log('OpenEditAd', this.formData)
     })
 
     EventBus.$on('hideDeleteConfirmDialog', () => {
@@ -241,8 +237,6 @@ export default {
         this.$message.warning('Something went wrong')
         return
       }
-      // eslint-disable-next-line no-console
-      console.log(this.validateDate())
       if (this.validateDate() === false) {
         this.$message.warning('Error date: start date <= first closure date < final closure date <= end date')
         return
@@ -251,8 +245,6 @@ export default {
       this.formData.end_date = this.start_end[1]
       this.formData.first_closure_date = this.first_final[0]
       this.formData.final_closure_date = this.first_final[1]
-      // eslint-disable-next-line no-console
-      console.log('fdata', this.formData)
       this.$emit('handle-submit', this.formData)
       this.dialogVisible = false
     }

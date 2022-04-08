@@ -110,10 +110,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    handleClick () {
-      // eslint-disable-next-line no-console
-      console.log('click')
-    },
     handleSearch () {
       this.fetchData()
     },
