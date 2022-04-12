@@ -12,7 +12,9 @@
           <h2>General information</h2>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
-              <div class="mams-label">Title</div>
+              <div class="mams-label">
+                Title
+              </div>
               <validation-provider
                 v-slot="{ errors }"
                 :name="'title'"
@@ -33,7 +35,9 @@
           </div>
           <div class="row-input grid grid-cols-2 gap-4">
             <div class="col-span-2">
-              <div class="mams-label">Category</div>
+              <div class="mams-label">
+                Category
+              </div>
               <validation-provider
                 v-slot="{ errors }"
                 :name="'category'"
@@ -61,7 +65,9 @@
           </div>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
-              <div class="mams-label">Pictures Header</div>
+              <div class="mams-label">
+                Pictures Header
+              </div>
               <validation-provider
                 v-slot="{ errors }"
                 :name="'picture'"
@@ -85,7 +91,9 @@
           </div>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
-              <div class="mams-label">File Upload</div>
+              <div class="mams-label">
+                File Upload
+              </div>
               <el-upload
                 class="upload-demo"
                 action="#"
@@ -104,7 +112,9 @@
           </div>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
-              <div class="mams-label">Content</div>
+              <div class="mams-label">
+                Content
+              </div>
               <ckeditor-nuxt
                 v-model="formData.content"
                 :config="editorConfig"
@@ -124,7 +134,9 @@
           </div>
           <div class="row-input grid grid-cols-1 gap-4">
             <div class="col-span-1">
-              <div class="mams-label">Anonymous</div>
+              <div class="mams-label">
+                Anonymous
+              </div>
               <validation-provider
                 v-slot="{ errors }"
                 :name="'status'"
@@ -148,19 +160,24 @@
           </div>
         </el-card>
       </ValidationObserver>
-      <div style="text-align: left" class="dialog-footer">
-        <div class="container_footer">
-          <div class="checkbox-left">
+      <div slot="footer" class="dialog-footer">
+        <div>
+          <div style="float: left;">
             <el-checkbox v-model="checkedPosting">
               Do you agree to post in {{ aca_year }} ?
             </el-checkbox>
           </div>
-          <div class="Confirm-right">
-            <el-button @click="dialogVisible = false">Cancel</el-button>
+          <div>
+            <el-button @click="dialogVisible = false">
+              Cancel
+            </el-button>
             <el-button
               :disabled="!checkedPosting"
               type="primary"
-              @click="handleSubmitPosting">Confirm</el-button>
+              @click="handleSubmitPosting"
+            >
+              Confirm
+            </el-button>
           </div>
         </div>
       </div>
@@ -188,168 +205,168 @@
 </template>
 
 <script>
-import { ValidationObserver, ValidationProvider } from "vee-validate";
-import * as idea from "@/api/idea.js";
-import EventBus from "@/utils/eventBus";
+import { ValidationObserver, ValidationProvider } from 'vee-validate'
+import * as idea from '@/api/idea.js'
+import EventBus from '@/utils/eventBus'
 // import ckeditor from '@/components/ckeditor/index.vue'
 
 export default {
-  name: "ComponentCreateBuilding",
+  name: 'ComponentCreateBuilding',
   components: {
     ValidationObserver,
     ValidationProvider,
     // eslint-disable-next-line vue/no-unused-components
-    "ckeditor-nuxt": () => {
+    'ckeditor-nuxt': () => {
       if (process.client) {
-        return import("@blowstack/ckeditor-nuxt");
+        return import('@blowstack/ckeditor-nuxt')
       }
-    },
+    }
   },
   props: {
     propsDialogVisible: {
       type: Boolean,
       default: false,
-      required: true,
+      required: true
     },
     propsDialogVisibleAccept: {
       type: Boolean,
       default: false,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       dialogVisible: false,
       dialogVisibleAccept: false,
       formData: {
-        title: "",
-        category_id: "",
-        content: "",
+        title: '',
+        category_id: '',
+        content: '',
         files: [],
-        thumbnail_url: "",
-        is_anonymous: true,
+        thumbnail_url: '',
+        is_anonymous: true
       },
       checkedPosting: false,
       optionsCategory: [],
       optionsAcademicYear: [],
       editorConfig: {
         simpleUpload: {
-          uploadUrl: "https://groupbar.me/api/v1/upload",
+          uploadUrl: 'https://groupbar.me/api/v1/upload',
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjgsInJvbGUiOiJRQU0ifSwiZXhwIjoxNjQ5MTAyMDU2LCJpYXQiOjE2NDY1MTAwNTZ9.PY_4uTLRt1ics1F9xjq2rgrtPjW0XXLuZGGeH6EMxwE",
-          },
-        },
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJfaWQiOjgsInJvbGUiOiJRQU0ifSwiZXhwIjoxNjQ5MTAyMDU2LCJpYXQiOjE2NDY1MTAwNTZ9.PY_4uTLRt1ics1F9xjq2rgrtPjW0XXLuZGGeH6EMxwE'
+          }
+        }
       },
-      contentHolder: "",
+      contentHolder: '',
       submit: false,
-      aca_year: "",
-    };
+      aca_year: ''
+    }
   },
   watch: {
-    dialogVisible(newVal) {
+    dialogVisible (newVal) {
       // eslint-disable-next-line no-console
-      console.log(this.propsDialogVisible);
-      this.$emit("input", newVal);
+      console.log(this.propsDialogVisible)
+      this.$emit('input', newVal)
     },
-    propsDialogVisible(newVal) {
-      this.innerValue = newVal;
-    },
+    propsDialogVisible (newVal) {
+      this.innerValue = newVal
+    }
   },
-  mounted() {
-    EventBus.$on("OpenCreateAY", (val, categories) => {
-      this.dialogVisible = val;
-      this.optionsCategory = categories;
-    });
-    EventBus.$on("hideDeleteConfirmDialog", () => {
-      this.dialogVisible = false;
-    });
+  mounted () {
+    EventBus.$on('OpenCreateAY', (val, categories) => {
+      this.dialogVisible = val
+      this.optionsCategory = categories
+    })
+    EventBus.$on('hideDeleteConfirmDialog', () => {
+      this.dialogVisible = false
+    })
   },
-  created() {
-    this.dialogVisible = this.propsDialogVisible;
-    this.getCurrnetAcadeicYear();
+  created () {
+    this.dialogVisible = this.propsDialogVisible
+    this.getCurrnetAcadeicYear()
   },
   methods: {
-    handleContract() {
-      this.dialogVisibleAccept = true;
+    handleContract () {
+      this.dialogVisibleAccept = true
     },
-    handleSubmitPosting() {
-      this.dialogVisibleAccept = false;
-      this.send();
+    handleSubmitPosting () {
+      this.dialogVisibleAccept = false
+      this.send()
     },
-    handleSubmit() {
-      this.handleContract();
+    handleSubmit () {
+      this.handleContract()
     },
 
-    async send() {
-      const isValid = await this.$refs.obsAddIdea.validate();
+    async send () {
+      const isValid = await this.$refs.obsAddIdea.validate()
       if (!isValid) {
-        return;
+        return
       }
-      this.$emit("handle-submit", this.formData);
-      this.dialogVisible = false;
-      this.$refs.obsAddIdea.reset();
+      this.$emit('handle-submit', this.formData)
+      this.dialogVisible = false
+      this.$refs.obsAddIdea.reset()
     },
 
-    async getCurrnetAcadeicYear() {
+    async getCurrnetAcadeicYear () {
       try {
-        const res = await idea.getCurrentAca();
-        const data = res.data.data;
+        const res = await idea.getCurrentAca()
+        const data = res.data.data
         // eslint-disable-next-line no-console
-        console.log("acaca", data);
-        this.aca_year = data.title;
+        console.log('acaca', data)
+        this.aca_year = data.title
         // eslint-disable-next-line no-console
-        console.log("this data", this.activities);
+        console.log('this data', this.activities)
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.log(e);
+        console.log(e)
       }
     },
-    beforeUploadThumbnail(file, fileList) {
+    beforeUploadThumbnail (file, fileList) {
       // eslint-disable-next-line no-console
-      this.$emit("handle-import-image", file);
+      this.$emit('handle-import-image', file)
     },
-    beforeUpload(file, fileList) {
+    beforeUpload (file, fileList) {
       // eslint-disable-next-line no-console
-      this.$emit("handle-import", file);
+      this.$emit('handle-import', file)
     },
     // file
-    handleRemove(file, fileList) {
+    handleRemove (file, fileList) {
       // eslint-disable-next-line no-console
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
-    handlePreview(file) {
+    handlePreview (file) {
       // eslint-disable-next-line no-console
-      console.log(file);
+      console.log(file)
     },
-    handleExceed(files, fileList) {
+    handleExceed (files, fileList) {
       this.$message.warning(
         `The limit is 3, you selected ${
           files.length
         } files this time, add up to ${files.length + fileList.length} totally`
-      );
+      )
     },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`Cancel the transfert of ${file.name} ?`);
+    beforeRemove (file, fileList) {
+      return this.$confirm(`Cancel the transfert of ${file.name} ?`)
     },
     // picture
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+    handleAvatarSuccess (res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error("Avatar picture must be JPG format!");
+        this.$message.error('Avatar picture must be JPG format!')
       }
       if (!isLt2M) {
-        this.$message.error("Avatar picture size can not exceed 2MB!");
+        this.$message.error('Avatar picture size can not exceed 2MB!')
       }
-      return isJPG && isLt2M;
-    },
-  },
-};
+      return isJPG && isLt2M
+    }
+  }
+}
 </script>
 
 <style>
@@ -391,10 +408,5 @@ export default {
 .checkbox-left {
   display: inline-block;
   padding: 12px 20px;
-}
-.Confirm-right {
-  float: right;
-  display: inline-block;
-
 }
 </style>
