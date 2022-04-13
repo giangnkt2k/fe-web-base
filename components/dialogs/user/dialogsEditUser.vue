@@ -48,7 +48,6 @@
                   type="date"
                   placeholder="Pick a Date"
                   format="MM/dd/yyyy"
-                  value-format="MM/dd/yyyy"
                 />
                 <div class="text-error">
                   {{ errors[0] }}
