@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="Create Idea"
+      title="Edit Idea"
       :visible.sync="dialogVisible"
       append-to-body
       width="80%"

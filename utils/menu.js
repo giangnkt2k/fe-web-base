@@ -37,7 +37,7 @@ export default [
     icon: 'el-icon-suitcase-1',
     active: false,
     link: '/department',
-    role: ['ADMIN']
+    role: ['ADMIN', 'QAC']
   },
   {
     routerName: '',
