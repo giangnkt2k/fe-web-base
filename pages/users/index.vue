@@ -188,7 +188,6 @@ export default {
     async  handleCreate (params) {
       try {
         this.$store.commit('pages/setLoading', true)
-        params.full_name = params.full_name.trim()
         await user.add(params)
         this.fetchData()
         this.$store.commit('pages/setLoading', false)
