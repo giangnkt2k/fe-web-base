@@ -37,7 +37,7 @@ export default [
     icon: 'el-icon-suitcase-1',
     active: false,
     link: '/department',
-    role: ['ADMIN', 'QAC']
+    role: ['ADMIN']
   },
   {
     routerName: '',
@@ -53,7 +53,7 @@ export default [
     icon: 'el-icon-document',
     active: false,
     link: '/idea',
-    role: ['STAFF', 'QAM', 'QAC']
+    role: ['STAFF']
   }
 
 ]
